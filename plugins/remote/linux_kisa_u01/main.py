@@ -77,12 +77,11 @@ class RootLoginCheck(BasePlugin):
     def check(self) -> List[Finding]:
         # 설정에서 sshd_config 경로를 읽고 기본값을 적용한다.
         config_path = Path(self.context.config.get("sshd_config_path", "/etc/ssh/sshd_config"))
-        # 먼저 로컬 파일을 읽고, 없으면 원격 SSH로 읽는다.
-        lines = _read_local_config(config_path)
-        remote_used = False
+        # 먼저 원격 SSH로 읽고, 원격 정보가 없으면 로컬 파일을 읽는다.
+        lines = _read_remote_config(self.context.target, config_path, self.context.config)
+        remote_used = lines is not None
         if lines is None:
-            lines = _read_remote_config(self.context.target, config_path, self.context.config)
-            remote_used = lines is not None
+            lines = _read_local_config(config_path)
         if lines is None:
             # 로컬/원격 모두 실패하면 설정 오류로 처리한다.
             raise PluginConfigError("Missing SSH config path or remote credentials")
