@@ -24,7 +24,7 @@
 
 ### 동적(HTTP) 관련 권장 필드
 - `connection_info.url` 또는 플러그인 설정의 `base_url`
-- 플러그인 설정: `headers`, `timeout`, `verify_ssl`
+- 플러그인 설정: `headers`, `auth_headers`, `require_auth`, `timeout`, `verify_ssl`
 
 ## 태그 규칙
 - KISA U-코드: `KISA:U-01`

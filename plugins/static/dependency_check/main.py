@@ -50,9 +50,9 @@ class DependencyCheck(BasePlugin):
             operator = req["operator"]
             if operator != "==":
                 self.add_finding(
-                    vuln_id="KISA-STATIC-UNPINNED",
-                    title="의존성 버전 미고정",
-                    severity="Medium",
+                    vuln_id="POLICY-UNPINNED-DEPENDENCY",
+                    title="의존성 버전 미고정(정책 점검)",
+                    severity="Info",
                     evidence={
                         "dependency": req["name"],
                         "operator": operator,
@@ -61,8 +61,8 @@ class DependencyCheck(BasePlugin):
                         "manifest": str(path),
                     },
                     tags=["OWASP:2025:A03"],
-                    description="버전이 고정되지 않으면 공급망 리스크가 증가합니다.",
-                    solution="의존성을 정확한 버전으로 고정하세요.",
+                    description="버전 고정 정책 위반 항목입니다.",
+                    solution="의존성을 정확한 버전(==)으로 고정하세요.",
                 )
 
         return self.results

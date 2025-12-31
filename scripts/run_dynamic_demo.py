@@ -55,7 +55,11 @@ def main() -> None:
     try:
         context = PluginContext(
             target={"type": "WEB_URL", "base_url": f"http://127.0.0.1:{port}"},
-            config={"base_url": f"http://127.0.0.1:{port}", "endpoint_path": "/api/users/2"},
+            config={
+                "base_url": f"http://127.0.0.1:{port}",
+                "endpoint_path": "/api/users/2",
+                "require_auth": True,
+            },
         )
         plugin = loader.load_plugin(meta, context)
         findings = plugin.check()

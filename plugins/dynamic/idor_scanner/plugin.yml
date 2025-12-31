@@ -1,12 +1,12 @@
 # 이 파일은 .yml 플러그인 메타데이터로 동적 검사 모듈 정보를 제공합니다.
 id: "dynamic_idor_scanner"
-name: "IDOR Scanner"
+name: "Access Control Scanner"
 version: "0.1.0"
 type: "dynamic"
 category: "application"
 tags:
   - "OWASP:2025:A01"
-description: "Scenario-based IDOR detection placeholder."
+description: "Unauthenticated access check for protected endpoints."
 config_schema:
   properties:
     base_url:
@@ -17,6 +17,12 @@ config_schema:
     headers:
       type: object
       default: {}
+    auth_headers:
+      type: object
+      default: {}
+    require_auth:
+      type: boolean
+      default: false
     timeout:
       type: integer
       default: 5
