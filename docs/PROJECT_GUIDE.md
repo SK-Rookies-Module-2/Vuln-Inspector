@@ -12,6 +12,37 @@
 5. **결과 조회**: `GET /api/v1/jobs/{id}/findings`로 결과 확인.
 6. **보고서 생성/다운로드**: `POST /api/v1/jobs/{id}/report` → `storage/reports/{job_id}/report.(json|csv)` 생성, `/reports/{id}/file`로 다운로드.
 
+## 전체 동작 프로세스(상세, 모듈/함수 기준)
+1. **API 시작/DB 초기화**
+   - `app/api/app.py:_startup()` → `app/db/session.py:init_db()`
+2. **대상 등록 흐름**
+   - `app/api/app.py:create_target()` 요청 수신
+   - `app/api/schemas.py:TargetCreate.validate_connection_info()`로 유형별 필수값 검증
+   - `app/db/models.py:Target` 생성 후 저장
+3. **스캔 Job 생성 및 실행**
+   - `app/api/app.py:create_job()` → `app/db/models.py:ScanJob` 생성
+   - `run_now=True`이면 `app/services/scan_executor.py:ScanExecutor.run_job()` 호출
+4. **스캔 실행 상세**
+   - `ScanExecutor._set_job_running()` 상태 업데이트
+   - 플러그인 순회(`job.scan_scope`)
+     - `ScanExecutor._get_meta()` → `app/core/plugin_loader.py:PluginLoader.discover()` → `_load_meta()`로 `plugin.yml` 읽기
+     - `app/core/config_validation.py:apply_config_schema()`로 설정 검증/기본값 주입
+     - `ScanExecutor._build_context()` → `app/core/types.py:PluginContext` 구성
+     - `PluginLoader.load_plugin()` → `_import_module()` → 플러그인 클래스 인스턴스 생성
+     - `plugins/**/main.py:<PluginClass>.check()` 실행
+       - 결과는 `app/core/plugin_base.py:BasePlugin.add_finding()`으로 누적
+       - 태그 확장은 `app/core/taxonomy.py:TaxonomyIndex.expand_tags()`에서 수행
+     - `ScanExecutor._store_findings()` → `app/db/models.py:Finding` 저장
+   - 완료 시 `ScanExecutor._summarize()`로 요약 저장 및 상태 갱신
+5. **결과 조회**
+   - `app/api/app.py:get_job_findings()` → `app/db/models.py:Finding` 조회
+6. **보고서 생성**
+   - `app/api/app.py:create_report()` → `app/services/reporting.py:generate_report()`
+   - `app/core/storage.py:ensure_reports_dir()`로 저장 경로 준비
+   - `app/db/models.py:Report` 저장
+7. **보고서 다운로드**
+   - `app/api/app.py:download_report_file()` → `fastapi.responses.FileResponse`
+
 ## 실행 방법(uv 기준)
 ```bash
 uv venv
