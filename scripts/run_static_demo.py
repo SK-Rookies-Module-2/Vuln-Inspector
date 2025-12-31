@@ -1,4 +1,4 @@
-"""이 파일은 .py 정적 채널 데모 실행 스크립트로 플러그인 로딩을 검증합니다."""
+"""이 파일은 .py 정적 채널 데모 실행 스크립트로 의존성 고정 여부를 점검합니다."""
 
 import sys
 from pathlib import Path
@@ -28,7 +28,7 @@ def main() -> None:
 
     print(f"Findings: {len(findings)}")
     for finding in findings:
-        print(f"- {finding.vuln_id} | {finding.title} | {finding.tags}")
+        print(f"- {finding.vuln_id} | {finding.title} | {finding.tags} | {finding.evidence}")
 
 
 if __name__ == "__main__":

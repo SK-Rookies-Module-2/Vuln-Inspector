@@ -1,0 +1,3 @@
+# 이 파일은 .conf 데모 구성으로 SSH root 로그인 설정을 테스트합니다.
+Port 22
+PermitRootLogin yes

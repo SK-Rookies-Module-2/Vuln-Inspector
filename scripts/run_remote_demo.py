@@ -1,4 +1,4 @@
-"""이 파일은 .py 원격 채널 데모 실행 스크립트로 KISA 매핑을 확인합니다."""
+"""이 파일은 .py 원격 채널 데모 실행 스크립트로 SSH 설정 점검을 수행합니다."""
 
 import sys
 from pathlib import Path
@@ -21,14 +21,14 @@ def main() -> None:
 
     context = PluginContext(
         target={"type": "SERVER", "host": "127.0.0.1"},
-        config={"permit_root_login": True},
+        config={"sshd_config_path": str(REPO_ROOT / "fixtures" / "sshd_config_demo")},
     )
     plugin = loader.load_plugin(meta, context)
     findings = plugin.check()
 
     print(f"Findings: {len(findings)}")
     for finding in findings:
-        print(f"- {finding.vuln_id} | {finding.title} | {finding.tags}")
+        print(f"- {finding.vuln_id} | {finding.title} | {finding.tags} | {finding.evidence}")
 
 
 if __name__ == "__main__":

@@ -8,6 +8,7 @@
 - `app/`: 코어 로직, 서비스, DB 모델, 매핑 데이터
 - `plugins/`: 채널별 플러그인(Static/Remote/Dynamic)
 - `scripts/`: 채널별 데모 실행 스크립트
+- `fixtures/`: 데모 점검용 설정/입력 파일
 - `tests/`: 기본 유닛 테스트
 - `storage/`: 스캔 아티팩트/증적 저장소
 
@@ -34,6 +35,14 @@ uv run python scripts/run_static_demo.py
 uv run python scripts/run_remote_demo.py
 uv run python scripts/run_dynamic_demo.py
 ```
+
+## 채널별 기본 진단 동작
+- Static: `requirements.txt`를 읽어 버전이 고정되지 않은 의존성을 탐지합니다.
+- Remote: `fixtures/sshd_config_demo`를 읽어 `PermitRootLogin` 설정을 점검합니다.
+- Dynamic: 로컬 HTTP 서버를 임시로 띄우고 `/api/users/2` 접근 허용 여부를 확인합니다.
+
+## 결과 출력
+각 데모 스크립트는 Findings 개수와 증적(evidence)을 콘솔에 출력합니다.
 
 ## 매핑 데이터
 - KISA → OWASP 매핑: `app/data/mappings/kisa_owasp.yml`

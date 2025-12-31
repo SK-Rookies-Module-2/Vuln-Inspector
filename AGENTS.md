@@ -6,14 +6,14 @@
 
 ## 빌드, 테스트, 개발 명령
 현재는 스켈레톤 단계이며 아래 명령은 기본 템플릿으로 제공됩니다.
-- `pip install -r requirements.txt`: 런타임 의존성 설치.
-- `pip install -r requirements-dev.txt`: 개발/테스트 의존성 설치.
-- `python run.py`: 오케스트레이터 진입점(플러그인 탐색 로그 출력).
-- `python scripts/run_static_demo.py`: 정적 채널 데모 플러그인 실행.
-- `python scripts/run_remote_demo.py`: 원격 채널 데모 플러그인 실행.
-- `python scripts/run_dynamic_demo.py`: 동적 채널 데모 플러그인 실행.
+- `uv venv`: 가상환경 생성.
+- `uv pip install -r requirements.txt -r requirements-dev.txt`: 의존성 설치.
+- `uv run python run.py`: 오케스트레이터 진입점(플러그인 탐색 로그 출력).
+- `uv run python scripts/run_static_demo.py`: 정적 채널 데모 플러그인 실행.
+- `uv run python scripts/run_remote_demo.py`: 원격 채널 데모 플러그인 실행.
+- `uv run python scripts/run_dynamic_demo.py`: 동적 채널 데모 플러그인 실행.
 - `docker-compose up`: 로컬 DB·캐시 서비스 실행.
-- `pytest`: 테스트 실행.
+- `uv run pytest`: 테스트 실행.
 
 ## 코딩 스타일 및 네이밍 규칙
 Python 4-space 들여쓰기와 PEP 8을 기본으로 합니다. 함수·모듈은 `snake_case`, 클래스는 `CapWords`를 사용합니다. 플러그인은 `plugins/<채널>/<플러그인명>/` 구조로 두고 `main.py`와 `plugin.yml`을 포함하세요. 메타데이터 ID는 `remote_linux_kisa_u01`처럼 명확하고 안정적인 규칙을 유지합니다.
