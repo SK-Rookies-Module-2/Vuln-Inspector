@@ -12,11 +12,14 @@ from app.core.types import Finding
 
 class IdorScanner(BasePlugin):
     def check(self) -> List[Finding]:
+        # 우선순위: config.base_url → target.connection_info.url
         base_url = self.context.config.get("base_url")
         if not base_url:
             base_url = self.context.target.get("connection_info", {}).get("url", "")
         if not base_url:
+            # 대상 URL이 없으면 실행하지 않는다.
             return self.results
+        # 요청 경로 및 옵션을 설정에서 읽는다.
         endpoint_path = self.context.config.get("endpoint_path", "/api/users/1")
         headers = self.context.config.get("headers", {})
         auth_headers = self.context.config.get("auth_headers", {})
@@ -25,13 +28,17 @@ class IdorScanner(BasePlugin):
         verify_ssl = bool(self.context.config.get("verify_ssl", True))
         target_url = f"{base_url.rstrip('/')}{endpoint_path}"
 
+        # HTTP 클라이언트를 생성한다(타임아웃/SSL 검증 옵션 적용).
         client = HttpClient(timeout=timeout, verify_ssl=verify_ssl)
+        # 무인증 요청을 먼저 수행한다.
         unauth_result = client.get(target_url, headers=headers)
         auth_result = None
         if auth_headers:
+            # 인증 헤더가 있으면 인증 요청도 수행한다.
             merged_headers = {**headers, **auth_headers}
             auth_result = client.get(target_url, headers=merged_headers)
 
+        # 인증 필요 API인데 무인증 200이면 취약 가능성으로 기록한다.
         if require_auth and unauth_result.status == 200:
             auth_status = auth_result.status if auth_result else None
             self.add_finding(
