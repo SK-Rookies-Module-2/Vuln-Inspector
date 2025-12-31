@@ -44,6 +44,32 @@ uv run python scripts/run_dynamic_demo.py
 ## 결과 출력
 각 데모 스크립트는 Findings 개수와 증적(evidence)을 콘솔에 출력합니다.
 
+## API 실행
+```bash
+uv run uvicorn app.api.app:app --reload
+```
+- 기본 DB는 `storage/vuln_inspector.db`(SQLite)이며, `DATABASE_URL`로 변경할 수 있습니다.
+- 현재 스캔 요청은 동기 실행입니다(요청이 완료될 때까지 응답 대기).
+
+## API 사용 예시
+```bash
+# 대상 등록
+curl -X POST http://127.0.0.1:8000/api/v1/targets \
+  -H "Content-Type: application/json" \
+  -d '{"name":"demo-web","type":"WEB_URL","connection_info":{"url":"http://127.0.0.1"}}'
+
+# 스캔 요청(즉시 실행)
+curl -X POST http://127.0.0.1:8000/api/v1/jobs \
+  -H "Content-Type: application/json" \
+  -d '{"target_id":1,"scan_scope":["static_dependency_check","remote_linux_kisa_u01"],"scan_config":{"static_dependency_check":{"manifest_path":"requirements.txt"},"remote_linux_kisa_u01":{"sshd_config_path":"fixtures/sshd_config_demo"}}}'
+
+# 상태 조회
+curl http://127.0.0.1:8000/api/v1/jobs/1/status
+
+# 결과 조회
+curl http://127.0.0.1:8000/api/v1/jobs/1/findings
+```
+
 ## 매핑 데이터
 - KISA → OWASP 매핑: `app/data/mappings/kisa_owasp.yml`
 - 플러그인 태그에 `KISA:U-01`처럼 KISA 코드를 포함하면, 매핑을 통해 `OWASP:2025:A07` 같은 태그가 자동 확장됩니다.

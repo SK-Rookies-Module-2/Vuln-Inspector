@@ -1,3 +1,4 @@
+# 이 파일은 .toml 프로젝트 메타데이터 및 의존성 관리를 위한 설정입니다.
 [project]
 name = "vuln-inspector"
 version = "0.1.0"

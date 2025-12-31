@@ -2,5 +2,14 @@
 
 from .base import Base
 from .models import Finding, Report, ScanJob, Target
+from .session import get_session, init_db
 
-__all__ = ["Base", "Finding", "Report", "ScanJob", "Target"]
+__all__ = [
+    "Base",
+    "Finding",
+    "Report",
+    "ScanJob",
+    "Target",
+    "get_session",
+    "init_db",
+]

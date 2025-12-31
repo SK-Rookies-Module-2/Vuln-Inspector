@@ -1,0 +1,155 @@
+"""이 파일은 .py FastAPI 앱 모듈로 REST 엔드포인트를 제공합니다."""
+
+from __future__ import annotations
+
+from typing import List
+
+from fastapi import Depends, FastAPI, HTTPException
+from sqlalchemy.orm import Session
+
+from app.core.config import API_PREFIX
+from app.db import models
+from app.db.session import get_session, init_db
+from app.services.scan_executor import ScanExecutor
+
+from .schemas import (
+    FindingResponse,
+    JobCreate,
+    JobResponse,
+    JobStatusResponse,
+    TargetCreate,
+    TargetResponse,
+)
+
+app = FastAPI(title="vuln-inspector")
+
+
+@app.on_event("startup")
+def _startup() -> None:
+    init_db()
+
+
+@app.post(f"{API_PREFIX}/targets", response_model=TargetResponse, status_code=201)
+def create_target(
+    payload: TargetCreate,
+    session: Session = Depends(get_session),
+) -> TargetResponse:
+    target = models.Target(
+        name=payload.name,
+        target_type=payload.target_type,
+        connection_info=payload.connection_info,
+        credentials=payload.credentials,
+        description=payload.description,
+    )
+    session.add(target)
+    session.commit()
+    session.refresh(target)
+    return TargetResponse.model_validate(target)
+
+
+@app.get(f"{API_PREFIX}/targets/{{target_id}}", response_model=TargetResponse)
+def get_target(
+    target_id: int,
+    session: Session = Depends(get_session),
+) -> TargetResponse:
+    target = session.get(models.Target, target_id)
+    if target is None:
+        raise HTTPException(status_code=404, detail="Target not found")
+    return TargetResponse.model_validate(target)
+
+
+@app.post(f"{API_PREFIX}/jobs", response_model=JobResponse, status_code=201)
+def create_job(
+    payload: JobCreate,
+    session: Session = Depends(get_session),
+) -> JobResponse:
+    target = session.get(models.Target, payload.target_id)
+    if target is None:
+        raise HTTPException(status_code=404, detail="Target not found")
+
+    job = models.ScanJob(
+        target_id=payload.target_id,
+        status="PENDING",
+        scan_scope=payload.scan_scope,
+        scan_config=payload.scan_config,
+    )
+    session.add(job)
+    session.commit()
+    session.refresh(job)
+
+    if payload.run_now:
+        executor = ScanExecutor(session)
+        try:
+            executor.run_job(job, target)
+        except KeyError as exc:
+            detail = exc.args[0] if exc.args else "Invalid plugin id"
+            raise HTTPException(status_code=400, detail=detail) from exc
+        session.refresh(job)
+
+    return JobResponse.model_validate(job)
+
+
+@app.post(f"{API_PREFIX}/jobs/{{job_id}}/run", response_model=JobResponse)
+def run_job(
+    job_id: int,
+    session: Session = Depends(get_session),
+) -> JobResponse:
+    job = session.get(models.ScanJob, job_id)
+    if job is None:
+        raise HTTPException(status_code=404, detail="Job not found")
+    if job.status == "RUNNING":
+        raise HTTPException(status_code=409, detail="Job already running")
+
+    target = session.get(models.Target, job.target_id)
+    if target is None:
+        raise HTTPException(status_code=404, detail="Target not found")
+
+    executor = ScanExecutor(session)
+    try:
+        executor.run_job(job, target)
+    except KeyError as exc:
+        detail = exc.args[0] if exc.args else "Invalid plugin id"
+        raise HTTPException(status_code=400, detail=detail) from exc
+    session.refresh(job)
+    return JobResponse.model_validate(job)
+
+
+@app.get(f"{API_PREFIX}/jobs/{{job_id}}/status", response_model=JobStatusResponse)
+def get_job_status(
+    job_id: int,
+    session: Session = Depends(get_session),
+) -> JobStatusResponse:
+    job = session.get(models.ScanJob, job_id)
+    if job is None:
+        raise HTTPException(status_code=404, detail="Job not found")
+
+    progress_map = {
+        "PENDING": 0,
+        "RUNNING": 50,
+        "COMPLETED": 100,
+        "FAILED": 100,
+    }
+    progress = progress_map.get(job.status, 0)
+    return JobStatusResponse(
+        status=job.status,
+        progress=progress,
+        error_message=job.error_message,
+    )
+
+
+@app.get(f"{API_PREFIX}/jobs/{{job_id}}/findings", response_model=List[FindingResponse])
+def get_job_findings(
+    job_id: int,
+    session: Session = Depends(get_session),
+) -> List[FindingResponse]:
+    job = session.get(models.ScanJob, job_id)
+    if job is None:
+        raise HTTPException(status_code=404, detail="Job not found")
+
+    records = (
+        session.query(models.Finding)
+        .filter(models.Finding.job_id == job_id)
+        .order_by(models.Finding.id.asc())
+        .all()
+    )
+    return [FindingResponse.model_validate(record) for record in records]

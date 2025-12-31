@@ -29,9 +29,11 @@ class ScanJob(Base):
     target_id = Column(Integer, ForeignKey("targets.id"))
     status = Column(String, default="PENDING")
     scan_scope = Column(JSON, nullable=False)
+    scan_config = Column(JSON, default={})
     start_time = Column(DateTime, nullable=True)
     end_time = Column(DateTime, nullable=True)
     summary = Column(JSON, default={})
+    error_message = Column(Text, nullable=True)
 
     target = relationship("Target", back_populates="scan_jobs")
     findings = relationship("Finding", back_populates="job")

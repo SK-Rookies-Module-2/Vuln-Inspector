@@ -9,6 +9,7 @@
 - `uv venv`: 가상환경 생성.
 - `uv pip install -r requirements.txt -r requirements-dev.txt`: 의존성 설치.
 - `uv run python run.py`: 오케스트레이터 진입점(플러그인 탐색 로그 출력).
+- `uv run uvicorn app.api.app:app --reload`: API 서버 실행.
 - `uv run python scripts/run_static_demo.py`: 정적 채널 데모 플러그인 실행.
 - `uv run python scripts/run_remote_demo.py`: 원격 채널 데모 플러그인 실행.
 - `uv run python scripts/run_dynamic_demo.py`: 동적 채널 데모 플러그인 실행.

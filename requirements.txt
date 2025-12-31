@@ -1,3 +1,5 @@
 # 이 파일은 .txt 의존성 목록으로 런타임 패키지를 정의합니다.
 PyYAML>=6.0
 SQLAlchemy>=2.0
+fastapi>=0.110
+uvicorn>=0.25
