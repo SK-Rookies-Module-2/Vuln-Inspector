@@ -68,6 +68,24 @@ curl http://127.0.0.1:8000/api/v1/jobs/1/status
 
 # 결과 조회
 curl http://127.0.0.1:8000/api/v1/jobs/1/findings
+
+# 보고서 생성(JSON/CSV)
+curl -X POST http://127.0.0.1:8000/api/v1/jobs/1/report \
+  -H "Content-Type: application/json" \
+  -d '{"format":"json"}'
+
+# 보고서 생성(CSV)
+curl -X POST http://127.0.0.1:8000/api/v1/jobs/1/report \
+  -H "Content-Type: application/json" \
+  -d '{"format":"csv"}'
+
+# 보고서 메타 조회
+curl http://127.0.0.1:8000/api/v1/reports/1
+
+# 보고서 생성 후 id 추출(예: jq 사용)
+curl -X POST http://127.0.0.1:8000/api/v1/jobs/1/report \
+  -H "Content-Type: application/json" \
+  -d '{"format":"json"}' | jq -r '.id'
 ```
 
 ## 매핑 데이터
@@ -78,6 +96,7 @@ curl http://127.0.0.1:8000/api/v1/jobs/1/findings
 - 플러그인은 `plugins/<채널>/<플러그인명>/` 구조로 추가합니다.
 - `plugin.yml`에 `id`, `entry_point`, `class_name`을 정의합니다.
 - 실행 클래스는 `BasePlugin`을 상속하고 `check()`에서 `add_finding()`으로 결과를 반환합니다.
+- `config_schema`로 플러그인별 설정 검증/기본값 주입을 지원합니다.
 
 ## 테스트
 ```bash

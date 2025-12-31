@@ -8,15 +8,19 @@ from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
 
 from app.core.config import API_PREFIX
+from app.core.errors import PluginConfigError
 from app.db import models
 from app.db.session import get_session, init_db
 from app.services.scan_executor import ScanExecutor
+from app.services.reporting import generate_report
 
 from .schemas import (
     FindingResponse,
     JobCreate,
     JobResponse,
     JobStatusResponse,
+    ReportCreate,
+    ReportResponse,
     TargetCreate,
     TargetResponse,
 )
@@ -81,6 +85,8 @@ def create_job(
         executor = ScanExecutor(session)
         try:
             executor.run_job(job, target)
+        except PluginConfigError as exc:
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
         except KeyError as exc:
             detail = exc.args[0] if exc.args else "Invalid plugin id"
             raise HTTPException(status_code=400, detail=detail) from exc
@@ -107,6 +113,8 @@ def run_job(
     executor = ScanExecutor(session)
     try:
         executor.run_job(job, target)
+    except PluginConfigError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
     except KeyError as exc:
         detail = exc.args[0] if exc.args else "Invalid plugin id"
         raise HTTPException(status_code=400, detail=detail) from exc
@@ -153,3 +161,37 @@ def get_job_findings(
         .all()
     )
     return [FindingResponse.model_validate(record) for record in records]
+
+
+@app.post(f"{API_PREFIX}/jobs/{{job_id}}/report", response_model=ReportResponse, status_code=201)
+def create_report(
+    job_id: int,
+    payload: ReportCreate,
+    session: Session = Depends(get_session),
+) -> ReportResponse:
+    job = session.get(models.ScanJob, job_id)
+    if job is None:
+        raise HTTPException(status_code=404, detail="Job not found")
+    if job.status not in {"COMPLETED", "FAILED"}:
+        raise HTTPException(status_code=409, detail="Job not completed")
+
+    try:
+        report = generate_report(session, job_id, payload.format)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except KeyError as exc:
+        detail = exc.args[0] if exc.args else "Invalid job or target"
+        raise HTTPException(status_code=400, detail=detail) from exc
+
+    return ReportResponse.model_validate(report)
+
+
+@app.get(f"{API_PREFIX}/reports/{{report_id}}", response_model=ReportResponse)
+def get_report(
+    report_id: int,
+    session: Session = Depends(get_session),
+) -> ReportResponse:
+    report = session.get(models.Report, report_id)
+    if report is None:
+        raise HTTPException(status_code=404, detail="Report not found")
+    return ReportResponse.model_validate(report)

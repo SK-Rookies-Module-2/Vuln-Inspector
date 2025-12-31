@@ -2,33 +2,27 @@
 
 from __future__ import annotations
 
-from typing import List, Tuple
-from urllib import request
-from urllib.error import HTTPError, URLError
+from typing import List
+
+from app.adapters.http import HttpClient
 
 from app.core.plugin_base import BasePlugin
 from app.core.types import Finding
 
 
-def _http_get(url: str) -> Tuple[int, str]:
-    try:
-        with request.urlopen(url, timeout=5) as response:
-            body = response.read().decode("utf-8", errors="replace")
-            return response.status, body
-    except HTTPError as exc:
-        body = exc.read().decode("utf-8", errors="replace")
-        return exc.code, body
-    except URLError:
-        return 0, ""
-
-
 class IdorScanner(BasePlugin):
     def check(self) -> List[Finding]:
-        base_url = self.context.config.get("base_url", "")
+        base_url = self.context.config.get("base_url")
+        if not base_url:
+            base_url = self.context.target.get("connection_info", {}).get("url", "")
+        if not base_url:
+            return self.results
         endpoint_path = self.context.config.get("endpoint_path", "/api/users/1")
         target_url = f"{base_url.rstrip('/')}{endpoint_path}"
 
-        status, body = _http_get(target_url)
+        client = HttpClient(timeout=5)
+        result = client.get(target_url)
+        status, body = result.status, result.body
         if status == 200:
             self.add_finding(
                 vuln_id="OWASP-A01-IDOR",

@@ -8,5 +8,10 @@ tags:
   - "KISA:U-01"
   - "OWASP:2025:A07"
 description: "Check whether root remote login is permitted."
+config_schema:
+  properties:
+    sshd_config_path:
+      type: string
+      default: "fixtures/sshd_config_demo"
 entry_point: "main.py"
 class_name: "RootLoginCheck"

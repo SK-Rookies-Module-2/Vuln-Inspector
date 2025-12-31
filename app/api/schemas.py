@@ -70,3 +70,17 @@ class FindingResponse(BaseModel):
     raw_data: Optional[Dict] = None
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class ReportCreate(BaseModel):
+    format: str = "json"
+
+
+class ReportResponse(BaseModel):
+    id: int
+    job_id: int
+    format: str
+    file_path: str
+    generated_at: Optional[datetime] = None
+
+    model_config = ConfigDict(from_attributes=True)

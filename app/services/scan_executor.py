@@ -9,6 +9,7 @@ from typing import Dict, List, Optional
 from sqlalchemy.orm import Session
 
 from app.core.config import PLUGINS_DIR
+from app.core.config_validation import apply_config_schema
 from app.core.plugin_loader import PluginLoader, PluginMeta
 from app.core.taxonomy import TaxonomyIndex
 from app.core.types import Finding as CoreFinding
@@ -33,9 +34,14 @@ class ScanExecutor:
         stored_findings: List[models.Finding] = []
 
         try:
+            scan_config = job.scan_config or {}
             for plugin_id in job.scan_scope or []:
                 meta = self._get_meta(plugin_id)
-                context = self._build_context(target, job.scan_config or {}, plugin_id)
+                plugin_config = apply_config_schema(meta.config_schema, scan_config.get(plugin_id, {}))
+                scan_config[plugin_id] = plugin_config
+                job.scan_config = scan_config
+                self.session.commit()
+                context = self._build_context(target, plugin_config)
                 plugin = self.loader.load_plugin(meta, context)
                 results = plugin.check()
                 stored_findings.extend(self._store_findings(job, results))
@@ -67,8 +73,7 @@ class ScanExecutor:
     def _build_context(
         self,
         target: models.Target,
-        scan_config: Dict,
-        plugin_id: str,
+        plugin_config: Dict,
     ) -> PluginContext:
         target_payload = {
             "id": target.id,
@@ -78,7 +83,7 @@ class ScanExecutor:
             "credentials": target.credentials or {},
             "description": target.description,
         }
-        return PluginContext(target=target_payload, config=scan_config.get(plugin_id, {}))
+        return PluginContext(target=target_payload, config=plugin_config)
 
     def _store_findings(
         self,

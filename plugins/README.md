@@ -11,6 +11,9 @@
 - `plugin.yml`: 메타데이터(식별자, 태그, 실행 정보)
 - `main.py`: 실행 클래스(예: `class_name`)
 
+## 설정 스키마
+`plugin.yml`에 `config_schema`를 정의하면 입력 설정을 검증하고 기본값을 주입할 수 있습니다.
+
 ## 태그 규칙
 - KISA U-코드: `KISA:U-01`
 - OWASP 2025: `OWASP:2025:A01`

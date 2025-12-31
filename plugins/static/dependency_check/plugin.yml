@@ -7,5 +7,10 @@ category: "supply_chain"
 tags:
   - "OWASP:2025:A03"
 description: "Dependency supply-chain scanning placeholder."
+config_schema:
+  properties:
+    manifest_path:
+      type: string
+      default: "requirements.txt"
 entry_point: "main.py"
 class_name: "DependencyCheck"

@@ -21,6 +21,7 @@ class PluginMeta:
     category: Optional[str]
     tags: List[str]
     description: Optional[str]
+    config_schema: Optional[dict]
     entry_point: str
     class_name: str
     plugin_dir: Path
@@ -67,6 +68,7 @@ class PluginLoader:
             category=data.get("category"),
             tags=data.get("tags", []) or [],
             description=data.get("description"),
+            config_schema=data.get("config_schema"),
             entry_point=str(data["entry_point"]),
             class_name=str(data["class_name"]),
             plugin_dir=plugin_file.parent,

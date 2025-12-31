@@ -1,0 +1,96 @@
+{
+  "job": {
+    "id": 1,
+    "status": "COMPLETED",
+    "scan_scope": [
+      "static_dependency_check",
+      "remote_linux_kisa_u01"
+    ],
+    "scan_config": {
+      "static_dependency_check": {
+        "manifest_path": "requirements.txt"
+      },
+      "remote_linux_kisa_u01": {
+        "sshd_config_path": "fixtures/sshd_config_demo"
+      }
+    },
+    "start_time": "2025-12-31T03:00:01.477447",
+    "end_time": "2025-12-31T03:00:01.504741",
+    "summary": {
+      "Medium": 4,
+      "High": 1
+    }
+  },
+  "target": {
+    "id": 1,
+    "name": "demo-web",
+    "type": "WEB_URL",
+    "connection_info": {
+      "url": "http://127.0.0.1"
+    },
+    "description": null
+  },
+  "findings": [
+    {
+      "id": 1,
+      "job_id": 1,
+      "vuln_id": "KISA-STATIC-UNPINNED",
+      "title": "의존성 버전 미고정",
+      "severity": "Medium",
+      "tags": "OWASP:2025:A03",
+      "description": "버전이 고정되지 않으면 공급망 리스크가 증가합니다.",
+      "solution": "의존성을 정확한 버전으로 고정하세요.",
+      "evidence": "{\"dependency\": \"PyYAML\", \"operator\": \">=\", \"spec\": \"6.0\", \"line\": \"PyYAML>=6.0\", \"manifest\": \"requirements.txt\"}",
+      "raw_data": "{}"
+    },
+    {
+      "id": 2,
+      "job_id": 1,
+      "vuln_id": "KISA-STATIC-UNPINNED",
+      "title": "의존성 버전 미고정",
+      "severity": "Medium",
+      "tags": "OWASP:2025:A03",
+      "description": "버전이 고정되지 않으면 공급망 리스크가 증가합니다.",
+      "solution": "의존성을 정확한 버전으로 고정하세요.",
+      "evidence": "{\"dependency\": \"SQLAlchemy\", \"operator\": \">=\", \"spec\": \"2.0\", \"line\": \"SQLAlchemy>=2.0\", \"manifest\": \"requirements.txt\"}",
+      "raw_data": "{}"
+    },
+    {
+      "id": 3,
+      "job_id": 1,
+      "vuln_id": "KISA-STATIC-UNPINNED",
+      "title": "의존성 버전 미고정",
+      "severity": "Medium",
+      "tags": "OWASP:2025:A03",
+      "description": "버전이 고정되지 않으면 공급망 리스크가 증가합니다.",
+      "solution": "의존성을 정확한 버전으로 고정하세요.",
+      "evidence": "{\"dependency\": \"fastapi\", \"operator\": \">=\", \"spec\": \"0.110\", \"line\": \"fastapi>=0.110\", \"manifest\": \"requirements.txt\"}",
+      "raw_data": "{}"
+    },
+    {
+      "id": 4,
+      "job_id": 1,
+      "vuln_id": "KISA-STATIC-UNPINNED",
+      "title": "의존성 버전 미고정",
+      "severity": "Medium",
+      "tags": "OWASP:2025:A03",
+      "description": "버전이 고정되지 않으면 공급망 리스크가 증가합니다.",
+      "solution": "의존성을 정확한 버전으로 고정하세요.",
+      "evidence": "{\"dependency\": \"uvicorn\", \"operator\": \">=\", \"spec\": \"0.25\", \"line\": \"uvicorn>=0.25\", \"manifest\": \"requirements.txt\"}",
+      "raw_data": "{}"
+    },
+    {
+      "id": 5,
+      "job_id": 1,
+      "vuln_id": "KISA-U-01",
+      "title": "SSH root 원격 로그인 허용",
+      "severity": "High",
+      "tags": "KISA:U-01,OWASP:2025:A07",
+      "description": "SSH 설정에서 root 원격 로그인이 허용되어 있습니다.",
+      "solution": "PermitRootLogin 값을 no로 설정하고 SSH를 재시작하세요.",
+      "evidence": "{\"config_path\": \"fixtures/sshd_config_demo\", \"permit_root_login\": \"yes\"}",
+      "raw_data": "{}"
+    }
+  ],
+  "generated_at": "2025-12-31T03:20:20.216159"
+}

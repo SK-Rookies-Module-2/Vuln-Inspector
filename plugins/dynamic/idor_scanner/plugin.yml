@@ -7,5 +7,12 @@ category: "application"
 tags:
   - "OWASP:2025:A01"
 description: "Scenario-based IDOR detection placeholder."
+config_schema:
+  properties:
+    base_url:
+      type: string
+    endpoint_path:
+      type: string
+      default: "/api/users/1"
 entry_point: "main.py"
 class_name: "IdorScanner"

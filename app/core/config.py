@@ -10,6 +10,7 @@ DATA_DIR = APP_DIR / "data"
 MAPPINGS_DIR = DATA_DIR / "mappings"
 DEFAULT_MAPPING_FILE = MAPPINGS_DIR / "kisa_owasp.yml"
 STORAGE_DIR = REPO_ROOT / "storage"
+REPORTS_DIR = STORAGE_DIR / "reports"
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
     f"sqlite:///{(STORAGE_DIR / 'vuln_inspector.db').as_posix()}",
