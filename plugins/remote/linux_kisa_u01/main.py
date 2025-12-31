@@ -38,11 +38,14 @@ def _read_remote_config(target: dict, config_path: Path, config: dict) -> Option
     # Target에서 접속 정보를 추출한다.
     connection = target.get("connection_info", {}) or {}
     credentials = target.get("credentials", {}) or {}
+    # SSH 접속에 필요한 기본 정보(호스트/사용자)를 읽는다.
     host = connection.get("host") or connection.get("ip")
     user = credentials.get("username")
+    # 키 또는 비밀번호 중 하나가 있어야 한다(비밀번호는 sshpass 필요).
     key_path = credentials.get("key_path")
     password = credentials.get("password")
     port = int(connection.get("port", 22))
+    # 점프 호스트가 있으면 -J 옵션으로 전달된다.
     proxy_jump = connection.get("proxy_jump")
 
     # 필수 정보가 없으면 원격 접근을 시도하지 않는다.
@@ -52,6 +55,7 @@ def _read_remote_config(target: dict, config_path: Path, config: dict) -> Option
         return None
 
     # SSH 클라이언트를 구성한다(키 또는 비밀번호 인증).
+    # sudo 옵션은 플러그인 설정에서 전달받는다(use_sudo/sudo_user).
     client = SshClient(
         host=host,
         user=user,
