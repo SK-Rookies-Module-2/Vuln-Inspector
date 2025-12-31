@@ -19,6 +19,12 @@ uv pip install -r requirements.txt -r requirements-dev.txt
 uv run uvicorn app.api.app:app --reload
 ```
 
+## 구조 확정 및 운용 변경 범위
+현재 구조는 **플러그인 추가와 DB 연결 변경만으로 운용 가능한 상태**로 고정했습니다.  
+운용 시 필수로 변경되는 범위는 아래 두 가지입니다.
+- 플러그인 추가/수정: `plugins/` 및 필요 시 `app/data/mappings/`
+- DB 연결 변경: `DATABASE_URL` 환경 변수 설정
+
 ## API 기본 사용 흐름
 ```bash
 # 1) 대상 등록

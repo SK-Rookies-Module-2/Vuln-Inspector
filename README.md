@@ -12,6 +12,12 @@
 - `tests/`: 기본 유닛 테스트
 - `storage/`: 스캔 아티팩트/증적 저장소
 
+## 구조 확정 및 운용 변경 범위
+현재 구조는 **플러그인 추가와 DB 연결 변경만으로 운용 가능한 상태**로 고정했습니다.  
+운용 시 필수로 변경되는 범위는 아래 두 가지입니다.
+- 플러그인 추가/수정: `plugins/` 및 필요 시 `app/data/mappings/`
+- DB 연결 변경: `DATABASE_URL` 환경 변수 설정
+
 ## 모듈 상호작용 흐름
 1. `Orchestrator`가 `PluginLoader`로 `plugins/**/plugin.yml`을 탐색합니다.
 2. 선택된 플러그인은 `BasePlugin`을 상속한 클래스에서 `check()`를 실행합니다.
@@ -21,7 +27,7 @@
 ## 핵심 모듈
 - `app/core/`: 플러그인 로딩, 태그 매핑, 공통 타입
 - `app/services/`: 오케스트레이터와 리포팅 로직
-- `app/db/`: SQLAlchemy 모델(추후 마이그레이션 연동 예정)
+- `app/db/`: SQLAlchemy 모델/세션
 - `app/data/mappings/`: KISA ↔ OWASP 매핑 데이터
 
 ## 빠른 실행
@@ -118,7 +124,8 @@ uv run pytest
 ```
 
 ## 확장 방향
+아래는 선택 확장 항목이며, 현재 운용에는 필수가 아닙니다.
 - Static: 외부 SCA 도구(OSV, Safety 등) 어댑터 연동
-- Remote: SSH/WinRM 기반 점검 스크립트와 결과 파싱
+- Remote: SSH/WinRM 기반 점검 스크립트와 결과 파싱 확장
 - Dynamic: HTTP 기반 휴리스틱/레시피 엔진 고도화
-- DB: 마이그레이션 도구(Alembic) 도입 및 리포트 생성기 확장
+- DB: 마이그레이션 도구(Alembic) 도입
