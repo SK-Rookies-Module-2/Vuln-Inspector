@@ -1,0 +1,11 @@
+# 이 파일은 .yml 플러그인 메타데이터로 정적 분석 모듈 정보를 제공합니다.
+id: "static_dependency_check"
+name: "Dependency Check"
+version: "0.1.0"
+type: "static"
+category: "supply_chain"
+tags:
+  - "OWASP:2025:A03"
+description: "Dependency supply-chain scanning placeholder."
+entry_point: "main.py"
+class_name: "DependencyCheck"
