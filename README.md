@@ -46,6 +46,7 @@ uv run python scripts/run_dynamic_demo.py
 ```
 
 ## PostgreSQL 실행(로컬)
+*따로 PostgreSQL 서버 실행 및 계정 설정을 진행할 경우 .env파일 정보 수정*   
 ```bash
 docker-compose up -d
 ```

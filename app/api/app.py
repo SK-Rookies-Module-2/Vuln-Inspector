@@ -32,6 +32,7 @@ app = FastAPI(title="vuln-inspector")
 
 @app.on_event("startup")
 def _startup() -> None:
+    # API 서버 시작 시점에 DB 초기화(테이블 생성 등)를 보장한다.
     init_db()
 
 
@@ -40,6 +41,7 @@ def create_target(
     payload: TargetCreate,
     session: Session = Depends(get_session),
 ) -> TargetResponse:
+    # 요청 스키마를 기반으로 Target ORM 객체를 생성한다.
     target = models.Target(
         name=payload.name,
         target_type=payload.target_type,
@@ -47,9 +49,11 @@ def create_target(
         credentials=payload.credentials,
         description=payload.description,
     )
+    # DB에 저장하고 PK를 리로드한다.
     session.add(target)
     session.commit()
     session.refresh(target)
+    # ORM 객체를 응답 스키마로 변환한다.
     return TargetResponse.model_validate(target)
 
 
@@ -58,9 +62,11 @@ def get_target(
     target_id: int,
     session: Session = Depends(get_session),
 ) -> TargetResponse:
+    # Target ID로 조회 후, 없으면 404를 반환한다.
     target = session.get(models.Target, target_id)
     if target is None:
         raise HTTPException(status_code=404, detail="Target not found")
+    # ORM 객체를 응답 스키마로 변환한다.
     return TargetResponse.model_validate(target)
 
 
@@ -69,10 +75,12 @@ def create_job(
     payload: JobCreate,
     session: Session = Depends(get_session),
 ) -> JobResponse:
+    # Job이 참조하는 Target이 존재하는지 확인한다.
     target = session.get(models.Target, payload.target_id)
     if target is None:
         raise HTTPException(status_code=404, detail="Target not found")
 
+    # 스캔 범위와 설정을 포함한 Job 레코드를 생성한다.
     job = models.ScanJob(
         target_id=payload.target_id,
         status="PENDING",
@@ -84,6 +92,7 @@ def create_job(
     session.refresh(job)
 
     if payload.run_now:
+        # 즉시 실행 옵션이면 스캔 실행기로 실행 후 결과를 DB에 반영한다.
         executor = ScanExecutor(session)
         try:
             executor.run_job(job, target)
@@ -92,8 +101,10 @@ def create_job(
         except KeyError as exc:
             detail = exc.args[0] if exc.args else "Invalid plugin id"
             raise HTTPException(status_code=400, detail=detail) from exc
+        # 실행 결과가 반영된 최신 Job 상태를 다시 로드한다.
         session.refresh(job)
 
+    # Job 생성/실행 결과를 응답으로 반환한다.
     return JobResponse.model_validate(job)
 
 
@@ -102,16 +113,19 @@ def run_job(
     job_id: int,
     session: Session = Depends(get_session),
 ) -> JobResponse:
+    # Job 존재 여부와 상태를 확인한다.
     job = session.get(models.ScanJob, job_id)
     if job is None:
         raise HTTPException(status_code=404, detail="Job not found")
     if job.status == "RUNNING":
         raise HTTPException(status_code=409, detail="Job already running")
 
+    # Job이 참조하는 Target을 조회한다.
     target = session.get(models.Target, job.target_id)
     if target is None:
         raise HTTPException(status_code=404, detail="Target not found")
 
+    # 플러그인 실행기로 Job을 수행한다.
     executor = ScanExecutor(session)
     try:
         executor.run_job(job, target)
@@ -120,6 +134,7 @@ def run_job(
     except KeyError as exc:
         detail = exc.args[0] if exc.args else "Invalid plugin id"
         raise HTTPException(status_code=400, detail=detail) from exc
+    # 실행 후 최신 상태를 반영한다.
     session.refresh(job)
     return JobResponse.model_validate(job)
 
@@ -129,10 +144,12 @@ def get_job_status(
     job_id: int,
     session: Session = Depends(get_session),
 ) -> JobStatusResponse:
+    # Job 조회 후 없으면 404를 반환한다.
     job = session.get(models.ScanJob, job_id)
     if job is None:
         raise HTTPException(status_code=404, detail="Job not found")
 
+    # 상태값을 간단한 퍼센트로 매핑한다.
     progress_map = {
         "PENDING": 0,
         "RUNNING": 50,
@@ -140,6 +157,7 @@ def get_job_status(
         "FAILED": 100,
     }
     progress = progress_map.get(job.status, 0)
+    # 상태/진행률/에러 메시지를 응답한다.
     return JobStatusResponse(
         status=job.status,
         progress=progress,
@@ -152,6 +170,7 @@ def get_job_findings(
     job_id: int,
     session: Session = Depends(get_session),
 ) -> List[FindingResponse]:
+    # Job 존재 여부 확인 후, Finding을 정렬해 조회한다.
     job = session.get(models.ScanJob, job_id)
     if job is None:
         raise HTTPException(status_code=404, detail="Job not found")
@@ -162,6 +181,7 @@ def get_job_findings(
         .order_by(models.Finding.id.asc())
         .all()
     )
+    # ORM 리스트를 응답 스키마 리스트로 변환한다.
     return [FindingResponse.model_validate(record) for record in records]
 
 
@@ -171,12 +191,14 @@ def create_report(
     payload: ReportCreate,
     session: Session = Depends(get_session),
 ) -> ReportResponse:
+    # 보고서 생성 전 Job 상태를 확인한다.
     job = session.get(models.ScanJob, job_id)
     if job is None:
         raise HTTPException(status_code=404, detail="Job not found")
     if job.status not in {"COMPLETED", "FAILED"}:
         raise HTTPException(status_code=409, detail="Job not completed")
 
+    # 보고서를 생성하고 DB에 저장한다.
     try:
         report = generate_report(session, job_id, payload.format)
     except ValueError as exc:
@@ -185,6 +207,7 @@ def create_report(
         detail = exc.args[0] if exc.args else "Invalid job or target"
         raise HTTPException(status_code=400, detail=detail) from exc
 
+    # 생성된 보고서 메타데이터를 반환한다.
     return ReportResponse.model_validate(report)
 
 
@@ -193,6 +216,7 @@ def get_report(
     report_id: int,
     session: Session = Depends(get_session),
 ) -> ReportResponse:
+    # 보고서 메타데이터를 조회한다.
     report = session.get(models.Report, report_id)
     if report is None:
         raise HTTPException(status_code=404, detail="Report not found")
@@ -204,10 +228,12 @@ def download_report_file(
     report_id: int,
     session: Session = Depends(get_session),
 ) -> FileResponse:
+    # 보고서 파일 경로를 조회한 뒤, 존재 여부를 확인한다.
     report = session.get(models.Report, report_id)
     if report is None:
         raise HTTPException(status_code=404, detail="Report not found")
     file_path = Path(report.file_path)
     if not file_path.exists():
         raise HTTPException(status_code=404, detail="Report file not found")
+    # 실제 파일 다운로드 응답을 반환한다.
     return FileResponse(path=str(file_path), filename=file_path.name)

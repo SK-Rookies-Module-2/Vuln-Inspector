@@ -9,12 +9,16 @@ from .types import Finding, PluginContext
 
 class BasePlugin(ABC):
     def __init__(self, context: PluginContext, taxonomy: Optional[TaxonomyIndex] = None):
+        # API에서 전달된 Target/Config 정보를 보관한다.
         self.context = context
+        # 태그 확장(예: KISA -> OWASP)을 위해 택소노미를 사용한다.
         self.taxonomy = taxonomy or TaxonomyIndex({})
+        # 실행 중 누적되는 결과를 저장한다.
         self.results: List[Finding] = []
 
     @abstractmethod
     def check(self) -> List[Finding]:
+        # 각 플러그인은 check()에서 진단 로직을 수행한다.
         raise NotImplementedError
 
     def add_finding(
@@ -28,6 +32,7 @@ class BasePlugin(ABC):
         solution: Optional[str] = None,
         raw_data: Optional[Dict] = None,
     ) -> Finding:
+        # 입력된 태그를 확장(매핑)하고 표준 Finding을 생성한다.
         expanded_tags = self.taxonomy.expand_tags(tags or [])
         finding = Finding(
             vuln_id=vuln_id,
@@ -39,5 +44,6 @@ class BasePlugin(ABC):
             solution=solution,
             raw_data=raw_data,
         )
+        # 결과 목록에 추가하고 호출 측에 반환한다.
         self.results.append(finding)
         return finding
