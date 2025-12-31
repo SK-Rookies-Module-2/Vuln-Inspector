@@ -41,7 +41,7 @@ class ScanExecutor:
                 scan_config[plugin_id] = plugin_config
                 job.scan_config = scan_config
                 self.session.commit()
-                context = self._build_context(target, plugin_config)
+                context = self._build_context(job, target, plugin_config)
                 plugin = self.loader.load_plugin(meta, context)
                 results = plugin.check()
                 stored_findings.extend(self._store_findings(job, results))
@@ -72,6 +72,7 @@ class ScanExecutor:
 
     def _build_context(
         self,
+        job: models.ScanJob,
         target: models.Target,
         plugin_config: Dict,
     ) -> PluginContext:
@@ -83,7 +84,7 @@ class ScanExecutor:
             "credentials": target.credentials or {},
             "description": target.description,
         }
-        return PluginContext(target=target_payload, config=plugin_config)
+        return PluginContext(target=target_payload, config=plugin_config, job_id=job.id)
 
     def _store_findings(
         self,

@@ -2,6 +2,11 @@
 
 import os
 from pathlib import Path
+from urllib.parse import quote_plus
+
+from dotenv import load_dotenv
+
+load_dotenv()
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 APP_DIR = REPO_ROOT / "app"
@@ -11,8 +16,16 @@ MAPPINGS_DIR = DATA_DIR / "mappings"
 DEFAULT_MAPPING_FILE = MAPPINGS_DIR / "kisa_owasp.yml"
 STORAGE_DIR = REPO_ROOT / "storage"
 REPORTS_DIR = STORAGE_DIR / "reports"
-DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    f"sqlite:///{(STORAGE_DIR / 'vuln_inspector.db').as_posix()}",
+DB_USER = os.getenv("DB_USER", "vuln")
+DB_PASSWORD = os.getenv("DB_PASSWORD", "vuln")
+DB_HOST = os.getenv("DB_HOST", "localhost")
+DB_PORT = os.getenv("DB_PORT", "5432")
+DB_NAME = os.getenv("DB_NAME", "vuln_inspector")
+
+DEFAULT_DATABASE_URL = (
+    "postgresql+psycopg://"
+    f"{quote_plus(DB_USER)}:{quote_plus(DB_PASSWORD)}@"
+    f"{DB_HOST}:{DB_PORT}/{DB_NAME}"
 )
+DATABASE_URL = os.getenv("DATABASE_URL", DEFAULT_DATABASE_URL)
 API_PREFIX = "/api/v1"

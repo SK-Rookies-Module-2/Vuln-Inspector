@@ -3,3 +3,5 @@ PyYAML>=6.0
 SQLAlchemy>=2.0
 fastapi>=0.110
 uvicorn>=0.25
+python-dotenv>=1.0
+psycopg[binary]>=3.1

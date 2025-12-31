@@ -15,6 +15,10 @@
 `plugin.yml`에 `config_schema`를 정의하면 입력 설정을 검증하고 기본값을 주입할 수 있습니다.
 원격 플러그인의 경우 `target.connection_info`(host/port)와 `target.credentials`(username/key_path)를 사용해 SSH로 접근할 수 있습니다.
 
+### 정적(Static) 관련 권장 필드
+- `manifest_path`: 매니페스트 상대 경로(기본 `requirements.txt`)
+- `repo_url`/`repo_ref`: Git 저장소 URL과 브랜치/태그(선택)
+
 ### 원격(SSH) 관련 권장 필드
 - `connection_info.host` 또는 `ip`, `port`
 - `connection_info.proxy_jump`: 점프 호스트(`user@host:port` 형식)

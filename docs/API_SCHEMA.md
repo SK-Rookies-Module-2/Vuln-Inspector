@@ -1,12 +1,13 @@
 <!-- API_SCHEMA.md: REST API 스키마 상세 문서 -->
-# API 스키마 상세
+# API 스키마 상세  
+http://127.0.0.1:8000/docs
 
 ## 공통 사항
 - Base URL: `http://127.0.0.1:8000`
 - Prefix: `/api/v1`
 - Content-Type: `application/json`
 - 인증: 없음(내부/개발용)
-- 기본 DB: SQLite (`storage/vuln_inspector.db`)
+- 기본 DB: PostgreSQL (`.env`의 `DB_*` 또는 `DATABASE_URL`)
 - 스캔 실행 방식: 동기 실행(`run_now: true`일 때 요청이 완료될 때까지 대기)
 
 ### 오류 응답 형식
@@ -235,6 +236,8 @@ FastAPI 기본 오류 응답을 사용합니다.
 ### static_dependency_check
 **필드**
 - `manifest_path` (string, default: `requirements.txt`)
+- `repo_url` (string, optional)
+- `repo_ref` (string, optional)
 ```json
 {"manifest_path": "requirements.txt"}
 ```

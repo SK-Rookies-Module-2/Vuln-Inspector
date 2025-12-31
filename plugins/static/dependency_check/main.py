@@ -4,9 +4,13 @@ from __future__ import annotations
 
 from pathlib import Path
 import re
+import shutil
+import subprocess
 from typing import List, Optional
 
+from app.core.errors import PluginConfigError
 from app.core.plugin_base import BasePlugin
+from app.core.storage import ensure_artifacts_dir
 from app.core.types import Finding
 
 VERSION_OPERATORS = ("==", ">=", "<=", "~=", "!=", ">", "<")
@@ -40,13 +44,69 @@ def _parse_requirement(line: str) -> Optional[dict]:
     return {"name": name, "spec": spec, "operator": operator}
 
 
+def _clone_repo(repo_url: str, dest_dir: Path, ref: Optional[str]) -> Path:
+    # git 명령이 없으면 클론을 수행할 수 없다.
+    if not shutil.which("git"):
+        raise PluginConfigError("git binary not found for repository clone")
+    if dest_dir.exists():
+        return dest_dir
+
+    clone_command = ["git", "clone", "--depth", "1"]
+    if ref:
+        clone_command.extend(["--branch", ref])
+    clone_command.extend([repo_url, str(dest_dir)])
+    result = subprocess.run(clone_command, capture_output=True, text=True, check=False)
+    if result.returncode != 0:
+        raise PluginConfigError(f"git clone failed: {result.stderr.strip()}")
+
+    if ref:
+        checkout = subprocess.run(
+            ["git", "-C", str(dest_dir), "checkout", ref],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if checkout.returncode != 0:
+            raise PluginConfigError(f"git checkout failed: {checkout.stderr.strip()}")
+    return dest_dir
+
+
+def _resolve_manifest_path(context, manifest_path: str) -> Optional[Path]:
+    # 절대 경로면 해당 파일을 우선 사용한다.
+    path = Path(manifest_path)
+    if path.is_absolute() and path.exists():
+        return path
+
+    # Target에 로컬 경로가 있으면 상대 경로로 결합한다.
+    target_info = context.target.get("connection_info", {}) or {}
+    target_path = target_info.get("path") or context.target.get("path")
+    if target_path:
+        candidate = Path(target_path) / manifest_path
+        if candidate.exists():
+            return candidate
+
+    # Git URL이 있으면 artifacts로 클론하여 검사한다.
+    repo_url = context.config.get("repo_url") or target_info.get("url")
+    if repo_url:
+        job_id = context.job_id if context.job_id is not None else 0
+        artifacts_dir = ensure_artifacts_dir(job_id)
+        repo_dir = artifacts_dir / "repo"
+        repo_ref = context.config.get("repo_ref")
+        _clone_repo(repo_url, repo_dir, repo_ref)
+        candidate = repo_dir / manifest_path
+        if candidate.exists():
+            return candidate
+
+    return None
+
+
 class DependencyCheck(BasePlugin):
     def check(self) -> List[Finding]:
         # 설정에서 매니페스트 경로를 읽고 기본값을 적용한다.
         manifest_path = self.context.config.get("manifest_path", "requirements.txt")
-        path = Path(manifest_path)
-        # 파일이 없으면 결과 없이 종료한다.
-        if not path.exists():
+        path = _resolve_manifest_path(self.context, manifest_path)
+        # 경로를 찾지 못하면 결과 없이 종료한다.
+        if path is None:
             return self.results
 
         # 매니페스트를 줄 단위로 파싱한다.

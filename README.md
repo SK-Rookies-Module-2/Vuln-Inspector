@@ -36,14 +36,22 @@
 uv venv
 uv pip install -r requirements.txt -r requirements-dev.txt
 
+# 환경 변수 설정
+cp .env.example .env
+
 # 데모 실행(채널별)
 uv run python scripts/run_static_demo.py
 uv run python scripts/run_remote_demo.py
 uv run python scripts/run_dynamic_demo.py
 ```
 
+## PostgreSQL 실행(로컬)
+```bash
+docker-compose up -d
+```
+
 ## 채널별 기본 진단 동작
-- Static: `requirements.txt`를 읽어 버전이 고정되지 않은 의존성을 탐지합니다.
+- Static: 로컬 `requirements.txt` 또는 GIT_REPO를 클론한 경로에서 버전 미고정을 탐지합니다.
 - Remote: `fixtures/sshd_config_demo`를 읽어 `PermitRootLogin` 설정을 점검합니다.
 - Dynamic: 로컬 HTTP 서버를 임시로 띄우고 `/api/users/2` 접근 허용 여부를 확인합니다.
 
@@ -54,7 +62,7 @@ uv run python scripts/run_dynamic_demo.py
 ```bash
 uv run uvicorn app.api.app:app --reload
 ```
-- 기본 DB는 `storage/vuln_inspector.db`(SQLite)이며, `DATABASE_URL`로 변경할 수 있습니다.
+- 기본 DB는 PostgreSQL이며, `.env`의 `DB_*` 또는 `DATABASE_URL`로 변경할 수 있습니다.
 - 현재 스캔 요청은 동기 실행입니다(요청이 완료될 때까지 응답 대기).
 
 ## API 사용 예시

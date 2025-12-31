@@ -52,6 +52,10 @@ config_schema:
     manifest_path:
       type: string
       default: "requirements.txt"
+    repo_url:
+      type: string
+    repo_ref:
+      type: string
 ```
 
 **API 호출 예시**

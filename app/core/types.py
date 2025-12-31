@@ -8,6 +8,7 @@ from typing import Dict, List, Optional
 class PluginContext:
     target: Dict
     config: Dict = field(default_factory=dict)
+    job_id: Optional[int] = None
 
 
 @dataclass
