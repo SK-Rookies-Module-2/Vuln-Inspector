@@ -13,5 +13,10 @@ config_schema:
     sshd_config_path:
       type: string
       default: "fixtures/sshd_config_demo"
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
 entry_point: "main.py"
 class_name: "RootLoginCheck"

@@ -58,6 +58,11 @@ curl -X POST http://127.0.0.1:8000/api/v1/targets \
   -H "Content-Type: application/json" \
   -d '{"name":"demo-web","type":"WEB_URL","connection_info":{"url":"http://127.0.0.1"}}'
 
+# 원격 대상 예시(SSH)
+curl -X POST http://127.0.0.1:8000/api/v1/targets \
+  -H "Content-Type: application/json" \
+  -d '{"name":"demo-server","type":"SERVER","connection_info":{"host":"127.0.0.1","port":22},"credentials":{"username":"root","key_path":"/path/to/key","password":""}}'
+
 # 스캔 요청(즉시 실행)
 curl -X POST http://127.0.0.1:8000/api/v1/jobs \
   -H "Content-Type: application/json" \
@@ -86,7 +91,16 @@ curl http://127.0.0.1:8000/api/v1/reports/1
 curl -X POST http://127.0.0.1:8000/api/v1/jobs/1/report \
   -H "Content-Type: application/json" \
   -d '{"format":"json"}' | jq -r '.id'
+
+# 보고서 파일 다운로드
+curl -O http://127.0.0.1:8000/api/v1/reports/1/file
 ```
+
+## 대상/자격증명 스키마
+- SERVER: `connection_info.host`(또는 `ip`) 필수, `port` 선택
+- WEB_URL: `connection_info.url` 필수
+- GIT_REPO: `connection_info.url` 또는 `path` 필수
+- 원격 점검 사용 시 `credentials.username`과 `key_path` 또는 `password`가 필요합니다.
 
 ## 매핑 데이터
 - KISA → OWASP 매핑: `app/data/mappings/kisa_owasp.yml`

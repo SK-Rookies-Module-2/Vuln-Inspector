@@ -10,7 +10,7 @@ from typing import Any, Dict, List
 
 from sqlalchemy.orm import Session
 
-from app.core.config import REPORTS_DIR
+from app.core.storage import ensure_reports_dir
 from app.core.types import Finding
 from app.db import models
 
@@ -44,7 +44,7 @@ def generate_report(session: Session, job_id: int, report_format: str) -> models
     )
 
     generated_at = datetime.utcnow()
-    report_dir = _ensure_report_dir(job_id)
+    report_dir = ensure_reports_dir(job_id)
     file_path = report_dir / f"report.{normalized}"
 
     if normalized == "json":
@@ -63,12 +63,6 @@ def generate_report(session: Session, job_id: int, report_format: str) -> models
     session.commit()
     session.refresh(report)
     return report
-
-
-def _ensure_report_dir(job_id: int) -> Path:
-    report_dir = REPORTS_DIR / str(job_id)
-    report_dir.mkdir(parents=True, exist_ok=True)
-    return report_dir
 
 
 def _build_json_payload(

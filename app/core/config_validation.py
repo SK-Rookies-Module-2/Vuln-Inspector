@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from typing import Any, Dict, Optional
 
 from .errors import PluginConfigError
@@ -58,6 +59,20 @@ def apply_config_schema(schema: Optional[Dict[str, Any]], config: Optional[Dict[
                     errors.append(f"Config '{key}' must be {expected}")
         if "enum" in spec and value not in spec["enum"]:
             errors.append(f"Config '{key}' must be one of {spec['enum']}")
+        if isinstance(value, (int, float)):
+            if "min" in spec and value < spec["min"]:
+                errors.append(f"Config '{key}' must be >= {spec['min']}")
+            if "max" in spec and value > spec["max"]:
+                errors.append(f"Config '{key}' must be <= {spec['max']}")
+        if isinstance(value, str):
+            if "min_length" in spec and len(value) < spec["min_length"]:
+                errors.append(f"Config '{key}' length must be >= {spec['min_length']}")
+            if "max_length" in spec and len(value) > spec["max_length"]:
+                errors.append(f"Config '{key}' length must be <= {spec['max_length']}")
+            if "pattern" in spec:
+                pattern = re.compile(spec["pattern"])
+                if not pattern.search(value):
+                    errors.append(f"Config '{key}' does not match pattern")
 
     if errors:
         raise PluginConfigError("; ".join(errors))

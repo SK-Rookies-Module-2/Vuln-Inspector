@@ -13,6 +13,18 @@
 
 ## 설정 스키마
 `plugin.yml`에 `config_schema`를 정의하면 입력 설정을 검증하고 기본값을 주입할 수 있습니다.
+원격 플러그인의 경우 `target.connection_info`(host/port)와 `target.credentials`(username/key_path)를 사용해 SSH로 접근할 수 있습니다.
+
+### 원격(SSH) 관련 권장 필드
+- `connection_info.host` 또는 `ip`, `port`
+- `connection_info.proxy_jump`: 점프 호스트(`user@host:port` 형식)
+- `credentials.username`, `credentials.key_path` 또는 `credentials.password`
+- 플러그인 설정: `use_sudo`/`sudo_user` 등
+ - `password` 인증을 쓸 경우 `sshpass`가 필요합니다.
+
+### 동적(HTTP) 관련 권장 필드
+- `connection_info.url` 또는 플러그인 설정의 `base_url`
+- 플러그인 설정: `headers`, `timeout`, `verify_ssl`
 
 ## 태그 규칙
 - KISA U-코드: `KISA:U-01`

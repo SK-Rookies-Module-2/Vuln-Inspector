@@ -22,3 +22,13 @@ def test_apply_config_schema_type_error() -> None:
         assert "port" in str(exc)
     else:
         raise AssertionError("PluginConfigError not raised")
+
+
+def test_apply_config_schema_min_validation() -> None:
+    schema = {"properties": {"timeout": {"type": "integer", "min": 1}}}
+    try:
+        apply_config_schema(schema, {"timeout": 0})
+    except PluginConfigError as exc:
+        assert "timeout" in str(exc)
+    else:
+        raise AssertionError("PluginConfigError not raised")

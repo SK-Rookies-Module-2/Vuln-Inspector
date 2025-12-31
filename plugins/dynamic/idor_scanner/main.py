@@ -18,10 +18,13 @@ class IdorScanner(BasePlugin):
         if not base_url:
             return self.results
         endpoint_path = self.context.config.get("endpoint_path", "/api/users/1")
+        headers = self.context.config.get("headers", {})
+        timeout = int(self.context.config.get("timeout", 5))
+        verify_ssl = bool(self.context.config.get("verify_ssl", True))
         target_url = f"{base_url.rstrip('/')}{endpoint_path}"
 
-        client = HttpClient(timeout=5)
-        result = client.get(target_url)
+        client = HttpClient(timeout=timeout, verify_ssl=verify_ssl)
+        result = client.get(target_url, headers=headers)
         status, body = result.status, result.body
         if status == 200:
             self.add_finding(

@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import List
 
 from fastapi import Depends, FastAPI, HTTPException
+from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 
 from app.core.config import API_PREFIX
@@ -195,3 +197,17 @@ def get_report(
     if report is None:
         raise HTTPException(status_code=404, detail="Report not found")
     return ReportResponse.model_validate(report)
+
+
+@app.get(f"{API_PREFIX}/reports/{{report_id}}/file")
+def download_report_file(
+    report_id: int,
+    session: Session = Depends(get_session),
+) -> FileResponse:
+    report = session.get(models.Report, report_id)
+    if report is None:
+        raise HTTPException(status_code=404, detail="Report not found")
+    file_path = Path(report.file_path)
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail="Report file not found")
+    return FileResponse(path=str(file_path), filename=file_path.name)

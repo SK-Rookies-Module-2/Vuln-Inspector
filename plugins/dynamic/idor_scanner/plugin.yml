@@ -14,5 +14,15 @@ config_schema:
     endpoint_path:
       type: string
       default: "/api/users/1"
+    headers:
+      type: object
+      default: {}
+    timeout:
+      type: integer
+      default: 5
+      min: 1
+    verify_ssl:
+      type: boolean
+      default: true
 entry_point: "main.py"
 class_name: "IdorScanner"
