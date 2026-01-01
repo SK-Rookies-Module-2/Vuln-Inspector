@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import List
 
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Query
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 
@@ -57,6 +57,23 @@ def create_target(
     return TargetResponse.model_validate(target)
 
 
+@app.get(f"{API_PREFIX}/targets", response_model=List[TargetResponse])
+def list_targets(
+    session: Session = Depends(get_session),
+    limit: int = Query(100, ge=1, le=1000),
+    offset: int = Query(0, ge=0),
+) -> List[TargetResponse]:
+    # 등록된 대상 목록을 페이지 단위로 조회한다.
+    records = (
+        session.query(models.Target)
+        .order_by(models.Target.id.asc())
+        .offset(offset)
+        .limit(limit)
+        .all()
+    )
+    return [TargetResponse.model_validate(record) for record in records]
+
+
 @app.get(f"{API_PREFIX}/targets/{{target_id}}", response_model=TargetResponse)
 def get_target(
     target_id: int,
@@ -106,6 +123,29 @@ def create_job(
 
     # Job 생성/실행 결과를 응답으로 반환한다.
     return JobResponse.model_validate(job)
+
+
+@app.get(f"{API_PREFIX}/jobs", response_model=List[JobResponse])
+def list_jobs(
+    session: Session = Depends(get_session),
+    target_id: int | None = Query(None),
+    status: str | None = Query(None),
+    limit: int = Query(100, ge=1, le=1000),
+    offset: int = Query(0, ge=0),
+) -> List[JobResponse]:
+    # Job 목록을 필터링/페이지네이션으로 조회한다.
+    query = session.query(models.ScanJob)
+    if target_id is not None:
+        query = query.filter(models.ScanJob.target_id == target_id)
+    if status:
+        query = query.filter(models.ScanJob.status == status)
+    records = (
+        query.order_by(models.ScanJob.id.desc())
+        .offset(offset)
+        .limit(limit)
+        .all()
+    )
+    return [JobResponse.model_validate(record) for record in records]
 
 
 @app.post(f"{API_PREFIX}/jobs/{{job_id}}/run", response_model=JobResponse)
@@ -182,6 +222,39 @@ def get_job_findings(
         .all()
     )
     # ORM 리스트를 응답 스키마 리스트로 변환한다.
+    return [FindingResponse.model_validate(record) for record in records]
+
+
+@app.get(f"{API_PREFIX}/findings", response_model=List[FindingResponse])
+def list_findings(
+    session: Session = Depends(get_session),
+    job_id: int | None = Query(None),
+    target_id: int | None = Query(None),
+    severity: str | None = Query(None),
+    tag: str | None = Query(None),
+    limit: int = Query(100, ge=1, le=1000),
+    offset: int = Query(0, ge=0),
+) -> List[FindingResponse]:
+    # Finding 목록을 필터링/페이지네이션으로 조회한다.
+    query = session.query(models.Finding)
+    if job_id is not None:
+        query = query.filter(models.Finding.job_id == job_id)
+    if target_id is not None:
+        query = query.join(models.ScanJob).filter(models.ScanJob.target_id == target_id)
+    if severity:
+        query = query.filter(models.Finding.severity == severity)
+
+    records = (
+        query.order_by(models.Finding.id.desc())
+        .offset(offset)
+        .limit(limit)
+        .all()
+    )
+
+    if tag:
+        # JSON 컬럼 호환성을 위해 태그 필터는 파이썬 레벨에서 처리한다.
+        records = [record for record in records if tag in (record.tags or [])]
+
     return [FindingResponse.model_validate(record) for record in records]
 
 

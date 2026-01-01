@@ -5,3 +5,5 @@ fastapi>=0.110
 uvicorn>=0.25
 python-dotenv>=1.0
 psycopg[binary]>=3.1
+requests>=2.31
+streamlit>=1.31
