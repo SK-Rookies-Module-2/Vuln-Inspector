@@ -23,25 +23,6 @@ def main() -> None:
     api_base_url = os.getenv("API_BASE_URL", "http://127.0.0.1:8000")
     client = APIClient(api_base_url)
 
-    st.subheader("Job 목록")
-    list_target_id = st.text_input("target_id (선택)", value="")
-    list_status = st.text_input("status (선택)", value="")
-    list_limit = st.number_input("limit", min_value=1, max_value=1000, value=100, step=10, key="job_limit")
-    list_offset = st.number_input("offset", min_value=0, value=0, step=10, key="job_offset")
-    if st.button("Job 목록 조회"):
-        try:
-            target_id = int(list_target_id) if list_target_id.strip() else None
-            status = list_status.strip() or None
-            result = client.list_jobs(
-                target_id=target_id,
-                status=status,
-                limit=int(list_limit),
-                offset=int(list_offset),
-            )
-            st.dataframe(result, use_container_width=True)
-        except Exception as exc:
-            st.error(str(exc))
-
     st.subheader("Job 생성")
     with st.form("create_job"):
         target_id = st.number_input("target_id", min_value=1, step=1, value=1)
@@ -93,6 +74,15 @@ def main() -> None:
         try:
             result = client.get_job_status(int(job_status_id))
             st.json(result)
+        except Exception as exc:
+            st.error(str(exc))
+
+    st.subheader("Job 삭제")
+    delete_job_id = st.number_input("삭제할 job_id", min_value=1, step=1, value=1, key="delete_job_id")
+    if st.button("삭제"):
+        try:
+            client.delete_job(int(delete_job_id))
+            st.success("Job 삭제 완료")
         except Exception as exc:
             st.error(str(exc))
 

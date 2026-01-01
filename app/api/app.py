@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import List
 
-from fastapi import Depends, FastAPI, HTTPException, Query
+from fastapi import Depends, FastAPI, HTTPException, Query, Response
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 
@@ -85,6 +85,27 @@ def get_target(
         raise HTTPException(status_code=404, detail="Target not found")
     # ORM 객체를 응답 스키마로 변환한다.
     return TargetResponse.model_validate(target)
+
+
+@app.delete(f"{API_PREFIX}/targets/{{target_id}}", status_code=204)
+def delete_target(
+    target_id: int,
+    session: Session = Depends(get_session),
+) -> Response:
+    # Target과 연관된 Job/결과를 정리한 뒤 삭제한다.
+    target = session.get(models.Target, target_id)
+    if target is None:
+        raise HTTPException(status_code=404, detail="Target not found")
+
+    jobs = session.query(models.ScanJob).filter(models.ScanJob.target_id == target_id).all()
+    for job in jobs:
+        session.query(models.Finding).filter(models.Finding.job_id == job.id).delete(synchronize_session=False)
+        session.query(models.Report).filter(models.Report.job_id == job.id).delete(synchronize_session=False)
+        session.delete(job)
+
+    session.delete(target)
+    session.commit()
+    return Response(status_code=204)
 
 
 @app.post(f"{API_PREFIX}/jobs", response_model=JobResponse, status_code=201)
@@ -179,6 +200,23 @@ def run_job(
     return JobResponse.model_validate(job)
 
 
+@app.delete(f"{API_PREFIX}/jobs/{{job_id}}", status_code=204)
+def delete_job(
+    job_id: int,
+    session: Session = Depends(get_session),
+) -> Response:
+    # Job과 연관된 Finding/Report를 정리한 뒤 삭제한다.
+    job = session.get(models.ScanJob, job_id)
+    if job is None:
+        raise HTTPException(status_code=404, detail="Job not found")
+
+    session.query(models.Finding).filter(models.Finding.job_id == job_id).delete(synchronize_session=False)
+    session.query(models.Report).filter(models.Report.job_id == job_id).delete(synchronize_session=False)
+    session.delete(job)
+    session.commit()
+    return Response(status_code=204)
+
+
 @app.get(f"{API_PREFIX}/jobs/{{job_id}}/status", response_model=JobStatusResponse)
 def get_job_status(
     job_id: int,
@@ -223,6 +261,20 @@ def get_job_findings(
     )
     # ORM 리스트를 응답 스키마 리스트로 변환한다.
     return [FindingResponse.model_validate(record) for record in records]
+
+
+@app.delete(f"{API_PREFIX}/findings/{{finding_id}}", status_code=204)
+def delete_finding(
+    finding_id: int,
+    session: Session = Depends(get_session),
+) -> Response:
+    # 단일 Finding을 삭제한다.
+    finding = session.get(models.Finding, finding_id)
+    if finding is None:
+        raise HTTPException(status_code=404, detail="Finding not found")
+    session.delete(finding)
+    session.commit()
+    return Response(status_code=204)
 
 
 @app.get(f"{API_PREFIX}/findings", response_model=List[FindingResponse])

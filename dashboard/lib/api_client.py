@@ -60,6 +60,9 @@ class APIClient:
         params = self._build_params(limit=limit, offset=offset)
         return self._request("GET", "/api/v1/targets", params=params)
 
+    def delete_target(self, target_id: int) -> Any:
+        return self._request("DELETE", f"/api/v1/targets/{target_id}")
+
     def create_job(self, payload: Dict[str, Any]) -> Dict[str, Any]:
         return self._request("POST", "/api/v1/jobs", payload)
 
@@ -72,6 +75,9 @@ class APIClient:
     ) -> Any:
         params = self._build_params(target_id=target_id, status=status, limit=limit, offset=offset)
         return self._request("GET", "/api/v1/jobs", params=params)
+
+    def delete_job(self, job_id: int) -> Any:
+        return self._request("DELETE", f"/api/v1/jobs/{job_id}")
 
     def run_job(self, job_id: int) -> Dict[str, Any]:
         return self._request("POST", f"/api/v1/jobs/{job_id}/run")
@@ -100,6 +106,9 @@ class APIClient:
             offset=offset,
         )
         return self._request("GET", "/api/v1/findings", params=params)
+
+    def delete_finding(self, finding_id: int) -> Any:
+        return self._request("DELETE", f"/api/v1/findings/{finding_id}")
 
     def create_report(self, job_id: int, report_format: str) -> Dict[str, Any]:
         return self._request("POST", f"/api/v1/jobs/{job_id}/report", {"format": report_format})

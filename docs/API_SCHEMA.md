@@ -73,6 +73,19 @@ FastAPI 기본 오류 응답을 사용합니다.
 - 200: 정상 반환
 - 404: 대상 없음
 
+### GET /api/v1/targets
+**쿼리 파라미터**
+- `limit` (int, default: 100, max: 1000)
+- `offset` (int, default: 0)
+
+**응답 코드**
+- 200: 정상 반환
+
+### DELETE /api/v1/targets/{target_id}
+**응답 코드**
+- 204: 삭제 완료
+- 404: 대상 없음
+
 ---
 
 ## 2) Job API
@@ -143,6 +156,21 @@ FastAPI 기본 오류 응답을 사용합니다.
 - 404: Job 또는 Target 없음
 - 409: 이미 실행 중
 
+### GET /api/v1/jobs
+**쿼리 파라미터**
+- `target_id` (int, optional)
+- `status` (string, optional)
+- `limit` (int, default: 100, max: 1000)
+- `offset` (int, default: 0)
+
+**응답 코드**
+- 200: 정상 반환
+
+### DELETE /api/v1/jobs/{job_id}
+**응답 코드**
+- 204: 삭제 완료
+- 404: Job 없음
+
 ### GET /api/v1/jobs/{job_id}/status
 **응답**
 ```json
@@ -163,6 +191,23 @@ FastAPI 기본 오류 응답을 사용합니다.
 **응답 코드**
 - 200: 정상 반환
 - 404: Job 없음
+
+### GET /api/v1/findings
+**쿼리 파라미터**
+- `job_id` (int, optional)
+- `target_id` (int, optional)
+- `severity` (string, optional)
+- `tag` (string, optional)
+- `limit` (int, default: 100, max: 1000)
+- `offset` (int, default: 0)
+
+**응답 코드**
+- 200: 정상 반환
+
+### DELETE /api/v1/findings/{finding_id}
+**응답 코드**
+- 204: 삭제 완료
+- 404: Finding 없음
 
 ---
 

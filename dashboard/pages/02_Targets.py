@@ -16,16 +16,6 @@ def main() -> None:
     api_base_url = os.getenv("API_BASE_URL", "http://127.0.0.1:8000")
     client = APIClient(api_base_url)
 
-    st.subheader("대상 목록")
-    list_limit = st.number_input("limit", min_value=1, max_value=1000, value=100, step=10)
-    list_offset = st.number_input("offset", min_value=0, value=0, step=10)
-    if st.button("목록 조회"):
-        try:
-            result = client.list_targets(limit=int(list_limit), offset=int(list_offset))
-            st.dataframe(result, use_container_width=True)
-        except Exception as exc:
-            st.error(str(exc))
-
     st.subheader("대상 등록")
     with st.form("create_target"):
         name = st.text_input("대상 이름", value="demo-target")
@@ -62,6 +52,15 @@ def main() -> None:
         try:
             result = client.get_target(int(target_id))
             st.json(result)
+        except Exception as exc:
+            st.error(str(exc))
+
+    st.subheader("대상 삭제")
+    delete_target_id = st.number_input("삭제할 target_id", min_value=1, step=1, value=1, key="delete_target_id")
+    if st.button("삭제"):
+        try:
+            client.delete_target(int(delete_target_id))
+            st.success("대상 삭제 완료")
         except Exception as exc:
             st.error(str(exc))
 
