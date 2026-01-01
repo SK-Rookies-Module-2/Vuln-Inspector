@@ -5,12 +5,21 @@
 이 저장소는 중앙 오케스트레이터가 정적(Static), 원격(Remote), 동적(Dynamic) 채널 플러그인을 로드해 취약점을 진단하는 구조를 목표로 합니다. KISA/OWASP 태그는 플러그인이 전달한 값을 그대로 저장합니다.
 
 ## 프로젝트 구조
-- `app/`: 코어 로직, 서비스, DB 모델
-- `plugins/`: 채널별 플러그인(Static/Remote/Dynamic)
-- `scripts/`: 채널별 데모 실행 스크립트
-- `fixtures/`: 데모 점검용 설정/입력 파일
-- `tests/`: 기본 유닛 테스트
-- `storage/`: 스캔 아티팩트/증적 저장소
+```
+.
+├── app/            # API/서비스/DB/어댑터 등 코어 로직
+├── dashboard/      # Streamlit 대시보드
+├── plugins/        # 채널별 플러그인(Static/Remote/Dynamic)
+├── scripts/        # 데모 실행/유틸 스크립트
+├── docs/           # 상세 문서
+├── tests/          # 테스트 코드
+├── fixtures/       # 데모용 설정/입력 파일
+├── storage/        # 스캔 아티팩트/보고서 저장(생성물)
+├── docker-compose.yml
+├── Dockerfile
+├── README.md
+└── requirements.txt
+```
 
 ## 구조 확정 및 운용 변경 범위
 현재 구조는 **플러그인 추가와 DB 연결 변경만으로 운용 가능한 상태**로 고정했습니다.  
@@ -18,36 +27,105 @@
 - 플러그인 추가/수정: `plugins/`
 - DB 연결 변경: `DATABASE_URL` 환경 변수 설정
 
-## 모듈 상호작용 흐름
-1. `Orchestrator`가 `PluginLoader`로 `plugins/**/plugin.yml`을 탐색합니다.
-2. 선택된 플러그인은 `BasePlugin`을 상속한 클래스에서 `check()`를 실행합니다.
-3. 플러그인은 `add_finding()`으로 결과를 생성하고, 태그는 그대로 저장됩니다.
-4. 결과는 `services/reporting.py` 등에서 요약하거나 리포트로 확장할 수 있습니다.
 
-## 핵심 모듈
-- `app/core/`: 플러그인 로딩, 공통 타입
-- `app/services/`: 오케스트레이터와 리포팅 로직
-- `app/db/`: SQLAlchemy 모델/세션
+## Docker Compose 실행(서버/VM 공용)
+Docker만 설치되어 있으면 **API + 대시보드 + DB를 한 번에** 실행할 수 있습니다.
 
-## 빠른 실행
+### 1) .env 준비
 ```bash
-# uv로 의존성 설치(가상환경 포함)
-uv venv
-uv pip install -r requirements.txt -r requirements-dev.txt
-
-# 환경 변수 설정
-cp .env.example .env
-
-# 데모 실행(채널별)
-uv run python scripts/run_static_demo.py
-uv run python scripts/run_remote_demo.py
-uv run python scripts/run_dynamic_demo.py
+bash scripts/bootstrap_env.sh
 ```
 
-## PostgreSQL 실행(로컬)
-*따로 PostgreSQL 서버 실행 및 계정 설정을 진행할 경우 .env파일 정보 수정*   
+### 2) 빌드 및 실행
 ```bash
-docker-compose up -d
+docker-compose up -d --build
+```
+
+### 3) 접속
+- API: `http://<서버IP>:8000`
+- 대시보드: `http://<서버IP>:8501`
+
+### 4) 로그 확인/중지
+```bash
+docker-compose logs -f api
+docker-compose logs -f dashboard
+docker-compose down
+```
+
+### 참고
+- 컨테이너 내부에서는 DB 호스트가 `db`로 자동 설정됩니다.
+- `.env`에 `DATABASE_URL`을 직접 지정했다면 `db` 호스트로 맞춰야 합니다.
+- 방화벽에서 `8000`, `8501` 포트를 허용해야 외부 접속이 가능합니다.
+
+## 로컬 개발 실행(WSL + PostgreSQL)
+Docker 대신 **로컬 PostgreSQL**을 사용해 개발/테스트할 수 있습니다.  
+아래 순서대로 실행하면 **사전 환경이 없는 상태**에서도 API 서버와 대시보드를 함께 실행할 수 있습니다.
+
+### 1) 필수 도구 설치
+- 필수: `git`, `python3`, `pip`
+- 권장: `docker`, `docker-compose` (PostgreSQL 사용 시)
+
+```bash
+# Ubuntu/Debian 예시
+sudo apt update
+sudo apt install -y git python3 python3-pip
+```
+
+### 2) 레포 클론 및 이동
+```bash
+git clone <REPO_URL>
+cd vuln-inspector
+```
+
+### 3) uv 설치
+```bash
+python3 -m pip install --user uv
+export PATH="$HOME/.local/bin:$PATH"
+```
+
+### 4) 의존성 설치
+```bash
+uv venv
+uv pip install -r requirements.txt -r requirements-dev.txt
+```
+
+### 5) PostgreSQL 설치(WSL)
+```bash
+sudo apt update
+sudo apt install -y postgresql postgresql-contrib
+```
+
+### 6) 계정/DB 생성 스크립트
+아래 스크립트를 실행하면 `vuln` 계정과 `vuln_inspector` DB가 생성됩니다.
+```bash
+sudo -u postgres psql <<'SQL'
+CREATE USER vuln WITH PASSWORD 'vuln';
+CREATE DATABASE vuln_inspector OWNER vuln;
+GRANT ALL PRIVILEGES ON DATABASE vuln_inspector TO vuln;
+SQL
+```
+
+### 7) 환경 설정
+```bash
+bash scripts/bootstrap_env.sh
+```
+필요하면 `.env`에서 `DB_*` 값을 수정하거나 `DATABASE_URL`을 직접 지정하세요.
+
+### 8) API 서버 실행
+```bash
+uv run uvicorn app.api.app:app --reload
+```
+
+### 9) 대시보드 실행(별도 터미널)
+```bash
+export API_BASE_URL="http://127.0.0.1:8000"
+uv run streamlit run dashboard/app.py
+```
+
+## PostgreSQL 실행(로컬, Docker)
+*Docker로 PostgreSQL만 실행하는 경우*   
+```bash
+docker-compose up -d db
 ```
 
 ## 채널별 기본 진단 동작
@@ -64,51 +142,6 @@ uv run uvicorn app.api.app:app --reload
 ```
 - 기본 DB는 PostgreSQL이며, `.env`의 `DB_*` 또는 `DATABASE_URL`로 변경할 수 있습니다.
 - 현재 스캔 요청은 동기 실행입니다(요청이 완료될 때까지 응답 대기).
-
-## API 사용 예시
-```bash
-# 대상 등록
-curl -X POST http://127.0.0.1:8000/api/v1/targets \
-  -H "Content-Type: application/json" \
-  -d '{"name":"demo-web","type":"WEB_URL","connection_info":{"url":"http://127.0.0.1"}}'
-
-# 원격 대상 예시(SSH)
-curl -X POST http://127.0.0.1:8000/api/v1/targets \
-  -H "Content-Type: application/json" \
-  -d '{"name":"demo-server","type":"SERVER","connection_info":{"host":"127.0.0.1","port":22},"credentials":{"username":"root","key_path":"/path/to/key","password":""}}'
-
-# 스캔 요청(즉시 실행)
-curl -X POST http://127.0.0.1:8000/api/v1/jobs \
-  -H "Content-Type: application/json" \
-  -d '{"target_id":1,"scan_scope":["static_dependency_check","remote_linux_kisa_u01"],"scan_config":{"static_dependency_check":{"manifest_path":"requirements.txt"},"remote_linux_kisa_u01":{"sshd_config_path":"fixtures/sshd_config_demo"}}}'
-
-# 상태 조회
-curl http://127.0.0.1:8000/api/v1/jobs/1/status
-
-# 결과 조회
-curl http://127.0.0.1:8000/api/v1/jobs/1/findings
-
-# 보고서 생성(JSON/CSV)
-curl -X POST http://127.0.0.1:8000/api/v1/jobs/1/report \
-  -H "Content-Type: application/json" \
-  -d '{"format":"json"}'
-
-# 보고서 생성(CSV)
-curl -X POST http://127.0.0.1:8000/api/v1/jobs/1/report \
-  -H "Content-Type: application/json" \
-  -d '{"format":"csv"}'
-
-# 보고서 메타 조회
-curl http://127.0.0.1:8000/api/v1/reports/1
-
-# 보고서 생성 후 id 추출(예: jq 사용)
-curl -X POST http://127.0.0.1:8000/api/v1/jobs/1/report \
-  -H "Content-Type: application/json" \
-  -d '{"format":"json"}' | jq -r '.id'
-
-# 보고서 파일 다운로드
-curl -O http://127.0.0.1:8000/api/v1/reports/1/file
-```
 
 ## 대상/자격증명 스키마
 - SERVER: `connection_info.host`(또는 `ip`) 필수, `port` 선택

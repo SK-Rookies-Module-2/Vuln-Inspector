@@ -1,5 +1,4 @@
-# 이 파일은 .yml 구성으로 로컬 DB/캐시 개발 환경을 정의합니다.
-# 이 파일은 .yml 구성으로 로컬 DB/캐시 개발 환경을 정의합니다.
+# 이 파일은 .yml 구성으로 API/대시보드/DB를 함께 실행합니다.
 version: "3.9"
 services:
   db:
@@ -14,10 +13,42 @@ services:
       - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
-  redis:
-    image: redis:7
+    restart: unless-stopped
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+    volumes:
+      - ./storage:/app/storage
     ports:
-      - "6379:6379"
+      - "8000:8000"
+    depends_on:
+      - db
+    restart: unless-stopped
+    command: ["uvicorn", "app.api.app:app", "--host", "0.0.0.0", "--port", "8000"]
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      API_BASE_URL: http://api:8000
+    volumes:
+      - ./storage:/app/storage
+    ports:
+      - "8501:8501"
+    depends_on:
+      - api
+    restart: unless-stopped
+    command: ["streamlit", "run", "dashboard/app.py", "--server.address=0.0.0.0", "--server.port=8501"]
 
 volumes:
   db_data:
