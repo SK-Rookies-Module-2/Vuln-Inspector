@@ -168,7 +168,7 @@ FastAPI 기본 오류 응답을 사용합니다.
 
 ## 3) Finding 스키마
 **severity 값 예시**: `Critical | High | Medium | Low | Info`  
-**tags 확장**: KISA 태그가 있으면 OWASP 태그가 자동으로 추가될 수 있습니다.
+**tags 처리**: 플러그인이 전달한 태그를 그대로 반환합니다.
 ```json
 {
   "id": 1,

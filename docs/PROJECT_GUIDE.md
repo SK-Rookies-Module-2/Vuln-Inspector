@@ -8,7 +8,7 @@
 1. **대상 등록**: `POST /api/v1/targets` → `Target` 저장.
 2. **스캔 요청**: `POST /api/v1/jobs` → `ScanJob` 저장 후 동기 실행.
 3. **플러그인 실행**: `ScanExecutor`가 `plugin.yml`을 읽어 플러그인을 로드하고 `check()` 실행.
-4. **결과 저장**: `Finding`을 DB에 저장, KISA 태그는 OWASP 태그로 확장.
+4. **결과 저장**: `Finding`을 DB에 저장, 태그는 플러그인이 전달한 값을 그대로 기록.
 5. **결과 조회**: `GET /api/v1/jobs/{id}/findings`로 결과 확인.
 6. **보고서 생성/다운로드**: `POST /api/v1/jobs/{id}/report` → `storage/reports/{job_id}/report.(json|csv)` 생성, `/reports/{id}/file`로 다운로드.
 
@@ -30,8 +30,7 @@
      - `ScanExecutor._build_context()` → `app/core/types.py:PluginContext` 구성
      - `PluginLoader.load_plugin()` → `_import_module()` → 플러그인 클래스 인스턴스 생성
      - `plugins/**/main.py:<PluginClass>.check()` 실행
-       - 결과는 `app/core/plugin_base.py:BasePlugin.add_finding()`으로 누적
-       - 태그 확장은 `app/core/taxonomy.py:TaxonomyIndex.expand_tags()`에서 수행
+      - 결과는 `app/core/plugin_base.py:BasePlugin.add_finding()`으로 누적
      - `ScanExecutor._store_findings()` → `app/db/models.py:Finding` 저장
    - 완료 시 `ScanExecutor._summarize()`로 요약 저장 및 상태 갱신
 5. **결과 조회**
@@ -59,7 +58,7 @@ docker-compose up -d
 ## 구조 확정 및 운용 변경 범위
 현재 구조는 **플러그인 추가와 DB 연결 변경만으로 운용 가능한 상태**로 고정했습니다.  
 운용 시 필수로 변경되는 범위는 아래 두 가지입니다.
-- 플러그인 추가/수정: `plugins/` 및 필요 시 `app/data/mappings/`
+- 플러그인 추가/수정: `plugins/`
 - DB 연결 변경: `.env`의 `DB_*` 또는 `DATABASE_URL` 설정
 
 ## API 기본 사용 흐름
@@ -96,7 +95,7 @@ curl -O http://127.0.0.1:8000/api/v1/reports/1/file
 - `app/api/app.py` → `app/services/scan_executor.py`, `app/services/reporting.py` 호출
 - `scan_executor.py` → `app/core/plugin_loader.py`로 플러그인 로딩
 - `plugin_loader.py` → `plugin.yml` 메타데이터 로드, `BasePlugin` 인스턴스 생성
-- `BasePlugin.add_finding()` → `TaxonomyIndex`로 태그 확장
+- `BasePlugin.add_finding()` → 태그를 그대로 저장
 - `reporting.py` → 결과를 JSON/CSV로 저장
 
 ## 기능 추가/변경 방법
@@ -104,8 +103,7 @@ curl -O http://127.0.0.1:8000/api/v1/reports/1/file
 1. `plugins/<채널>/<플러그인명>/` 생성
 2. `plugin.yml`에 `id`, `entry_point`, `class_name`, `config_schema` 정의
 3. `main.py`에서 `BasePlugin` 상속 후 `check()` 구현
-4. 필요 시 `app/data/mappings/kisa_owasp.yml`에 태그 매핑 추가
-5. 테스트 추가 후 `uv run pytest`
+4. 테스트 추가 후 `uv run pytest`
 
 ### 기존 플러그인 수정
 - `plugin.yml`의 `config_schema` 변경 시 **입력 검증**이 즉시 적용됨
@@ -141,7 +139,6 @@ curl -O http://127.0.0.1:8000/api/v1/reports/1/file
 - `app/core/config_validation.py`: 플러그인 설정 스키마 검증
 - `app/core/plugin_loader.py`: `plugin.yml` 로딩/플러그인 로딩
 - `app/core/plugin_base.py`: 플러그인 베이스 클래스
-- `app/core/taxonomy.py`: KISA→OWASP 태그 확장
 - `app/core/types.py`: 공통 타입
 - `app/core/logging.py`: 로깅 설정
 - `app/core/__init__.py`: 코어 심볼 노출
@@ -159,9 +156,6 @@ curl -O http://127.0.0.1:8000/api/v1/reports/1/file
 - `app/adapters/ssh.py`: SSH 어댑터(키/패스워드/프록시/ sudo)
 - `app/adapters/sca.py`: SCA 도구 실행 래퍼
 - `app/adapters/__init__.py`: 어댑터 노출
-- `app/data/mappings/kisa_owasp.yml`: KISA→OWASP 매핑 데이터
-- `app/data/mappings/README.md`: 매핑 규칙 설명
-- `app/data/taxonomies/README.md`: 분류 데이터 안내
 
 ### plugins/
 - `plugins/README.md`: 플러그인 구조/설정 스키마 설명
@@ -182,7 +176,6 @@ curl -O http://127.0.0.1:8000/api/v1/reports/1/file
 
 ### tests/
 - `tests/conftest.py`: 테스트 경로 초기화
-- `tests/test_taxonomy.py`: 태그 확장 테스트
 - `tests/test_plugin_loader.py`: 플러그인 탐색 테스트
 - `tests/test_config_validation.py`: 설정 스키마 검증 테스트
 

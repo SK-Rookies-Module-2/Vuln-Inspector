@@ -6,7 +6,6 @@ from typing import List, Optional
 
 from app.core.config import PLUGINS_DIR
 from app.core.plugin_loader import PluginLoader, PluginMeta
-from app.core.taxonomy import TaxonomyIndex
 from app.core.types import PluginContext
 
 logger = logging.getLogger(__name__)
@@ -16,12 +15,9 @@ class Orchestrator:
     def __init__(
         self,
         plugins_dir: Optional[Path] = None,
-        taxonomy: Optional[TaxonomyIndex] = None,
     ) -> None:
-        # 분류 맵(예: KISA -> OWASP) 인덱스를 준비한다.
-        self.taxonomy = taxonomy or TaxonomyIndex.from_default()
         # 플러그인 디렉토리에서 메타 정보를 로드할 로더를 만든다.
-        self.loader = PluginLoader(plugins_dir or PLUGINS_DIR, self.taxonomy)
+        self.loader = PluginLoader(plugins_dir or PLUGINS_DIR)
 
     def list_plugins(self) -> List[PluginMeta]:
         # plugin.yml을 탐색해 메타데이터 리스트를 반환한다.

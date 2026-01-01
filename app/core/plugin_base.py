@@ -2,17 +2,13 @@
 
 from abc import ABC, abstractmethod
 from typing import Dict, List, Optional
-
-from .taxonomy import TaxonomyIndex
 from .types import Finding, PluginContext
 
 
 class BasePlugin(ABC):
-    def __init__(self, context: PluginContext, taxonomy: Optional[TaxonomyIndex] = None):
+    def __init__(self, context: PluginContext):
         # API에서 전달된 Target/Config 정보를 보관한다.
         self.context = context
-        # 태그 확장(예: KISA -> OWASP)을 위해 택소노미를 사용한다.
-        self.taxonomy = taxonomy or TaxonomyIndex({})
         # 실행 중 누적되는 결과를 저장한다.
         self.results: List[Finding] = []
 
@@ -32,14 +28,14 @@ class BasePlugin(ABC):
         solution: Optional[str] = None,
         raw_data: Optional[Dict] = None,
     ) -> Finding:
-        # 입력된 태그를 확장(매핑)하고 표준 Finding을 생성한다.
-        expanded_tags = self.taxonomy.expand_tags(tags or [])
+        # 입력된 태그를 그대로 사용해 표준 Finding을 생성한다.
+        normalized_tags = tags or []
         finding = Finding(
             vuln_id=vuln_id,
             title=title,
             severity=severity,
             evidence=evidence,
-            tags=expanded_tags,
+            tags=normalized_tags,
             description=description,
             solution=solution,
             raw_data=raw_data,

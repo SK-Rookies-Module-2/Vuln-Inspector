@@ -13,7 +13,6 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT))
 
 from app.core.plugin_loader import PluginLoader
-from app.core.taxonomy import TaxonomyIndex
 from app.core.types import PluginContext
 
 PLUGIN_ID = "dynamic_idor_scanner"
@@ -46,7 +45,7 @@ def _start_server() -> Tuple[HTTPServer, int]:
 
 
 def main() -> None:
-    loader = PluginLoader(REPO_ROOT / "plugins", TaxonomyIndex.from_default())
+    loader = PluginLoader(REPO_ROOT / "plugins")
     meta = next((item for item in loader.discover() if item.plugin_id == PLUGIN_ID), None)
     if meta is None:
         raise SystemExit(f"Plugin not found: {PLUGIN_ID}")

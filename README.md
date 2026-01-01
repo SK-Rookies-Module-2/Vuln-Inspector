@@ -2,10 +2,10 @@
 # vuln-inspector
 
 ## 개요
-이 저장소는 중앙 오케스트레이터가 정적(Static), 원격(Remote), 동적(Dynamic) 채널 플러그인을 로드해 취약점을 진단하는 구조를 목표로 합니다. KISA U-코드와 OWASP 2025 카테고리를 매핑해 태그를 확장하는 체계를 기본으로 제공합니다.
+이 저장소는 중앙 오케스트레이터가 정적(Static), 원격(Remote), 동적(Dynamic) 채널 플러그인을 로드해 취약점을 진단하는 구조를 목표로 합니다. KISA/OWASP 태그는 플러그인이 전달한 값을 그대로 저장합니다.
 
 ## 프로젝트 구조
-- `app/`: 코어 로직, 서비스, DB 모델, 매핑 데이터
+- `app/`: 코어 로직, 서비스, DB 모델
 - `plugins/`: 채널별 플러그인(Static/Remote/Dynamic)
 - `scripts/`: 채널별 데모 실행 스크립트
 - `fixtures/`: 데모 점검용 설정/입력 파일
@@ -15,20 +15,19 @@
 ## 구조 확정 및 운용 변경 범위
 현재 구조는 **플러그인 추가와 DB 연결 변경만으로 운용 가능한 상태**로 고정했습니다.  
 운용 시 필수로 변경되는 범위는 아래 두 가지입니다.
-- 플러그인 추가/수정: `plugins/` 및 필요 시 `app/data/mappings/`
+- 플러그인 추가/수정: `plugins/`
 - DB 연결 변경: `DATABASE_URL` 환경 변수 설정
 
 ## 모듈 상호작용 흐름
 1. `Orchestrator`가 `PluginLoader`로 `plugins/**/plugin.yml`을 탐색합니다.
 2. 선택된 플러그인은 `BasePlugin`을 상속한 클래스에서 `check()`를 실행합니다.
-3. 플러그인은 `add_finding()`으로 결과를 생성하고, `TaxonomyIndex`가 KISA→OWASP 태그를 확장합니다.
+3. 플러그인은 `add_finding()`으로 결과를 생성하고, 태그는 그대로 저장됩니다.
 4. 결과는 `services/reporting.py` 등에서 요약하거나 리포트로 확장할 수 있습니다.
 
 ## 핵심 모듈
-- `app/core/`: 플러그인 로딩, 태그 매핑, 공통 타입
+- `app/core/`: 플러그인 로딩, 공통 타입
 - `app/services/`: 오케스트레이터와 리포팅 로직
 - `app/db/`: SQLAlchemy 모델/세션
-- `app/data/mappings/`: KISA ↔ OWASP 매핑 데이터
 
 ## 빠른 실행
 ```bash
@@ -117,9 +116,10 @@ curl -O http://127.0.0.1:8000/api/v1/reports/1/file
 - GIT_REPO: `connection_info.url` 또는 `path` 필수
 - 원격 점검 사용 시 `credentials.username`과 `key_path` 또는 `password`가 필요합니다.
 
-## 매핑 데이터
-- KISA → OWASP 매핑: `app/data/mappings/kisa_owasp.yml`
-- 플러그인 태그에 `KISA:U-01`처럼 KISA 코드를 포함하면, 매핑을 통해 `OWASP:2025:A07` 같은 태그가 자동 확장됩니다.
+## 태그 사용
+- 플러그인은 KISA/OWASP 태그를 그대로 기록합니다.
+- 태그 규칙은 `plugins/README.md`를 따릅니다.
+- KISA/OWASP 태그는 혼용 사용 가능하며 자동 변환은 하지 않습니다.
 
 ## 플러그인 개발 가이드
 - 플러그인은 `plugins/<채널>/<플러그인명>/` 구조로 추가합니다.

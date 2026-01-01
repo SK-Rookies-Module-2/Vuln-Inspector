@@ -8,7 +8,7 @@
 4. 플러그인 로딩 → `app/core/plugin_loader.py:PluginLoader.load_plugin()`
 5. 플러그인 실행 → `plugins/**/main.py:*.check()`
 6. 결과 저장 → `ScanExecutor._store_findings()`
-7. 태그 확장 → `app/core/taxonomy.py:TaxonomyIndex.expand_tags()`
+7. 태그 저장 → `BasePlugin.add_finding()`에서 전달된 태그를 그대로 저장
 
 ## 플러그인 공통 구조
 - 메타데이터: `plugins/<채널>/<플러그인명>/plugin.yml`
@@ -26,9 +26,7 @@
 3. `main.py` 구현
    - `BasePlugin` 상속
    - `check()`에서 진단 수행 후 `add_finding()` 호출
-4. 매핑 추가(선택)
-   - KISA/OWASP 매핑이 필요하면 `app/data/mappings/kisa_owasp.yml` 갱신
-5. 테스트 추가
+4. 테스트 추가
    - `tests/`에 유닛 테스트 혹은 데모 스크립트 추가
 
 ---
@@ -186,5 +184,4 @@ curl -O http://127.0.0.1:8000/api/v1/reports/1/file
 ## 빠른 테스트 체크리스트
 - 플러그인 로딩: `tests/test_plugin_loader.py`
 - 설정 스키마 검증: `tests/test_config_validation.py`
-- 태그 확장: `tests/test_taxonomy.py`
 - 데모 실행: `scripts/run_*_demo.py`

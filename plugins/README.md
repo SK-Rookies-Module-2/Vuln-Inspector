@@ -33,4 +33,5 @@
 ## 태그 규칙
 - KISA U-코드: `KISA:U-01`
 - OWASP 2025: `OWASP:2025:A01`
-- 매핑 확장은 `app/data/mappings/kisa_owasp.yml`에 추가합니다.
+- 태그는 플러그인에서 전달한 값을 그대로 저장합니다.
+- KISA/OWASP 태그는 혼용 사용 가능합니다.

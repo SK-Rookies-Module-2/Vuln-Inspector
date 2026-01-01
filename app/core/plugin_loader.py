@@ -8,7 +8,6 @@ from typing import List, Optional
 import yaml
 
 from .plugin_base import BasePlugin
-from .taxonomy import TaxonomyIndex
 from .types import PluginContext
 
 
@@ -34,9 +33,8 @@ class PluginMeta:
 
 
 class PluginLoader:
-    def __init__(self, plugins_dir: Path, taxonomy: TaxonomyIndex):
+    def __init__(self, plugins_dir: Path):
         self.plugins_dir = Path(plugins_dir)
-        self.taxonomy = taxonomy
 
     def discover(self) -> List[PluginMeta]:
         # plugins_dir 하위의 모든 plugin.yml을 탐색한다.
@@ -56,8 +54,8 @@ class PluginLoader:
             raise ImportError(f"Class {meta.class_name} not found in {meta.module_path}")
         if not issubclass(plugin_class, BasePlugin):
             raise TypeError(f"{meta.class_name} does not extend BasePlugin")
-        # 플러그인에 컨텍스트/택소노미를 주입해 반환한다.
-        return plugin_class(context, taxonomy=self.taxonomy)
+        # 플러그인에 컨텍스트를 주입해 반환한다.
+        return plugin_class(context)
 
     def _load_meta(self, plugin_file: Path) -> Optional[PluginMeta]:
         # plugin.yml을 읽어 필수 필드를 검증한다.

@@ -11,7 +11,6 @@ from sqlalchemy.orm import Session
 from app.core.config import PLUGINS_DIR
 from app.core.config_validation import apply_config_schema
 from app.core.plugin_loader import PluginLoader, PluginMeta
-from app.core.taxonomy import TaxonomyIndex
 from app.core.types import Finding as CoreFinding
 from app.core.types import PluginContext
 from app.db import models
@@ -22,14 +21,11 @@ class ScanExecutor:
         self,
         session: Session,
         plugins_dir: Optional[Path] = None,
-        taxonomy: Optional[TaxonomyIndex] = None,
     ) -> None:
         # API에서 전달된 Job을 실행하기 위한 실행기이며 DB 세션을 사용한다.
         self.session = session
-        # 태그 확장(예: KISA → OWASP)을 위한 분류 인덱스를 준비한다.
-        self.taxonomy = taxonomy or TaxonomyIndex.from_default()
         # 플러그인 메타데이터 로더를 초기화한다.
-        self.loader = PluginLoader(plugins_dir or PLUGINS_DIR, self.taxonomy)
+        self.loader = PluginLoader(plugins_dir or PLUGINS_DIR)
         # 플러그인 ID로 빠르게 찾기 위한 인덱스를 만든다.
         self._meta_index = {meta.plugin_id: meta for meta in self.loader.discover()}
 

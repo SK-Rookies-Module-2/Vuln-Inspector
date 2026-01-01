@@ -12,7 +12,7 @@
 ## 프로젝트 핵심 구조
 - `app/api/`: API 엔드포인트 및 스키마
 - `app/services/`: 스캔 실행 및 리포팅
-- `app/core/`: 플러그인 로더/설정 검증/태그 매핑/경로 관리
+- `app/core/`: 플러그인 로더/설정 검증/경로 관리
 - `app/db/`: DB 모델 및 세션
 - `plugins/`: 채널별 플러그인
 - `tests/`: 유닛 테스트
@@ -85,12 +85,7 @@ class LicenseCheck(BasePlugin):
         return self.results
 ```
 
-### 4) 매핑 추가(필요 시)
-KISA → OWASP 태그 확장이 필요하면 매핑 파일을 갱신합니다.  
-OWASP 태그만 사용하는 경우 이 단계는 생략 가능합니다.
-`app/data/mappings/kisa_owasp.yml`에 필요한 매핑을 추가합니다.
-
-### 5) API에서 실행(예시)
+### 4) API에서 실행(예시)
 플러그인 ID를 `scan_scope`에 넣고, 같은 키의 설정을 `scan_config`에 넣습니다.  
 `scan_config`는 없으면 `config_schema`의 기본값이 자동 적용됩니다.
 ```bash
@@ -99,7 +94,7 @@ curl -X POST http://127.0.0.1:8000/api/v1/jobs \
   -d '{"target_id":1,"scan_scope":["static_license_check"],"scan_config":{"static_license_check":{"manifest_path":"requirements.txt","blocked_licenses":["GPL-3.0","AGPL-3.0"]}}}'
 ```
 
-### 6) 테스트 추가(선택)
+### 5) 테스트 추가(선택)
 유닛 테스트(계약/로직) 또는 데모 스크립트(실행 경로)를 추가합니다.
 - `tests/`에 유닛 테스트 추가
 - `scripts/`에 데모 스크립트 추가

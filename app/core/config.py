@@ -11,9 +11,6 @@ load_dotenv()
 REPO_ROOT = Path(__file__).resolve().parents[2]
 APP_DIR = REPO_ROOT / "app"
 PLUGINS_DIR = REPO_ROOT / "plugins"
-DATA_DIR = APP_DIR / "data"
-MAPPINGS_DIR = DATA_DIR / "mappings"
-DEFAULT_MAPPING_FILE = MAPPINGS_DIR / "kisa_owasp.yml"
 STORAGE_DIR = REPO_ROOT / "storage"
 REPORTS_DIR = STORAGE_DIR / "reports"
 DB_USER = os.getenv("DB_USER", "vuln")
