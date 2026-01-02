@@ -119,3 +119,139 @@ class_name: "RootRemoteLoginCheck"
 ### 테스트 계획
 • 유닛: OS별 파서 입력/출력 테스트(`tests/test_kisa_u01_parsers.py`).  
 • 통합(선택): `fixtures/`에 샘플 설정 파일을 두고 `allow_local_fallback=true`로 실행 경로 검증.
+
+### 설정 예시 (가이드만 보고 테스트 가능)
+#### 1) Target 등록 예시 (Bastion 경유)
+```json
+{
+  "name": "aws-private-ubuntu",
+  "type": "SERVER",
+  "connection_info": {
+    "host": "10.0.1.23",
+    "port": 22,
+    "proxy_jump": "bastion_user@bastion.example.com:22"
+  },
+  "credentials": {
+    "username": "ubuntu",
+    "key_path": "/path/to/key.pem"
+  },
+  "description": "AWS private subnet Ubuntu via bastion"
+}
+```
+
+#### 2) Job 실행 예시 (원격 SSH+Telnet 점검)
+```json
+{
+  "target_id": 1,
+  "scan_scope": ["remote_kisa_u01"],
+  "scan_config": {
+    "remote_kisa_u01": {
+      "os_type": "linux",
+      "protocols": ["ssh", "telnet"],
+      "use_sudo": true
+    }
+  }
+}
+```
+
+#### 3) 로컬 파일로 빠른 확인 (원격 정보가 없을 때)
+```json
+{
+  "target_id": 1,
+  "scan_scope": ["remote_kisa_u01"],
+  "scan_config": {
+    "remote_kisa_u01": {
+      "os_type": "linux",
+      "protocols": ["ssh"],
+      "allow_local_fallback": true,
+      "sshd_config_path": "fixtures/sshd_config_demo"
+    }
+  }
+}
+```
+
+### 실제 환경 테스트 절차 (AWS Private Subnet + Bastion)
+#### 1) 키 파일 준비
+• 스캐너가 실행되는 머신(이 프로젝트를 실행하는 곳)에 키를 저장합니다.  
+• 예: `~/.ssh/bastion-server-key.pem`
+```bash
+chmod 600 ~/.ssh/bastion-server-key.pem
+```
+
+#### 2) ProxyJump로 수동 SSH 확인(선택)
+```bash
+ssh -o "ProxyCommand=ssh -i ~/.ssh/bastion-server-key.pem -o IdentitiesOnly=yes -W %h:%p ubuntu@44.251.33.188" -i ~/.ssh/bastion-server-key.pem -o IdentitiesOnly=yes ubuntu@10.7.143.237 
+```
+
+#### 3) API 서버 실행
+```bash
+uv run uvicorn app.api.app:app --reload
+```
+
+#### 4) Target 등록 (Bastion 경유)
+```bash
+curl -X POST http://127.0.0.1:8000/api/v1/targets \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "aws-private-ubuntu-web",
+    "type": "SERVER",
+    "connection_info": {
+      "host": "10.7.143.237",
+      "port": 22,
+      "proxy_jump": "ubuntu@44.251.33.188:22",
+      "identities_only": true
+    },
+    "credentials": {
+      "username": "ubuntu",
+      "key_path": "~/.ssh/bastion-server-key.pem"
+    },
+    "description": "AWS private subnet Ubuntu via bastion"
+  }'
+```
+
+#### 4-1) Target 등록 (ProxyCommand 방식)
+```bash
+curl -X POST http://127.0.0.1:8000/api/v1/targets \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "aws-private-ubuntu-web-proxycommand",
+    "type": "SERVER",
+    "connection_info": {
+      "host": "10.7.143.237",
+      "port": 22,
+      "proxy_command": "ssh -i ~/.ssh/bastion-server-key.pem -o IdentitiesOnly=yes -W %h:%p ubuntu@44.251.33.188",
+      "identities_only": true
+    },
+    "credentials": {
+      "username": "ubuntu",
+      "key_path": "~/.ssh/bastion-server-key.pem"
+    },
+    "description": "AWS private subnet Ubuntu via bastion (ProxyCommand)"
+  }'
+```
+
+#### 5) Job 실행 (SSH + Telnet 점검)
+```bash
+curl -X POST http://127.0.0.1:8000/api/v1/jobs \
+  -H "Content-Type: application/json" \
+  -d '{
+    "target_id": 1,
+    "scan_scope": ["remote_kisa_u01"],
+    "scan_config": {
+      "remote_kisa_u01": {
+        "os_type": "linux",
+        "protocols": ["ssh", "telnet"],
+        "use_sudo": true
+      }
+    }
+  }'
+```
+
+#### 6) 결과 확인
+```bash
+curl http://127.0.0.1:8000/api/v1/jobs/1/findings
+```
+
+#### 참고
+• `/etc/securetty`가 없는 환경은 Telnet 점검이 `Info`로 기록될 수 있습니다.  
+• `use_sudo`는 대상 서버에서 비밀번호 없는 sudo가 가능한 경우에만 사용하세요.

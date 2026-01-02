@@ -16,3 +16,6 @@ storage/artifacts/
 # IDE
 .vscode/
 .idea/
+
+# Key
+.ssh/

@@ -47,6 +47,8 @@ def _read_remote_config(target: dict, config_path: Path, config: dict) -> Option
     port = int(connection.get("port", 22))
     # 점프 호스트가 있으면 -J 옵션으로 전달된다.
     proxy_jump = connection.get("proxy_jump")
+    proxy_command = connection.get("proxy_command")
+    identities_only = bool(connection.get("identities_only", False))
 
     # 필수 정보가 없으면 원격 접근을 시도하지 않는다.
     if not host or not user:
@@ -63,6 +65,8 @@ def _read_remote_config(target: dict, config_path: Path, config: dict) -> Option
         password=password,
         port=port,
         proxy_jump=proxy_jump,
+        proxy_command=proxy_command,
+        identities_only=identities_only,
         sudo=bool(config.get("use_sudo", False)),
         sudo_user=config.get("sudo_user"),
     )

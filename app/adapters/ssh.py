@@ -28,6 +28,8 @@ class SshClient:
         timeout: int = 10,
         strict_host_key: bool = False,
         proxy_jump: Optional[str] = None,
+        proxy_command: Optional[str] = None,
+        identities_only: bool = False,
         sudo: bool = False,
         sudo_user: Optional[str] = None,
     ) -> None:
@@ -47,6 +49,10 @@ class SshClient:
         self.strict_host_key = strict_host_key
         # 점프 호스트(-J user@host:port 형식)
         self.proxy_jump = proxy_jump
+        # ProxyCommand 문자열(우선순위가 proxy_jump보다 높다)
+        self.proxy_command = proxy_command
+        # 지정한 키만 사용하도록 제한할지 여부
+        self.identities_only = identities_only
         # sudo 사용 여부(비밀번호 없이 실행되는 경우에만 가능)
         self.sudo = sudo
         # sudo 대상 사용자(옵션)
@@ -83,11 +89,15 @@ class SshClient:
         # 연결 타임아웃 설정(SSH 레벨)
         ssh_command.extend(["-o", f"ConnectTimeout={self.timeout}"])
         # 점프 호스트가 있으면 프록시 점프 옵션을 붙인다.
-        if self.proxy_jump:
+        if self.proxy_command:
+            ssh_command.extend(["-o", f"ProxyCommand={self.proxy_command}"])
+        elif self.proxy_jump:
             ssh_command.extend(["-J", self.proxy_jump])
         # 키 경로가 있으면 키 기반 인증을 사용한다.
         if self.key_path:
             ssh_command.extend(["-i", self.key_path])
+        if self.identities_only:
+            ssh_command.extend(["-o", "IdentitiesOnly=yes"])
         # 운영 편의를 위해 기본은 호스트 키 검증을 끈다.
         if not self.strict_host_key:
             ssh_command.extend(["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"])

@@ -110,8 +110,10 @@ def ssh_read_config(target:dict, path: Path, config: dict) -> Optional[RemoteFil
     key_path = credentials.get("key_path")
     password = credentials.get("password")
     port = int(connection.get("port", 22))
-    
+
     proxy_jump = connection.get("proxy_jump")
+    proxy_command = connection.get("proxy_command")
+    identities_only = bool(connection.get("identities_only", False))
 
     if not host or not user:
         return None
@@ -125,6 +127,8 @@ def ssh_read_config(target:dict, path: Path, config: dict) -> Optional[RemoteFil
         password=password,
         port=port,
         proxy_jump=proxy_jump,
+        proxy_command=proxy_command,
+        identities_only=identities_only,
         sudo=bool(config.get("use_sudo", False)),
         sudo_user=config.get("sudo_user"),
     )
