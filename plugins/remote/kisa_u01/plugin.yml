@@ -1,0 +1,33 @@
+# 이 파일은 .yml 플러그인 메타데이터로 원격 점검 모듈 정보를 제공합니다.
+id: "remote_kisa_u01"
+name: "Root Remote Login Restriction"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-01"
+description: "Check root remote login restriction across SSH/Telnet by OS."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    protocols:
+      type: array
+      default: ["ssh", "telnet"]
+    sshd_config_path:
+      type: string
+    telnet_config_path:
+      type: string
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "RootRemoteLoginCheck"

@@ -1,6 +1,7 @@
 """이 파일은 .py 플러그인 로더 모듈로 메타데이터 로딩과 동적 임포트를 수행합니다."""
 
 import importlib.util
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Optional
@@ -91,7 +92,8 @@ class PluginLoader:
         if spec is None or spec.loader is None:
             raise ImportError(f"Cannot load module from {module_path}")
 
-        # 모듈 객체를 생성한 뒤 실제 코드를 실행한다.
+        # 모듈 객체를 생성한 뒤 sys.modules에 등록하고 실제 코드를 실행한다.
         module = importlib.util.module_from_spec(spec)
+        sys.modules[meta.plugin_id] = module
         spec.loader.exec_module(module)
         return module
