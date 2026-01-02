@@ -1,0 +1,52 @@
+# Remote plugin metadata for KISA U-11 system account shell checks.
+id: "remote_kisa_u11"
+name: "System Account Shell Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-11"
+description: "Ensure non-login system accounts use nologin shells."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    passwd_path:
+      type: string
+    system_accounts:
+      type: array
+      default:
+        - "daemon"
+        - "bin"
+        - "sys"
+        - "adm"
+        - "listen"
+        - "nobody"
+        - "nobody4"
+        - "noaccess"
+        - "diag"
+        - "operator"
+        - "games"
+        - "gopher"
+    non_login_shells:
+      type: array
+      default:
+        - "/bin/false"
+        - "/sbin/nologin"
+        - "/usr/sbin/nologin"
+        - "/bin/nologin"
+    exclude_accounts:
+      type: array
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "SystemAccountShellCheck"
