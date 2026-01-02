@@ -1,0 +1,56 @@
+# Remote plugin metadata for KISA U-25 world writable file checks.
+id: "remote_kisa_u25"
+name: "World Writable File Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-25"
+description: "Detect world writable files."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    find_command:
+      type: string
+      default: "find {path} -xdev {prune} -type f -perm -2 -ls"
+    search_paths:
+      type: array
+      default:
+        - "/etc"
+        - "/var"
+        - "/home"
+        - "/opt"
+        - "/root"
+        - "/bin"
+        - "/sbin"
+        - "/usr/bin"
+        - "/usr/sbin"
+        - "/usr/local/bin"
+        - "/usr/local/sbin"
+    exclude_paths:
+      type: array
+      default:
+        - "/proc"
+        - "/sys"
+        - "/dev"
+        - "/run"
+    whitelist_paths:
+      type: array
+      default: []
+    max_results:
+      type: integer
+      default: 200
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "WorldWritableFileCheck"
