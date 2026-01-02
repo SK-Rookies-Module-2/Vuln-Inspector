@@ -1,0 +1,36 @@
+# Remote plugin metadata for KISA U-04 password file protection checks.
+id: "remote_kisa_u04"
+name: "Password File Protection Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-04"
+description: "Check password file protection and shadow usage by OS."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    passwd_path:
+      type: string
+    shadow_path:
+      type: string
+    aix_security_passwd_path:
+      type: string
+    hpux_tcb_dir:
+      type: string
+    hpux_shadow_path:
+      type: string
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "PasswordFileProtectionCheck"
