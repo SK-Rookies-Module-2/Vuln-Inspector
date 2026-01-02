@@ -139,6 +139,8 @@ class SendmailRestrictQrunCheck(BasePlugin):
         config_result = self._read_config_lines(sendmail_cf_path, client, host)
         modes["sendmail_cf"] = config_result.mode
         if config_result.lines is None:
+            if config_result.missing:
+                return self.results
             self._add_unavailable(
                 os_type,
                 sendmail_cf_path,

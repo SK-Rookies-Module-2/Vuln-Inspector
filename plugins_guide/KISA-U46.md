@@ -76,7 +76,7 @@ class_name: "SendmailRestrictQrunCheck"
 • SMTP 미사용으로 판단되면 결과 없음(양호).
 4) sendmail.cf 점검  
 • `O PrivacyOptions=` 라인에서 `restrictqrun` 포함 여부 확인.  
-• 설정 파일이 없으면 점검 불가(Info) 처리.
+• 설정 파일이 없으면 SMTP 미사용으로 보고 양호 처리.
 5) 결과 기록  
 • 취약 시 `add_finding()` 호출:  
   - `vuln_id="KISA-U-46"`, `severity="High"`  
