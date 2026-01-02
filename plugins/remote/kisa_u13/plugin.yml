@@ -1,0 +1,36 @@
+# Remote plugin metadata for KISA U-13 password hash algorithm checks.
+id: "remote_kisa_u13"
+name: "Password Hash Algorithm Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-13"
+description: "Check password hash algorithm settings by OS."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    login_defs_path:
+      type: string
+    pam_password_path_debian:
+      type: string
+    pam_password_path_redhat:
+      type: string
+    policy_conf_path:
+      type: string
+    aix_login_cfg_path:
+      type: string
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "PasswordHashAlgorithmCheck"
