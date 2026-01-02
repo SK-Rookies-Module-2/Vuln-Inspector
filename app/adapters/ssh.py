@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import hashlib
+import os
 import shutil
 import subprocess
 from typing import List, Optional
@@ -88,6 +90,18 @@ class SshClient:
         ssh_command: List[str] = ["ssh", "-p", str(self.port)]
         # 연결 타임아웃 설정(SSH 레벨)
         ssh_command.extend(["-o", f"ConnectTimeout={self.timeout}"])
+        # SSH 멀티플렉싱을 활성화해 동일 대상 연결을 재사용한다.
+        control_path = self._control_path()
+        ssh_command.extend(
+            [
+                "-o",
+                "ControlMaster=auto",
+                "-o",
+                f"ControlPersist=300",
+                "-o",
+                f"ControlPath={control_path}",
+            ]
+        )
         # 점프 호스트가 있으면 프록시 점프 옵션을 붙인다.
         if self.proxy_command:
             ssh_command.extend(["-o", f"ProxyCommand={self.proxy_command}"])
@@ -105,6 +119,21 @@ class SshClient:
         ssh_command.append(target)
         ssh_command.append(command)
         return self._with_sshpass(ssh_command)
+
+    def _control_path(self) -> str:
+        identity = "|".join(
+            [
+                self.user or "",
+                self.host or "",
+                str(self.port),
+                self.key_path or "",
+                self.proxy_jump or "",
+                self.proxy_command or "",
+            ]
+        )
+        digest = hashlib.sha256(identity.encode("utf-8")).hexdigest()[:16]
+        uid = os.getuid() if hasattr(os, "getuid") else "user"
+        return f"/tmp/vuln-inspector-ssh-{uid}-{digest}.sock"
 
     def _with_sshpass(self, ssh_command: List[str]) -> List[str]:
         # 비밀번호가 없으면 일반 SSH 명령만 사용한다.
