@@ -1,0 +1,57 @@
+id: 'remote_linux_kisa_u67_log_file_perm'
+name: 'KISA U-67 로그 파일 소유자/권한 점검'
+version: '0.1.0'
+type: 'remote'
+category: 'infrastructure'
+tags:
+  - 'KISA:U-67'
+description: '/var/log 내 로그 파일의 소유자와 권한이 권고값(root/syslog, 0644 이하)인지 점검합니다.'
+
+config_schema:
+  type: object
+  additionalProperties: false
+  properties:
+    log_dir:
+      type: string
+      default: '/var/log'
+
+    max_depth:
+      type: integer
+      default: 1
+      description: 'find 탐색 깊이 (기본: 상위 디렉터리만)'
+      minimum: 0
+
+    expected_owner:
+      type: string
+      default: 'root'
+      description: '레거시 옵션: allowed_owners 미설정 시 사용하는 기본 소유자'
+
+    allowed_owners:
+      type: array
+      items:
+        type: string
+      default: ['root', 'syslog']
+      description: '허용 소유자 목록. 지정 시 expected_owner 대신 이 목록으로 검사'
+
+    max_mode:
+      type: string
+      default: '0644'
+      description: '허용 최대 권한(8진수, 예: 0644)'
+      pattern: '^[0-7]{3,4}$'
+
+    max_entries:
+      type: integer
+      default: 300
+      description: 'evidence에 포함할 entries 샘플 최대 개수(너무 큰 결과 방지)'
+      minimum: 1
+
+    use_sudo:
+      type: boolean
+      default: false
+
+    sudo_user:
+      type: string
+      description: 'sudo 실행 시 사용할 사용자 (use_sudo=true일 때)'
+
+entry_point: 'main.py'
+class_name: 'LinuxKisaU67LogFilePerm'
