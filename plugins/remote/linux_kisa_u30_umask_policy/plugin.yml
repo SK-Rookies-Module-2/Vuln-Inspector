@@ -1,0 +1,27 @@
+id: 'remote_linux_kisa_u30_umask'
+name: 'KISA U-30 UMASK 설정 점검'
+version: '0.1.0'
+type: 'remote'
+category: 'infrastructure'
+tags:
+  - 'KISA:U-30'
+description: '/etc/profile과 /etc/login.defs의 UMASK가 권고값(기본 022)인지 점검합니다.'
+
+config_schema:
+  type: object
+  additionalProperties: false
+  properties:
+    profile_path:
+      type: string
+      default: '/etc/profile'
+    login_defs_path:
+      type: string
+      default: '/etc/login.defs'
+    expected_umask:
+      type: string
+      default: '022'
+      description: 'KISA U-30 권고 UMASK 값'
+      pattern: '^[0-7]{2,4}$'
+
+entry_point: 'main.py'
+class_name: 'LinuxKisaU30UmaskPolicy'
