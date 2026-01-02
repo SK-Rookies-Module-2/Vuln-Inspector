@@ -1,0 +1,42 @@
+# Remote plugin metadata for KISA U-55 FTP account shell checks.
+id: "remote_kisa_u55"
+name: "FTP Account Shell Restriction Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-55"
+description: "Check that FTP accounts use non-login shells."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    passwd_path:
+      type: string
+      default: "/etc/passwd"
+    ftp_accounts:
+      type: array
+      default:
+        - "ftp"
+    allowed_shells:
+      type: array
+      default:
+        - "/bin/false"
+        - "/sbin/nologin"
+        - "/usr/sbin/nologin"
+    max_results:
+      type: integer
+      default: 200
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "FtpAccountShellCheck"
