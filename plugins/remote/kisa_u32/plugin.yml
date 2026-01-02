@@ -1,0 +1,44 @@
+# Remote plugin metadata for KISA U-32 home directory existence checks.
+id: "remote_kisa_u32"
+name: "Home Directory Existence Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-32"
+description: "Check that account home directories exist."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    passwd_path:
+      type: string
+      default: "/etc/passwd"
+    ignore_users:
+      type: array
+      default: []
+    ignore_home_paths:
+      type: array
+      default:
+        - "/dev/null"
+        - "/nonexistent"
+        - "/var/empty"
+    ignore_home_prefixes:
+      type: array
+      default: []
+    max_results:
+      type: integer
+      default: 200
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "HomeDirectoryExistenceCheck"

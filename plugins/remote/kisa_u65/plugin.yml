@@ -1,0 +1,57 @@
+# Remote plugin metadata for KISA U-65 NTP time sync checks.
+id: "remote_kisa_u65"
+name: "NTP/Time Sync Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-65"
+description: "Check NTP/chrony daemon and time server configuration."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    ntp_conf_paths:
+      type: array
+      default:
+        - "/etc/ntp.conf"
+    chrony_conf_paths:
+      type: array
+      default:
+        - "/etc/chrony.conf"
+        - "/etc/chrony/chrony.conf"
+    process_command:
+      type: string
+      default: "ps -ef"
+    process_pattern:
+      type: string
+      default: "ntpd|chronyd|systemd-timesyncd"
+    insecure_sources:
+      type: array
+      default:
+        - "127.0.0.1"
+        - "127.127.1.0"
+        - "localhost"
+        - "::1"
+    require_process:
+      type: boolean
+      default: true
+    require_time_servers:
+      type: boolean
+      default: true
+    max_results:
+      type: integer
+      default: 200
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "NtpTimeSyncCheck"

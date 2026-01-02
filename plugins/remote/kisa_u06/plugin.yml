@@ -1,0 +1,33 @@
+# Remote plugin metadata for KISA U-06 su access restriction checks.
+id: "remote_kisa_u06"
+name: "SU Access Restriction Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-06"
+description: "Check whether su is restricted to privileged group users."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    su_path:
+      type: string
+    pam_su_path:
+      type: string
+    privileged_group:
+      type: string
+      default: "wheel"
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "SuAccessRestrictionCheck"

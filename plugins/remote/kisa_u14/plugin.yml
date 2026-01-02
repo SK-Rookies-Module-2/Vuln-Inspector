@@ -1,0 +1,42 @@
+# Remote plugin metadata for KISA U-14 PATH safety checks.
+id: "remote_kisa_u14"
+name: "Root PATH Safety Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-14"
+description: "Detect unsafe PATH entries containing current directory."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    path_command:
+      type: string
+      default: "sh -lc 'echo $PATH'"
+    profile_paths:
+      type: array
+      default:
+        - "/etc/profile"
+    check_runtime_path:
+      type: boolean
+      default: true
+    check_profile_paths:
+      type: boolean
+      default: true
+    allow_trailing_dot:
+      type: boolean
+      default: true
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "RootPathSafetyCheck"

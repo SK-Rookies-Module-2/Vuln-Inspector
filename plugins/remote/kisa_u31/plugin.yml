@@ -1,0 +1,40 @@
+# Remote plugin metadata for KISA U-31 home directory permission checks.
+id: "remote_kisa_u31"
+name: "Home Directory Permission Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-31"
+description: "Check home directory ownership and permissions."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    passwd_path:
+      type: string
+    ignore_users:
+      type: array
+      default: []
+    allow_group_write:
+      type: boolean
+      default: false
+    allow_other_write:
+      type: boolean
+      default: false
+    max_results:
+      type: integer
+      default: 200
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "HomeDirectoryPermissionCheck"

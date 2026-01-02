@@ -1,0 +1,54 @@
+# Remote plugin metadata for KISA U-59 SNMP version checks.
+id: "remote_kisa_u59"
+name: "SNMP Version Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-59"
+description: "Check SNMP v1/v2c usage in snmpd configuration."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    snmp_conf_paths:
+      type: array
+      default:
+        - "/etc/snmp/snmpd.conf"
+    community_keywords:
+      type: array
+      default:
+        - "rocommunity"
+        - "rwcommunity"
+        - "rocommunity6"
+        - "rwcommunity6"
+        - "com2sec"
+        - "com2sec6"
+    check_process:
+      type: boolean
+      default: true
+    process_command:
+      type: string
+      default: "ps -ef"
+    process_pattern:
+      type: string
+      default: "snmpd"
+    process_version_pattern:
+      type: string
+      default: "v1|v2c"
+    max_results:
+      type: integer
+      default: 200
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "SnmpVersionCheck"

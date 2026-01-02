@@ -1,0 +1,47 @@
+# Remote plugin metadata for KISA U-15 orphan file ownership checks.
+id: "remote_kisa_u15"
+name: "Orphan File Ownership Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-15"
+description: "Find files/directories without owners (nouser/nogroup)."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    find_command:
+      type: string
+      default: "find {path} -xdev {prune} \\( -nouser -o -nogroup \\) -ls"
+    search_paths:
+      type: array
+      default:
+        - "/etc"
+        - "/var"
+        - "/home"
+        - "/opt"
+        - "/root"
+    exclude_paths:
+      type: array
+      default:
+        - "/proc"
+        - "/sys"
+        - "/dev"
+        - "/run"
+    max_results:
+      type: integer
+      default: 200
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "OrphanFileOwnershipCheck"

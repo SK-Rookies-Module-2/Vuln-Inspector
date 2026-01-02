@@ -1,0 +1,51 @@
+# Remote plugin metadata for KISA U-54 plain FTP service checks.
+id: "remote_kisa_u54"
+name: "Plain FTP Service Disable Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-54"
+description: "Check whether plain FTP service is running."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    check_process:
+      type: boolean
+      default: true
+    process_command:
+      type: string
+      default: "ps -ef"
+    ftp_process_names:
+      type: array
+      default:
+        - "ftpd"
+        - "vsftpd"
+        - "proftpd"
+        - "pure-ftpd"
+    check_port:
+      type: boolean
+      default: true
+    netstat_command:
+      type: string
+      default: "netstat -an"
+    ftp_port:
+      type: integer
+      default: 21
+    max_results:
+      type: integer
+      default: 200
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "PlainFtpDisableCheck"

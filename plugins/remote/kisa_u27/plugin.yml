@@ -1,0 +1,62 @@
+# Remote plugin metadata for KISA U-27 rhosts/hosts.equiv checks.
+id: "remote_kisa_u27"
+name: "Rhosts/hosts.equiv Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-27"
+description: "Check rhosts and hosts.equiv usage and permissions."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    passwd_path:
+      type: string
+    hosts_equiv_path:
+      type: string
+      default: "/etc/hosts.equiv"
+    rhosts_name:
+      type: string
+      default: ".rhosts"
+    ignore_users:
+      type: array
+      default: []
+    allowed_hosts_equiv_owners:
+      type: array
+      default:
+        - "root"
+    allow_root_owner:
+      type: boolean
+      default: true
+    allow_user_owner:
+      type: boolean
+      default: true
+    extra_allowed_owners:
+      type: array
+      default: []
+    max_mode:
+      type: integer
+      default: 600
+    allow_group_write:
+      type: boolean
+      default: false
+    allow_other_write:
+      type: boolean
+      default: false
+    max_results:
+      type: integer
+      default: 200
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "RhostsHostsEquivCheck"

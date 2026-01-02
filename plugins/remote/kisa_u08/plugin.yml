@@ -1,0 +1,37 @@
+# Remote plugin metadata for KISA U-08 admin group membership checks.
+id: "remote_kisa_u08"
+name: "Admin Group Membership Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-08"
+description: "Check for unnecessary accounts in admin groups."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    group_path:
+      type: string
+    admin_groups:
+      type: array
+      default:
+        - "root"
+        - "wheel"
+    allowed_members:
+      type: array
+      default:
+        - "root"
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "AdminGroupMembershipCheck"

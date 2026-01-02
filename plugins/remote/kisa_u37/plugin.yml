@@ -1,0 +1,63 @@
+# Remote plugin metadata for KISA U-37 cron/at permission checks.
+id: "remote_kisa_u37"
+name: "Cron/At Permission Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-37"
+description: "Check cron/at command and config file permissions."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    command_paths:
+      type: array
+      default:
+        - "/usr/bin/crontab"
+        - "/usr/bin/at"
+    allow_group_execute:
+      type: boolean
+      default: false
+    allow_other_execute:
+      type: boolean
+      default: false
+    config_search_paths:
+      type: array
+      default:
+        - "/etc/cron.d"
+        - "/etc/cron.daily"
+        - "/etc/cron.allow"
+        - "/etc/at.allow"
+    find_command:
+      type: string
+      default: "find {path} -type f -ls"
+    allowed_owners:
+      type: array
+      default:
+        - "root"
+    max_mode:
+      type: integer
+      default: 640
+    allow_group_write:
+      type: boolean
+      default: false
+    allow_other_write:
+      type: boolean
+      default: false
+    max_results:
+      type: integer
+      default: 200
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "CronAtPermissionCheck"

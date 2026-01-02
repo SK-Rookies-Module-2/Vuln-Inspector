@@ -1,0 +1,41 @@
+# Remote plugin metadata for KISA U-46 sendmail restrictqrun checks.
+id: "remote_kisa_u46"
+name: "Sendmail restrictqrun Option Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-46"
+description: "Check whether Sendmail restrictqrun option is set."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    sendmail_cf_path:
+      type: string
+      default: "/etc/mail/sendmail.cf"
+    require_smtp_enabled:
+      type: boolean
+      default: false
+    check_service:
+      type: boolean
+      default: false
+    smtp_process_command:
+      type: string
+      default: "ps -ef"
+    max_results:
+      type: integer
+      default: 200
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "SendmailRestrictQrunCheck"

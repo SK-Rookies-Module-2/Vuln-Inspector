@@ -1,0 +1,69 @@
+# Remote plugin metadata for KISA U-62 login warning banner checks.
+id: "remote_kisa_u62"
+name: "Login Warning Banner Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-62"
+description: "Check login warning banner settings and exposure of system info."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    motd_path:
+      type: string
+      default: "/etc/motd"
+    issue_path:
+      type: string
+      default: "/etc/issue"
+    issue_net_path:
+      type: string
+      default: "/etc/issue.net"
+    sshd_config_path:
+      type: string
+      default: "/etc/ssh/sshd_config"
+    required_banner_phrases:
+      type: array
+      default:
+        - "unauthorized"
+        - "unauthorised"
+        - "prohibited"
+        - "authorized"
+        - "authorised"
+        - "접근"
+        - "무단"
+        - "불법"
+        - "금지"
+    disallowed_patterns:
+      type: array
+      default:
+        - "Linux"
+        - "Ubuntu"
+        - "Debian"
+        - "CentOS"
+        - "Red Hat"
+        - "SunOS"
+        - "AIX"
+        - "HP-UX"
+        - "Kernel"
+        - "\\\\r"
+        - "\\\\m"
+        - "\\\\s"
+        - "\\\\v"
+    max_results:
+      type: integer
+      default: 200
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "LoginWarningBannerCheck"

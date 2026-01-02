@@ -1,0 +1,28 @@
+# Remote plugin metadata for KISA U-05 UID 0 account checks.
+id: "remote_kisa_u05"
+name: "UID 0 Non-root Account Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-05"
+description: "Detect non-root accounts with UID 0 in /etc/passwd."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    passwd_path:
+      type: string
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "UidZeroAccountCheck"

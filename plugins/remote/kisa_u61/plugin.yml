@@ -1,0 +1,53 @@
+# Remote plugin metadata for KISA U-61 SNMP access control checks.
+id: "remote_kisa_u61"
+name: "SNMP Access Control Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-61"
+description: "Check SNMP access control restrictions in snmpd.conf."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    snmpd_conf_path:
+      type: string
+      default: "/etc/snmp/snmpd.conf"
+    directives:
+      type: array
+      default:
+        - "com2sec"
+        - "com2sec6"
+        - "rocommunity"
+        - "rwcommunity"
+        - "rocommunity6"
+        - "rwcommunity6"
+    insecure_sources:
+      type: array
+      default:
+        - "default"
+        - "0.0.0.0"
+        - "0.0.0.0/0"
+        - "::"
+        - "::/0"
+        - "any"
+    require_source:
+      type: boolean
+      default: true
+    max_results:
+      type: integer
+      default: 200
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "SnmpAccessControlCheck"

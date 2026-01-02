@@ -1,0 +1,40 @@
+# Remote plugin metadata for KISA U-48 SMTP expn/vrfy checks.
+id: "remote_kisa_u48"
+name: "SMTP EXPN/VRFY Disable Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-48"
+description: "Check sendmail PrivacyOptions for noexpn/novrfy."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    sendmail_cf_path:
+      type: string
+      default: "/etc/mail/sendmail.cf"
+    required_tokens:
+      type: array
+      default:
+        - "noexpn"
+        - "novrfy"
+    allow_goaway:
+      type: boolean
+      default: true
+    max_results:
+      type: integer
+      default: 200
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "SmtpExpnVrfyCheck"

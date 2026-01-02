@@ -1,0 +1,37 @@
+# Remote plugin metadata for KISA U-60 SNMP community checks.
+id: "remote_kisa_u60"
+name: "SNMP Community String Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-60"
+description: "Check SNMP community strings for default values."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    snmpd_conf_path:
+      type: string
+      default: "/etc/snmp/snmpd.conf"
+    insecure_tokens:
+      type: array
+      default:
+        - "public"
+        - "private"
+    max_results:
+      type: integer
+      default: 200
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "SnmpCommunityCheck"

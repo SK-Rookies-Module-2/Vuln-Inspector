@@ -1,0 +1,42 @@
+# Remote plugin metadata for KISA U-45 mail service version checks.
+id: "remote_kisa_u45"
+name: "Mail Service Version Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-45"
+description: "Check sendmail/postfix version information."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    sendmail_command:
+      type: string
+      default: "sh -lc 'sendmail -d0.1 < /dev/null | grep Version'"
+    postfix_command:
+      type: string
+      default: "postconf mail_version"
+    min_sendmail_version:
+      type: string
+    min_postfix_version:
+      type: string
+    report_unknown:
+      type: boolean
+      default: true
+    max_results:
+      type: integer
+      default: 50
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "MailServiceVersionCheck"

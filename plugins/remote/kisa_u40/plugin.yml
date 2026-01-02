@@ -1,0 +1,44 @@
+# Remote plugin metadata for KISA U-40 NFS access control checks.
+id: "remote_kisa_u40"
+name: "NFS Access Control Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-40"
+description: "Check NFS exports access control and permissions."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    exports_path:
+      type: string
+      default: "/etc/exports"
+    required_owner:
+      type: string
+      default: "root"
+    max_mode:
+      type: integer
+      default: 644
+    allow_group_write:
+      type: boolean
+      default: false
+    allow_other_write:
+      type: boolean
+      default: false
+    max_results:
+      type: integer
+      default: 200
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "NfsAccessControlCheck"

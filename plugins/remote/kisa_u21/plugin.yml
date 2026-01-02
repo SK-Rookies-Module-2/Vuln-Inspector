@@ -1,0 +1,45 @@
+# Remote plugin metadata for KISA U-21 syslog permission checks.
+id: "remote_kisa_u21"
+name: "Syslog Config Permission Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-21"
+description: "Check syslog/rsyslog configuration file ownership and permissions."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    syslog_conf_path:
+      type: string
+    rsyslog_conf_path:
+      type: string
+    allowed_owners:
+      type: array
+      default:
+        - "root"
+        - "bin"
+        - "sys"
+    max_mode:
+      type: integer
+      default: 640
+    allow_group_write:
+      type: boolean
+      default: false
+    allow_other_permissions:
+      type: boolean
+      default: false
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "SyslogConfigPermissionCheck"

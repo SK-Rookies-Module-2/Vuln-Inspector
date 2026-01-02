@@ -1,0 +1,65 @@
+# Remote plugin metadata for KISA U-07 unused account checks.
+id: "remote_kisa_u07"
+name: "Unused Account Cleanup Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-07"
+description: "Detect unnecessary or inactive user accounts."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    passwd_path:
+      type: string
+    shadow_path:
+      type: string
+    system_accounts:
+      type: array
+      default:
+        - "lp"
+        - "uucp"
+        - "nuucp"
+        - "daemon"
+        - "bin"
+        - "sys"
+        - "adm"
+        - "operator"
+        - "mail"
+        - "news"
+        - "games"
+    non_login_shells:
+      type: array
+      default:
+        - "/bin/false"
+        - "/sbin/nologin"
+        - "/usr/sbin/nologin"
+        - "/bin/nologin"
+    login_shells:
+      type: array
+    inactive_days:
+      type: integer
+      default: 90
+    check_system_accounts:
+      type: boolean
+      default: true
+    check_inactive_accounts:
+      type: boolean
+      default: true
+    lastlog_command:
+      type: string
+      default: "lastlog"
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "UnusedAccountCleanupCheck"

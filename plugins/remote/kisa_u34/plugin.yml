@@ -1,0 +1,56 @@
+# Remote plugin metadata for KISA U-34 finger service disable checks.
+id: "remote_kisa_u34"
+name: "Finger Service Disable Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-34"
+description: "Check whether the finger service is disabled."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    inetd_conf_path:
+      type: string
+      default: "/etc/inetd.conf"
+    xinetd_finger_path:
+      type: string
+      default: "/etc/xinetd.d/finger"
+    check_inetd:
+      type: boolean
+      default: true
+    check_xinetd:
+      type: boolean
+      default: true
+    check_process:
+      type: boolean
+      default: true
+    process_command:
+      type: string
+      default: "ps -ef"
+    check_port:
+      type: boolean
+      default: true
+    netstat_command:
+      type: string
+      default: "netstat -an"
+    finger_port:
+      type: integer
+      default: 79
+    max_results:
+      type: integer
+      default: 200
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "FingerServiceDisableCheck"

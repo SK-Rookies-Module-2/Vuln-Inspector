@@ -1,0 +1,40 @@
+# Remote plugin metadata for KISA U-19 hosts file permission checks.
+id: "remote_kisa_u19"
+name: "Hosts File Permission Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-19"
+description: "Check /etc/hosts ownership and permissions."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    hosts_path:
+      type: string
+    required_owner:
+      type: string
+      default: "root"
+    max_mode:
+      type: integer
+      default: 644
+    allow_group_write:
+      type: boolean
+      default: false
+    allow_other_write:
+      type: boolean
+      default: false
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "HostsFilePermissionCheck"

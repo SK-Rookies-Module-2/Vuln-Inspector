@@ -1,0 +1,44 @@
+# Remote plugin metadata for KISA U-17 startup script permission checks.
+id: "remote_kisa_u17"
+name: "Startup Script Permission Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-17"
+description: "Check ownership and permissions of startup scripts."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    script_paths:
+      type: array
+      default:
+        - "/etc/rc.d"
+        - "/etc/rc*.d"
+        - "/etc/init.d"
+    required_owner:
+      type: string
+      default: "root"
+    check_others_writable:
+      type: boolean
+      default: true
+    max_results:
+      type: integer
+      default: 200
+    list_command:
+      type: string
+      default: "ls -l {path}"
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "StartupScriptPermissionCheck"

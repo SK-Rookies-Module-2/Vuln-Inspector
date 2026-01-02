@@ -1,0 +1,37 @@
+# Remote plugin metadata for KISA U-50 DNS zone transfer checks.
+id: "remote_kisa_u50"
+name: "DNS Zone Transfer Restriction Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-50"
+description: "Check DNS allow-transfer settings for zone transfer."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    named_conf_paths:
+      type: array
+      default:
+        - "/etc/named.conf"
+        - "/etc/bind/named.conf.options"
+    allow_missing_config:
+      type: boolean
+      default: false
+    max_results:
+      type: integer
+      default: 200
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "DnsZoneTransferCheck"

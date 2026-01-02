@@ -1,0 +1,34 @@
+# Remote plugin metadata for KISA U-16 passwd file permission checks.
+id: "remote_kisa_u16"
+name: "Passwd File Permission Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-16"
+description: "Check /etc/passwd ownership and permissions."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    passwd_path:
+      type: string
+    required_owner:
+      type: string
+      default: "root"
+    max_mode:
+      type: integer
+      default: 644
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "PasswdFilePermissionCheck"

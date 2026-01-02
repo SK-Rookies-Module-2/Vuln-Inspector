@@ -1,0 +1,48 @@
+# Remote plugin metadata for KISA U-38 DoS-prone service disable checks.
+id: "remote_kisa_u38"
+name: "DoS-Prone Service Disable Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-38"
+description: "Check whether echo/discard/daytime/chargen services are disabled."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    inetd_conf_path:
+      type: string
+      default: "/etc/inetd.conf"
+    xinetd_dir:
+      type: string
+      default: "/etc/xinetd.d"
+    services:
+      type: array
+      default:
+        - "echo"
+        - "discard"
+        - "daytime"
+        - "chargen"
+    check_inetd:
+      type: boolean
+      default: true
+    check_xinetd:
+      type: boolean
+      default: true
+    max_results:
+      type: integer
+      default: 200
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "DosServiceDisableCheck"

@@ -1,0 +1,34 @@
+# Remote plugin metadata for KISA U-51 DNS dynamic update checks.
+id: "remote_kisa_u51"
+name: "DNS Dynamic Update Restriction Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-51"
+description: "Check allow-update directives in named configuration."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    named_conf_paths:
+      type: array
+      default:
+        - "/etc/named.conf"
+        - "/etc/bind/named.conf.options"
+    max_results:
+      type: integer
+      default: 200
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "DnsDynamicUpdateCheck"

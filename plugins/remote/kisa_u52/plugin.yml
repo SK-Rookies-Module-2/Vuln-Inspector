@@ -1,0 +1,51 @@
+# Remote plugin metadata for KISA U-52 telnet disable checks.
+id: "remote_kisa_u52"
+name: "Telnet Disable Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-52"
+description: "Check telnet service disablement."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    inetd_conf_path:
+      type: string
+      default: "/etc/inetd.conf"
+    xinetd_dir:
+      type: string
+      default: "/etc/xinetd.d"
+    xinetd_services:
+      type: array
+      default:
+        - "telnet"
+    check_inetd:
+      type: boolean
+      default: true
+    check_xinetd:
+      type: boolean
+      default: true
+    check_systemd:
+      type: boolean
+      default: true
+    systemd_socket_command:
+      type: string
+      default: "systemctl list-units --type=socket"
+    max_results:
+      type: integer
+      default: 200
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "TelnetDisableCheck"
