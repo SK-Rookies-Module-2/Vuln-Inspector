@@ -1,0 +1,30 @@
+# Remote plugin metadata for KISA U-10 duplicate UID checks.
+id: "remote_kisa_u10"
+name: "Duplicate UID Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-10"
+description: "Detect duplicate UID assignments in /etc/passwd."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    passwd_path:
+      type: string
+    exclude_uids:
+      type: array
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "DuplicateUidCheck"
