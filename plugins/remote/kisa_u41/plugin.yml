@@ -1,0 +1,35 @@
+# Remote plugin metadata for KISA U-41 automountd disable checks.
+id: "remote_kisa_u41"
+name: "Automountd Disable Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-41"
+description: "Check whether automountd/autofs services are disabled."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    process_command:
+      type: string
+      default: "ps -ef"
+    process_pattern:
+      type: string
+      default: "automount|autofs"
+    max_results:
+      type: integer
+      default: 200
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "AutomountdDisableCheck"

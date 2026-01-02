@@ -1,0 +1,47 @@
+# Remote plugin metadata for KISA U-44 tftp/talk disable checks.
+id: "remote_kisa_u44"
+name: "TFTP/Talk Disable Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-44"
+description: "Check tftp/talk service disablement."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    inetd_conf_path:
+      type: string
+      default: "/etc/inetd.conf"
+    xinetd_dir:
+      type: string
+      default: "/etc/xinetd.d"
+    xinetd_services:
+      type: array
+      default:
+        - "tftp"
+        - "talk"
+        - "ntalk"
+    check_inetd:
+      type: boolean
+      default: true
+    check_xinetd:
+      type: boolean
+      default: true
+    max_results:
+      type: integer
+      default: 200
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "TftpTalkDisableCheck"

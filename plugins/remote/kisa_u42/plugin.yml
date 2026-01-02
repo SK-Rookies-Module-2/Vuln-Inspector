@@ -1,0 +1,51 @@
+# Remote plugin metadata for KISA U-42 RPC service disable checks.
+id: "remote_kisa_u42"
+name: "Unnecessary RPC Service Disable Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-42"
+description: "Check whether unnecessary RPC services are disabled."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    inetd_conf_path:
+      type: string
+      default: "/etc/inetd.conf"
+    services:
+      type: array
+      default:
+        - "cmsd"
+        - "ttdbserverd"
+        - "sadmind"
+        - "rusersd"
+        - "walld"
+        - "sprayd"
+        - "rstatd"
+    check_inetd:
+      type: boolean
+      default: true
+    check_process:
+      type: boolean
+      default: true
+    process_command:
+      type: string
+      default: "ps -ef"
+    max_results:
+      type: integer
+      default: 200
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "RpcServiceDisableCheck"

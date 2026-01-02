@@ -1,0 +1,41 @@
+# Remote plugin metadata for KISA U-43 NIS/NIS+ checks.
+id: "remote_kisa_u43"
+name: "NIS/NIS+ Service Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-43"
+description: "Check whether NIS daemons are running."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    process_command:
+      type: string
+      default: "ps -ef"
+    process_pattern:
+      type: string
+      default: "ypserv|ypbind|ypxfrd|rpc.yppasswdd|rpc.ypupdated"
+    check_nis_plus:
+      type: boolean
+      default: false
+    nis_plus_pattern:
+      type: string
+      default: "rpc.nisd|nisplus"
+    max_results:
+      type: integer
+      default: 200
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "NisServiceCheck"
