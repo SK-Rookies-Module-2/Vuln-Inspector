@@ -164,7 +164,7 @@ curl -X POST http://127.0.0.1:8000/api/v1/targets \
     "connection_info": {
       "host": "10.7.143.237",
       "port": 22,
-      "proxy_jump": "ubuntu@44.251.33.188:22",
+      "proxy_command": "ssh -i ~/.ssh/bastion-server-key.pem -o IdentitiesOnly=yes -W %h:%p ubuntu@44.251.33.188",
       "identities_only": true
     },
     "credentials": {
