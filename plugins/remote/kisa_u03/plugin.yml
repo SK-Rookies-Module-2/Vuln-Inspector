@@ -1,0 +1,40 @@
+# Remote plugin metadata for KISA U-03 account lockout threshold checks.
+id: "remote_kisa_u03"
+name: "Account Lockout Threshold Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-03"
+description: "Check account lockout threshold across OS policies."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    pam_auth_path_redhat:
+      type: string
+    pam_auth_path_debian:
+      type: string
+    policy_conf_path:
+      type: string
+    login_path:
+      type: string
+    aix_user_path:
+      type: string
+    hpux_trusted_path:
+      type: string
+    hpux_default_security_path:
+      type: string
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "AccountLockoutThresholdCheck"
