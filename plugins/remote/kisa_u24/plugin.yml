@@ -1,0 +1,58 @@
+# Remote plugin metadata for KISA U-24 environment file permission checks.
+id: "remote_kisa_u24"
+name: "User Env File Permission Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-24"
+description: "Check user environment file ownership and permissions."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    passwd_path:
+      type: string
+    env_file_names:
+      type: array
+      default:
+        - ".profile"
+        - ".bashrc"
+        - ".cshrc"
+        - ".kshrc"
+        - ".bash_profile"
+        - ".login"
+    ignore_users:
+      type: array
+      default: []
+    allow_root_owner:
+      type: boolean
+      default: true
+    allow_user_owner:
+      type: boolean
+      default: true
+    extra_allowed_owners:
+      type: array
+      default: []
+    allow_group_write:
+      type: boolean
+      default: false
+    allow_other_write:
+      type: boolean
+      default: false
+    max_results:
+      type: integer
+      default: 200
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "UserEnvFilePermissionCheck"
