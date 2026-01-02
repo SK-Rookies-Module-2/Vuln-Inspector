@@ -1,0 +1,67 @@
+# Remote plugin metadata for KISA U-28 access restriction checks.
+id: "remote_kisa_u28"
+name: "Access IP/Port Restriction Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-28"
+description: "Check TCP Wrapper and firewall access controls."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    hosts_deny_path:
+      type: string
+      default: "/etc/hosts.deny"
+    hosts_allow_path:
+      type: string
+      default: "/etc/hosts.allow"
+    required_deny_patterns:
+      type: array
+      default:
+        - "ALL:ALL"
+    require_allow_entries:
+      type: boolean
+      default: true
+    allowed_owners:
+      type: array
+      default:
+        - "root"
+    max_mode:
+      type: integer
+      default: 600
+    allow_group_write:
+      type: boolean
+      default: false
+    allow_other_write:
+      type: boolean
+      default: false
+    check_iptables:
+      type: boolean
+      default: true
+    iptables_command:
+      type: string
+      default: "iptables -L -n"
+    check_firewalld:
+      type: boolean
+      default: true
+    firewalld_command:
+      type: string
+      default: "firewall-cmd --list-all"
+    max_results:
+      type: integer
+      default: 200
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "AccessRestrictionCheck"
