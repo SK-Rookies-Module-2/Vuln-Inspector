@@ -1,0 +1,45 @@
+# Remote plugin metadata for KISA U-12 session timeout checks.
+id: "remote_kisa_u12"
+name: "Session Timeout Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-12"
+description: "Check session timeout settings (TMOUT/autologout)."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    profile_paths:
+      type: array
+      default:
+        - "/etc/profile"
+        - "/etc/bashrc"
+        - "/etc/bash.bashrc"
+    user_profile_paths:
+      type: array
+    csh_paths:
+      type: array
+      default:
+        - "/etc/csh.login"
+        - "/etc/csh.cshrc"
+    max_timeout_seconds:
+      type: integer
+      default: 600
+    require_tmout_export:
+      type: boolean
+      default: true
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "SessionTimeoutCheck"
