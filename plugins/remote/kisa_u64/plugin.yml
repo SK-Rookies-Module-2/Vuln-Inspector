@@ -1,0 +1,43 @@
+# Remote plugin metadata for KISA U-64 security patch level checks.
+id: "remote_kisa_u64"
+name: "Security Patch Level Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-64"
+description: "Collect kernel/package version info for patch verification."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    kernel_command:
+      type: string
+      default: "uname -a"
+    package_commands:
+      type: array
+      default: []
+    min_kernel_version:
+      type: string
+    report_unknown:
+      type: boolean
+      default: true
+    max_lines_per_command:
+      type: integer
+      default: 200
+    max_results:
+      type: integer
+      default: 200
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "SecurityPatchLevelCheck"
