@@ -1,0 +1,62 @@
+# Remote plugin metadata for KISA U-36 r services disable checks.
+id: "remote_kisa_u36"
+name: "R Services Disable Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-36"
+description: "Check rlogin/rsh/rexec service disablement."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    inetd_conf_path:
+      type: string
+      default: "/etc/inetd.conf"
+    xinetd_dir:
+      type: string
+      default: "/etc/xinetd.d"
+    xinetd_services:
+      type: array
+      default:
+        - "rlogin"
+        - "rsh"
+        - "rexec"
+    check_inetd:
+      type: boolean
+      default: true
+    check_xinetd:
+      type: boolean
+      default: true
+    check_systemd:
+      type: boolean
+      default: true
+    check_processes:
+      type: boolean
+      default: true
+    systemd_list_units_command:
+      type: string
+      default: "systemctl list-unit-files"
+    systemd_active_units_command:
+      type: string
+      default: "systemctl list-units --type=service --state=active"
+    process_command:
+      type: string
+      default: "ps -ef"
+    max_results:
+      type: integer
+      default: 200
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "RServiceDisableCheck"

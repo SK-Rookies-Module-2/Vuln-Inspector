@@ -1,0 +1,35 @@
+# Remote plugin metadata for KISA U-39 NFS service disable checks.
+id: "remote_kisa_u39"
+name: "NFS Service Disable Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-39"
+description: "Check whether NFS related daemons are running."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    process_command:
+      type: string
+      default: "ps -ef"
+    process_pattern:
+      type: string
+      default: "nfsd|statd|lockd"
+    max_results:
+      type: integer
+      default: 200
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "NfsServiceDisableCheck"

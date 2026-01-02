@@ -1,0 +1,70 @@
+# Remote plugin metadata for KISA U-35 anonymous access restriction checks.
+id: "remote_kisa_u35"
+name: "Anonymous Access Restriction Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-35"
+description: "Check anonymous access settings for FTP/Samba/NFS."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    passwd_path:
+      type: string
+      default: "/etc/passwd"
+    check_ftp_accounts:
+      type: boolean
+      default: true
+    ftp_account_names:
+      type: array
+      default:
+        - "ftp"
+        - "anonymous"
+    check_vsftpd:
+      type: boolean
+      default: true
+    vsftpd_conf_paths:
+      type: array
+      default:
+        - "/etc/vsftpd.conf"
+        - "/etc/vsftpd/vsftpd.conf"
+    check_proftpd:
+      type: boolean
+      default: true
+    proftpd_conf_path:
+      type: string
+      default: "/etc/proftpd/proftpd.conf"
+    check_samba:
+      type: boolean
+      default: true
+    samba_conf_paths:
+      type: array
+      default:
+        - "/etc/samba/smb.conf"
+        - "/usr/lib/smb.conf"
+    check_nfs:
+      type: boolean
+      default: true
+    nfs_export_paths:
+      type: array
+      default:
+        - "/etc/exports"
+        - "/etc/dfs/dfstab"
+    max_results:
+      type: integer
+      default: 200
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "AnonymousAccessRestrictionCheck"
