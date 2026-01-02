@@ -1,0 +1,47 @@
+# Remote plugin metadata for KISA U-47 SMTP relay restriction checks.
+id: "remote_kisa_u47"
+name: "SMTP Relay Restriction Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-47"
+description: "Check sendmail relay restriction settings."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    access_path:
+      type: string
+      default: "/etc/mail/access"
+    access_db_path:
+      type: string
+      default: "/etc/mail/access.db"
+    sendmail_cf_path:
+      type: string
+      default: "/etc/mail/sendmail.cf"
+    check_access:
+      type: boolean
+      default: true
+    check_access_db:
+      type: boolean
+      default: true
+    check_sendmail_cf:
+      type: boolean
+      default: true
+    max_results:
+      type: integer
+      default: 200
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "SmtpRelayRestrictionCheck"
