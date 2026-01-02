@@ -20,7 +20,16 @@ config_schema:
     search_paths:
       type: array
       default:
-        - "/"
+        - "/bin"
+        - "/sbin"
+        - "/usr/bin"
+        - "/usr/sbin"
+        - "/usr/local/bin"
+        - "/usr/local/sbin"
+        - "/opt"
+        - "/home"
+        - "/var"
+        - "/tmp"
     exclude_paths:
       type: array
       default:

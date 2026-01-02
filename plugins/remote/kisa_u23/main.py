@@ -14,6 +14,18 @@ from app.core.types import Finding
 
 OS_TYPES = {"linux", "solaris", "aix", "hpux"}
 DEFAULT_FIND_COMMAND = "find {path} -xdev {prune} -user root -type f \\( -perm -04000 -o -perm -02000 \\) -ls"
+DEFAULT_SEARCH_PATHS = (
+    "/bin",
+    "/sbin",
+    "/usr/bin",
+    "/usr/sbin",
+    "/usr/local/bin",
+    "/usr/local/sbin",
+    "/opt",
+    "/home",
+    "/var",
+    "/tmp",
+)
 
 
 @dataclass
@@ -58,7 +70,10 @@ class SuidSgidFileCheck(BasePlugin):
         if not find_command:
             raise PluginConfigError("find_command must be a non-empty string")
 
-        search_paths = _normalize_list(self.context.config.get("search_paths"), "search_paths") or ["/"]
+        search_paths = _normalize_list(
+            self.context.config.get("search_paths"),
+            "search_paths",
+        ) or list(DEFAULT_SEARCH_PATHS)
         exclude_paths = _normalize_list(self.context.config.get("exclude_paths"), "exclude_paths")
         whitelist_paths = set(
             path.strip() for path in _normalize_list(self.context.config.get("whitelist_paths"), "whitelist_paths")
