@@ -1,0 +1,46 @@
+# Remote plugin metadata for KISA U-66 syslog policy checks.
+id: "remote_kisa_u66"
+name: "System Logging Policy Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-66"
+description: "Check syslog/rsyslog policy configuration for key facilities."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    syslog_conf_paths:
+      type: array
+      default:
+        - "/etc/syslog.conf"
+        - "/etc/rsyslog.conf"
+    required_selectors:
+      type: array
+      default:
+        - "*.info"
+        - "authpriv.*"
+        - "mail.*"
+        - "cron.*"
+        - "*.alert"
+        - "*.emerg"
+    allow_missing_config:
+      type: boolean
+      default: false
+    max_results:
+      type: integer
+      default: 200
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "SystemLoggingPolicyCheck"
