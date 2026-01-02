@@ -1,0 +1,44 @@
+# Remote plugin metadata for KISA U-09 unassigned GID checks.
+id: "remote_kisa_u09"
+name: "Unassigned GID Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-09"
+description: "Detect groups whose GID is not assigned to any account."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    group_path:
+      type: string
+    passwd_path:
+      type: string
+    exclude_groups:
+      type: array
+      default:
+        - "root"
+        - "bin"
+        - "daemon"
+        - "sys"
+        - "adm"
+        - "uucp"
+        - "lp"
+        - "mail"
+        - "news"
+    exclude_gids:
+      type: array
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "UnassignedGidCheck"
