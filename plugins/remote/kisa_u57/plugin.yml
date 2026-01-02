@@ -1,0 +1,39 @@
+# Remote plugin metadata for KISA U-57 ftpusers checks.
+id: "remote_kisa_u57"
+name: "Ftpusers File Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-57"
+description: "Check ftpusers files for root account entries."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    ftpusers_paths:
+      type: array
+      default:
+        - "/etc/ftpusers"
+        - "/etc/vsftpd/ftpusers"
+        - "/etc/proftpd.ftpusers"
+    required_users:
+      type: array
+      default:
+        - "root"
+    max_results:
+      type: integer
+      default: 200
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "FtpusersFileCheck"
