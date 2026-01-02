@@ -1,0 +1,41 @@
+# Remote plugin metadata for KISA U-20 inetd permission checks.
+id: "remote_kisa_u20"
+name: "Inetd Config Permission Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-20"
+description: "Check inetd/xinetd configuration file ownership and permissions."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    inetd_conf_path:
+      type: string
+    xinetd_conf_path:
+      type: string
+    xinetd_dir:
+      type: string
+    required_owner:
+      type: string
+      default: "root"
+    max_mode:
+      type: integer
+      default: 600
+    max_results:
+      type: integer
+      default: 200
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "InetdConfigPermissionCheck"
