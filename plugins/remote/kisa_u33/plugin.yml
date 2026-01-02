@@ -1,0 +1,80 @@
+# Remote plugin metadata for KISA U-33 hidden file discovery.
+id: "remote_kisa_u33"
+name: "Hidden File Discovery"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-33"
+description: "Detect suspicious hidden files."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    find_command:
+      type: string
+      default: "find {path} -xdev {prune} -type f -name '.*' -ls"
+    search_paths:
+      type: array
+      default:
+        - "/"
+        - "/home"
+        - "/root"
+        - "/tmp"
+        - "/var"
+        - "/var/tmp"
+        - "/dev"
+    exclude_paths:
+      type: array
+      default:
+        - "/proc"
+        - "/sys"
+        - "/run"
+    allowed_basenames:
+      type: array
+      default:
+        - ".profile"
+        - ".bashrc"
+        - ".bash_profile"
+        - ".bash_logout"
+        - ".cshrc"
+        - ".kshrc"
+        - ".login"
+        - ".logout"
+        - ".zshrc"
+        - ".zprofile"
+        - ".zlogin"
+        - ".zlogout"
+        - ".vimrc"
+        - ".viminfo"
+        - ".nanorc"
+        - ".tmux.conf"
+        - ".screenrc"
+        - ".inputrc"
+        - ".gitconfig"
+        - ".pwd.lock"
+    whitelist_paths:
+      type: array
+      default: []
+    suspicious_paths:
+      type: array
+      default:
+        - "/tmp"
+        - "/var/tmp"
+        - "/dev"
+    max_results:
+      type: integer
+      default: 200
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "HiddenFileCheck"
