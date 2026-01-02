@@ -12,3 +12,7 @@ wheels/
 
 # Scanner output
 storage/artifacts/
+
+# IDE
+.vscode/
+.idea/

@@ -1,0 +1,36 @@
+id: 'remote_linux_kisa_u02'
+name: 'KISA U-02 Password Policy'
+version: '0.1.0'
+type: 'remote'
+category: 'infrastructure'
+tags:
+  - 'KISA:U-02'
+description: 'Password policy config passthrough stub'
+
+config_schema:
+  properties:
+    pwquality_path:
+      type: string
+      default: '/etc/security/pwquality.conf'
+    common_password_path:
+      type: string
+      default: '/etc/pam.d/common-password'
+    login_defs_path:
+      type: string
+      default: '/etc/login.defs'
+
+    required_settings:
+      type: object
+      default:
+        lcredit: -1
+        ucredit: -1
+        dcredit: -1
+        ocredit: -1
+        minlen: 8
+        PASS_MIN_DAYS: 1
+        PASS_MAX_DAYS: 90
+        remember: 4
+        difok: 1
+
+entry_point: 'main.py'
+class_name: 'LinuxKisaU02PasswordPolicy'
