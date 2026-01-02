@@ -1,0 +1,49 @@
+# Remote plugin metadata for KISA U-23 SUID/SGID file checks.
+id: "remote_kisa_u23"
+name: "SUID/SGID File Check"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-23"
+description: "Detect unnecessary SUID/SGID files."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    find_command:
+      type: string
+      default: "find {path} -xdev {prune} -user root -type f \\( -perm -04000 -o -perm -02000 \\) -ls"
+    search_paths:
+      type: array
+      default:
+        - "/"
+    exclude_paths:
+      type: array
+      default:
+        - "/proc"
+        - "/sys"
+        - "/dev"
+        - "/run"
+    whitelist_paths:
+      type: array
+      default:
+        - "/usr/bin/passwd"
+        - "/usr/bin/su"
+        - "/bin/ping"
+    max_results:
+      type: integer
+      default: 200
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "SuidSgidFileCheck"
