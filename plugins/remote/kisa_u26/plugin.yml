@@ -1,0 +1,46 @@
+# Remote plugin metadata for KISA U-26 non-device file checks in /dev.
+id: "remote_kisa_u26"
+name: "Non-Device File Check in /dev"
+version: "0.1.0"
+type: "remote"
+category: "infrastructure"
+tags:
+  - "KISA:U-26"
+description: "Detect regular files in /dev."
+config_schema:
+  required:
+    - os_type
+  properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    find_command:
+      type: string
+      default: "find {path} -xdev {prune} -type f -ls"
+    search_paths:
+      type: array
+      default:
+        - "/dev"
+    exclude_paths:
+      type: array
+      default:
+        - "/dev/shm"
+        - "/dev/mqueue"
+    whitelist_paths:
+      type: array
+      default:
+        - "/dev/MAKEDEV"
+        - "/dev/MAKEDEV.local"
+    max_results:
+      type: integer
+      default: 200
+    use_sudo:
+      type: boolean
+      default: false
+    sudo_user:
+      type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
+entry_point: "main.py"
+class_name: "NonDeviceFileCheck"
