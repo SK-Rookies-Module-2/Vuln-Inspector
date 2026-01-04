@@ -11,6 +11,7 @@ API 중심의 진단 흐름을 **웹 대시보드에서 쉽게 실행/관찰/보
   - `POST /api/v1/jobs/{id}/run` 지연 실행
   - `GET /api/v1/jobs/{id}/status` 상태/진행률
   - `GET /api/v1/jobs/{id}/findings` 결과 조회
+  - `GET /api/v1/plugins` 플러그인 목록 조회
   - `POST /api/v1/jobs/{id}/report` 보고서 생성
   - `GET /api/v1/reports/{id}/file` 보고서 다운로드
 

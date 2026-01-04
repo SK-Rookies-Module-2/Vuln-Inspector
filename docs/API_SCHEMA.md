@@ -142,9 +142,12 @@ FastAPI 기본 오류 응답을 사용합니다.
 
 **응답 코드**
 - 201: 생성 성공
-- 400: 플러그인 ID 오류 또는 설정 검증 실패
 - 404: 대상 없음
 - 422: 필드 검증 실패
+
+**실행 오류 처리**
+- 플러그인 ID/설정 오류는 백그라운드 실행 중 발생할 수 있으며,
+  `Job.error_message`와 `status=FAILED`로 기록됩니다.
 
 ### POST /api/v1/jobs/{job_id}/run
 - 기존 Job을 다시 실행
@@ -152,7 +155,6 @@ FastAPI 기본 오류 응답을 사용합니다.
 
 **응답 코드**
 - 200: 실행 성공
-- 400: 플러그인 ID 오류 또는 설정 검증 실패
 - 404: Job 또는 Target 없음
 - 409: 이미 실행 중
 
@@ -211,7 +213,36 @@ FastAPI 기본 오류 응답을 사용합니다.
 
 ---
 
-## 3) Finding 스키마
+## 3) Plugin API
+
+### GET /api/v1/plugins
+**쿼리 파라미터**
+- `type` (string, optional: `static` | `remote` | `dynamic`)
+
+**응답 코드**
+- 200: 정상 반환
+
+**응답 예시**
+```json
+[
+  {
+    "id": "static_strix_scan",
+    "name": "Strix External Static Scan",
+    "version": "0.1.0",
+    "type": "static",
+    "category": "external",
+    "tags": ["OWASP:2025:A03"],
+    "description": "External static scan placeholder for Strix integration.",
+    "config_schema": {"properties": {"repo_url": {"type": "string"}}},
+    "entry_point": "main.py",
+    "class_name": "StrixStaticScan"
+  }
+]
+```
+
+---
+
+## 4) Finding 스키마
 **severity 값 예시**: `Critical | High | Medium | Low | Info`  
 **tags 처리**: 플러그인이 전달한 태그를 그대로 반환합니다.
 ```json
@@ -231,7 +262,7 @@ FastAPI 기본 오류 응답을 사용합니다.
 
 ---
 
-## 4) Report API
+## 5) Report API
 
 ### POST /api/v1/jobs/{job_id}/report
 **요청 본문**
@@ -276,7 +307,7 @@ FastAPI 기본 오류 응답을 사용합니다.
 
 ---
 
-## 5) Demo 플러그인별 scan_config 스키마
+## 6) Demo 플러그인별 scan_config 스키마
 
 ### static_strix_scan
 **필드**
