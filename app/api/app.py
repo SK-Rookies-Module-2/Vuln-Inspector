@@ -9,8 +9,9 @@ from fastapi import Depends, FastAPI, HTTPException, Query, Response
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 
-from app.core.config import API_PREFIX
+from app.core.config import API_PREFIX, PLUGINS_DIR
 from app.core.errors import PluginConfigError
+from app.core.plugin_loader import PluginLoader
 from app.db import models
 from app.db.session import get_session, init_db
 from app.services.scan_executor import ScanExecutor
@@ -21,6 +22,7 @@ from .schemas import (
     JobCreate,
     JobResponse,
     JobStatusResponse,
+    PluginMetaResponse,
     ReportCreate,
     ReportResponse,
     TargetCreate,
@@ -72,6 +74,35 @@ def list_targets(
         .all()
     )
     return [TargetResponse.model_validate(record) for record in records]
+
+
+@app.get(f"{API_PREFIX}/plugins", response_model=List[PluginMetaResponse])
+def list_plugins(
+    plugin_type: str | None = Query(None, alias="type"),
+) -> List[PluginMetaResponse]:
+    # plugin.yml 메타데이터 목록을 반환한다.
+    loader = PluginLoader(PLUGINS_DIR)
+    metas = loader.discover()
+    if plugin_type:
+        normalized = plugin_type.strip().lower()
+        metas = [meta for meta in metas if meta.plugin_type == normalized]
+    metas = sorted(metas, key=lambda meta: meta.plugin_id)
+
+    return [
+        PluginMetaResponse(
+            id=meta.plugin_id,
+            name=meta.name,
+            version=meta.version,
+            type=meta.plugin_type,
+            category=meta.category,
+            tags=meta.tags,
+            description=meta.description,
+            config_schema=meta.config_schema,
+            entry_point=meta.entry_point,
+            class_name=meta.class_name,
+        )
+        for meta in metas
+    ]
 
 
 @app.get(f"{API_PREFIX}/targets/{{target_id}}", response_model=TargetResponse)

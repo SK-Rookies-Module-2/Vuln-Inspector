@@ -116,6 +116,10 @@ class APIClient:
     def get_report(self, report_id: int) -> Dict[str, Any]:
         return self._request("GET", f"/api/v1/reports/{report_id}")
 
+    def list_plugins(self, plugin_type: Optional[str] = None) -> Any:
+        params = self._build_params(type=plugin_type)
+        return self._request("GET", "/api/v1/plugins", params=params)
+
 
 def _safe_json(text: str) -> str:
     # 응답이 JSON이면 detail만 추출하고 아니면 원문을 반환한다.
