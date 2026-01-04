@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+import logging
 from pathlib import Path
 from typing import Dict, List, Optional
 
@@ -14,6 +15,33 @@ from app.core.plugin_loader import PluginLoader, PluginMeta
 from app.core.types import Finding as CoreFinding
 from app.core.types import PluginContext
 from app.db import models
+from app.db.session import SessionLocal
+
+
+logger = logging.getLogger(__name__)
+
+
+def run_job_background(job_id: int) -> None:
+    # 백그라운드 작업에서 Job을 실행한다.
+    session = SessionLocal()
+    try:
+        job = session.get(models.ScanJob, job_id)
+        if job is None:
+            logger.error("Job not found: %s", job_id)
+            return
+        target = session.get(models.Target, job.target_id)
+        if target is None:
+            job.status = "FAILED"
+            job.error_message = "Target not found"
+            session.commit()
+            return
+
+        executor = ScanExecutor(session)
+        executor.run_job(job, target)
+    except Exception as exc:
+        logger.exception("Background job failed: %s", exc)
+    finally:
+        session.close()
 
 
 class ScanExecutor:
