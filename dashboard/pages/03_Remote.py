@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import time
 from typing import Any, Dict, List, Tuple
 
 import streamlit as st
@@ -36,6 +37,13 @@ def _validate_overrides(overrides: Dict[str, Any]) -> Tuple[bool, str]:
         if not isinstance(value, dict):
             return False, f"Override for '{key}' must be a JSON object"
     return True, ""
+
+
+def _rerun() -> None:
+    if hasattr(st, "rerun"):
+        st.rerun()
+    else:
+        st.experimental_rerun()
 
 
 def main() -> None:
@@ -191,20 +199,41 @@ def main() -> None:
 
     last_job_id = st.session_state.get("remote_last_job_id")
     if last_job_id:
-        st.subheader("6) 결과 확인")
-        col_status, col_findings = st.columns(2)
-        if col_status.button("상태 조회"):
-            try:
-                status = client.get_job_status(int(last_job_id))
-                st.json(status)
-            except Exception as exc:
-                st.error(str(exc))
-        if col_findings.button("Finding 조회"):
-            try:
-                findings = client.get_job_findings(int(last_job_id))
-                st.json(findings)
-            except Exception as exc:
-                st.error(str(exc))
+        st.subheader("6) 진행 상태/결과")
+        st.caption(f"현재 Job ID: {last_job_id}")
+
+        col_refresh, col_interval = st.columns(2)
+        with col_refresh:
+            auto_refresh = st.checkbox("자동 새로고침", value=True, key="remote_auto_refresh")
+        with col_interval:
+            refresh_seconds = st.number_input(
+                "새로고침 간격(초)",
+                min_value=2,
+                max_value=30,
+                value=5,
+                step=1,
+                key="remote_refresh_seconds",
+            )
+
+        status_slot = st.empty()
+        findings_slot = st.empty()
+
+        status = None
+        try:
+            status = client.get_job_status(int(last_job_id))
+            status_slot.json(status)
+        except Exception as exc:
+            status_slot.error(str(exc))
+
+        try:
+            findings = client.list_findings(job_id=int(last_job_id), limit=500, offset=0)
+            findings_slot.dataframe(findings, use_container_width=True)
+        except Exception as exc:
+            findings_slot.error(str(exc))
+
+        if auto_refresh and status and status.get("status") in {"PENDING", "RUNNING"}:
+            time.sleep(int(refresh_seconds))
+            _rerun()
 
 
 if __name__ == "__main__":
