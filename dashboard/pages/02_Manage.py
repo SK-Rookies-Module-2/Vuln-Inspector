@@ -25,9 +25,9 @@ def _load_jobs(base_url: str, limit: int) -> List[Dict[str, Any]]:
 
 
 @st.cache_data(ttl=5)
-def _load_findings(base_url: str, limit: int, filters: Dict[str, Any]) -> List[Dict[str, Any]]:
+def _load_findings(base_url: str, limit: int) -> List[Dict[str, Any]]:
     client = APIClient(base_url)
-    return client.list_findings(limit=limit, offset=0, **filters)
+    return client.list_findings(limit=limit, offset=0)
 
 
 def main() -> None:
@@ -206,21 +206,6 @@ def main() -> None:
                     st.error(str(exc))
 
         st.subheader("Finding 목록")
-        col_filters_1, col_filters_2 = st.columns(2)
-        with col_filters_1:
-            filter_job_id = st.number_input("job_id (필터)", min_value=1, step=1, value=1, key="manage_filter_job_id")
-            filter_severity = st.text_input("severity (필터)", value="", key="manage_filter_severity")
-        with col_filters_2:
-            filter_target_id = st.number_input("target_id (필터)", min_value=1, step=1, value=1, key="manage_filter_target_id")
-            filter_tag = st.text_input("tag (필터)", value="", key="manage_filter_tag")
-
-        filters = {
-            "job_id": int(filter_job_id) if filter_job_id else None,
-            "target_id": int(filter_target_id) if filter_target_id else None,
-            "severity": filter_severity or None,
-            "tag": filter_tag or None,
-        }
-
         limit_findings = st.number_input(
             "조회 limit", min_value=10, max_value=1000, value=200, step=50, key="findings_limit"
         )
@@ -228,7 +213,7 @@ def main() -> None:
             st.cache_data.clear()
 
         try:
-            findings = _load_findings(api_base_url, int(limit_findings), filters)
+            findings = _load_findings(api_base_url, int(limit_findings))
             st.dataframe(findings, use_container_width=True)
         except Exception as exc:
             st.error(str(exc))

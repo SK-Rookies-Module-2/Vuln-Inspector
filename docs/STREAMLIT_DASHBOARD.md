@@ -17,20 +17,13 @@ API 중심의 진단 흐름을 **웹 대시보드에서 쉽게 실행/관찰/보
 ## 페이지 구성(멀티 페이지 기준)
 1. **Overview (요약 대시보드)**
    - 최근 Job 목록, 상태 요약(성공/실패/진행 중), 최근 Findings 수
-   - 버튼: “새 스캔 시작”
-2. **Targets (대상 관리)**
-   - 대상 등록 폼(Server/Web/Git Repo)
-   - 등록 목록 테이블(이름, 타입, 생성일, 메모)
-3. **Jobs (스캔 실행/모니터링)**
-   - 스캔 설정 폼(대상 선택, scan_scope, scan_config)
-   - Job 목록, 상태/진행률, 마지막 실행 시간
-   - 선택 Job 상세(상태 폴링, 에러 메시지)
-4. **Findings & Reports (결과/보고서)**
-   - 선택 Job의 Findings 테이블(태그, 심각도, 근거)
-   - 보고서 생성 버튼(JSON/CSV)
-   - 보고서 다운로드 링크
-5. **Settings (선택)**
-   - API URL, 타임아웃, 폴링 주기 설정
+2. **Remote (원격 진단)**
+   - SERVER 대상 선택/등록
+   - Remote 플러그인 다중 선택
+   - 공통 설정 일괄 입력 + 플러그인별 오버라이드(선택)
+3. **Manage (통합 관리)**
+   - Targets/Jobs/Findings CRUD를 탭으로 통합
+   - 각 탭 하단에 목록 테이블 제공
 
 ## 데이터 흐름(모듈/함수 기준)
 - 대상 등록
@@ -82,9 +75,8 @@ dashboard/
   app.py
   pages/
     01_Overview.py
-    02_Targets.py
-    03_Jobs.py
-    04_Findings_Reports.py
+    02_Remote.py
+    03_Manage.py
   lib/
     api_client.py
     schemas.py
