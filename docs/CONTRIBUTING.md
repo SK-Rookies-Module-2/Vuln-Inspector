@@ -177,75 +177,51 @@ curl -X POST http://127.0.0.1:8000/api/v1/jobs \
 ```
 
 ## 동적 플러그인 예시(설명 + 예시)
-동적 플러그인은 **HTTP 엔드포인트**를 대상으로 요청을 보내 응답을 분석합니다.  
-`require_auth`를 사용하는 경우 무인증 접근 가능 여부를 탐지합니다.
+동적 플러그인은 **외부 스캐너 결과를 파싱**하는 형태를 권장합니다.
 
 ### 1) 디렉터리 생성
 ```
-plugins/dynamic/auth_bypass_check/
+plugins/dynamic/strix_scan/
 ```
 
 ### 2) plugin.yml 작성
-`plugins/dynamic/auth_bypass_check/plugin.yml`
+`plugins/dynamic/strix_scan/plugin.yml`
 ```yaml
-id: "dynamic_auth_bypass_check"
-name: "Auth Bypass Check"
+id: "dynamic_strix_scan"
+name: "Strix External Dynamic Scan"
 version: "0.1.0"
 type: "dynamic"
-category: "application"
+category: "external"
 tags:
   - "OWASP:2025:A01"
-description: "Check unauthenticated access to protected endpoints."
+description: "External dynamic scan placeholder for Strix integration."
 config_schema:
   properties:
     base_url:
       type: string
-    endpoint_path:
-      type: string
-      default: "/api/admin"
-    require_auth:
-      type: boolean
-      default: true
-    headers:
-      type: object
-      default: {}
     auth_headers:
       type: object
       default: {}
+    timeout:
+      type: integer
+      default: 1800
 entry_point: "main.py"
-class_name: "AuthBypassCheck"
+class_name: "StrixDynamicScan"
 ```
 
 ### 3) main.py 구현(요약)
 ```python
 from typing import List
 
-from app.adapters.http import HttpClient
+from app.core.errors import PluginConfigError
 from app.core.plugin_base import BasePlugin
 from app.core.types import Finding
 
 
-class AuthBypassCheck(BasePlugin):
+class StrixDynamicScan(BasePlugin):
     def check(self) -> List[Finding]:
-        base_url = self.context.config.get("base_url")
-        endpoint = self.context.config.get("endpoint_path", "/api/admin")
-        require_auth = bool(self.context.config.get("require_auth", True))
-        headers = self.context.config.get("headers", {})
-        auth_headers = self.context.config.get("auth_headers", {})
-
-        client = HttpClient(timeout=5)
-        unauth = client.get(f"{base_url.rstrip('/')}{endpoint}", headers=headers)
-        if require_auth and unauth.status == 200:
-            self.add_finding(
-                vuln_id="OWASP-A01-UNAUTH",
-                title="인증 우회 가능성",
-                severity="Medium",
-                evidence={"status": unauth.status, "endpoint": endpoint},
-                tags=["OWASP:2025:A01"],
-                description="인증 필요 엔드포인트에 대한 접근이 가능합니다.",
-                solution="인증/인가 로직을 적용하세요.",
-            )
-        return self.results
+        # TODO: Strix 외부 스캐너 실행 및 리포트 파싱 추가
+        raise PluginConfigError("Strix dynamic scan is not configured yet")
 ```
 
 ### 4) API 호출 예시
@@ -256,7 +232,7 @@ curl -X POST http://127.0.0.1:8000/api/v1/targets \
 
 curl -X POST http://127.0.0.1:8000/api/v1/jobs \
   -H "Content-Type: application/json" \
-  -d '{"target_id":2,"scan_scope":["dynamic_auth_bypass_check"],"scan_config":{"dynamic_auth_bypass_check":{"endpoint_path":"/api/admin","require_auth":true}}}'
+  -d '{"target_id":2,"scan_scope":["dynamic_strix_scan"],"scan_config":{"dynamic_strix_scan":{"base_url":"https://example.com"}}}'
 ```
 
 ## 설정 전달 방식
@@ -265,7 +241,7 @@ curl -X POST http://127.0.0.1:8000/api/v1/jobs \
 
 ## 테스트 방법
 - 유닛 테스트: `UV_CACHE_DIR=.uv-cache uv run pytest -q`
-- 채널 데모: `python3 scripts/run_static_demo.py` 등
+- 채널 데모: `python3 scripts/run_remote_demo.py`
 
 ## 변경 시 체크리스트
 - `plugin.yml`에 스키마/기본값이 정의되었는가?
@@ -275,6 +251,6 @@ curl -X POST http://127.0.0.1:8000/api/v1/jobs \
 
 ## 문의/리뷰 포인트
 - 플러그인 ID는 고유한가?
-- 설정 검증 오류 시 API가 400을 반환하는가?
+- 설정 검증 오류가 Job `error_message`에 기록되는가?
 - 결과(Findings)가 DB에 저장되는가?
 - 보고서 생성/다운로드 경로가 정상인가?

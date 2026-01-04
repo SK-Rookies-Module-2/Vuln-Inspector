@@ -5,15 +5,15 @@ from __future__ import annotations
 from pathlib import Path
 from typing import List
 
-from fastapi import Depends, FastAPI, HTTPException, Query, Response
+from fastapi import BackgroundTasks, Depends, FastAPI, HTTPException, Query, Response
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 
-from app.core.config import API_PREFIX
-from app.core.errors import PluginConfigError
+from app.core.config import API_PREFIX, PLUGINS_DIR
+from app.core.plugin_loader import PluginLoader
 from app.db import models
 from app.db.session import get_session, init_db
-from app.services.scan_executor import ScanExecutor
+from app.services.scan_executor import run_job_background
 from app.services.reporting import generate_report
 
 from .schemas import (
@@ -21,6 +21,7 @@ from .schemas import (
     JobCreate,
     JobResponse,
     JobStatusResponse,
+    PluginMetaResponse,
     ReportCreate,
     ReportResponse,
     TargetCreate,
@@ -74,6 +75,35 @@ def list_targets(
     return [TargetResponse.model_validate(record) for record in records]
 
 
+@app.get(f"{API_PREFIX}/plugins", response_model=List[PluginMetaResponse])
+def list_plugins(
+    plugin_type: str | None = Query(None, alias="type"),
+) -> List[PluginMetaResponse]:
+    # plugin.yml 메타데이터 목록을 반환한다.
+    loader = PluginLoader(PLUGINS_DIR)
+    metas = loader.discover()
+    if plugin_type:
+        normalized = plugin_type.strip().lower()
+        metas = [meta for meta in metas if meta.plugin_type == normalized]
+    metas = sorted(metas, key=lambda meta: meta.plugin_id)
+
+    return [
+        PluginMetaResponse(
+            id=meta.plugin_id,
+            name=meta.name,
+            version=meta.version,
+            type=meta.plugin_type,
+            category=meta.category,
+            tags=meta.tags,
+            description=meta.description,
+            config_schema=meta.config_schema,
+            entry_point=meta.entry_point,
+            class_name=meta.class_name,
+        )
+        for meta in metas
+    ]
+
+
 @app.get(f"{API_PREFIX}/targets/{{target_id}}", response_model=TargetResponse)
 def get_target(
     target_id: int,
@@ -112,6 +142,7 @@ def delete_target(
 def create_job(
     payload: JobCreate,
     session: Session = Depends(get_session),
+    background_tasks: BackgroundTasks = None,
 ) -> JobResponse:
     # Job이 참조하는 Target이 존재하는지 확인한다.
     target = session.get(models.Target, payload.target_id)
@@ -129,18 +160,9 @@ def create_job(
     session.commit()
     session.refresh(job)
 
-    if payload.run_now:
-        # 즉시 실행 옵션이면 스캔 실행기로 실행 후 결과를 DB에 반영한다.
-        executor = ScanExecutor(session)
-        try:
-            executor.run_job(job, target)
-        except PluginConfigError as exc:
-            raise HTTPException(status_code=400, detail=str(exc)) from exc
-        except KeyError as exc:
-            detail = exc.args[0] if exc.args else "Invalid plugin id"
-            raise HTTPException(status_code=400, detail=detail) from exc
-        # 실행 결과가 반영된 최신 Job 상태를 다시 로드한다.
-        session.refresh(job)
+    if payload.run_now and background_tasks is not None:
+        # 즉시 실행 옵션이면 백그라운드에서 스캔을 수행한다.
+        background_tasks.add_task(run_job_background, job.id)
 
     # Job 생성/실행 결과를 응답으로 반환한다.
     return JobResponse.model_validate(job)
@@ -173,6 +195,7 @@ def list_jobs(
 def run_job(
     job_id: int,
     session: Session = Depends(get_session),
+    background_tasks: BackgroundTasks = None,
 ) -> JobResponse:
     # Job 존재 여부와 상태를 확인한다.
     job = session.get(models.ScanJob, job_id)
@@ -186,17 +209,17 @@ def run_job(
     if target is None:
         raise HTTPException(status_code=404, detail="Target not found")
 
-    # 플러그인 실행기로 Job을 수행한다.
-    executor = ScanExecutor(session)
-    try:
-        executor.run_job(job, target)
-    except PluginConfigError as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
-    except KeyError as exc:
-        detail = exc.args[0] if exc.args else "Invalid plugin id"
-        raise HTTPException(status_code=400, detail=detail) from exc
-    # 실행 후 최신 상태를 반영한다.
-    session.refresh(job)
+    # 실행을 백그라운드로 넘기기 전 상태를 초기화한다.
+    job.status = "PENDING"
+    job.start_time = None
+    job.end_time = None
+    job.summary = {}
+    job.error_message = None
+    session.commit()
+
+    if background_tasks is not None:
+        # 플러그인 실행기로 Job을 백그라운드에서 수행한다.
+        background_tasks.add_task(run_job_background, job.id)
     return JobResponse.model_validate(job)
 
 

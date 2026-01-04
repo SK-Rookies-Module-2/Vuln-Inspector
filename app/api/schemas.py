@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from enum import Enum
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -120,3 +120,17 @@ class ReportResponse(BaseModel):
     generated_at: Optional[datetime] = None
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class PluginMetaResponse(BaseModel):
+    # 플러그인 메타데이터 응답 스키마이다.
+    id: str
+    name: str
+    version: str
+    type: str
+    category: Optional[str] = None
+    tags: List[str] = Field(default_factory=list)
+    description: Optional[str] = None
+    config_schema: Optional[Dict[str, Any]] = None
+    entry_point: str
+    class_name: str

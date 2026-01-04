@@ -129,19 +129,19 @@ docker-compose up -d db
 ```
 
 ## 채널별 기본 진단 동작
-- Static: 로컬 `requirements.txt` 또는 GIT_REPO를 클론한 경로에서 버전 미고정을 탐지합니다.
+- Static: 외부 스캐너(Strix) 결과를 파싱해 정적 진단을 처리합니다. (구성 예정)
 - Remote: `fixtures/sshd_config_demo`를 읽어 `PermitRootLogin` 설정을 점검합니다.
-- Dynamic: 로컬 HTTP 서버를 임시로 띄우고 `/api/users/2` 접근 허용 여부를 확인합니다.
+- Dynamic: 외부 스캐너(Strix) 결과를 파싱해 동적 진단을 처리합니다. (구성 예정)
 
 ## 결과 출력
-각 데모 스크립트는 Findings 개수와 증적(evidence)을 콘솔에 출력합니다.
+원격 데모 스크립트는 Findings 개수와 증적(evidence)을 콘솔에 출력합니다.
 
 ## API 실행
 ```bash
 uv run uvicorn app.api.app:app --reload
 ```
 - 기본 DB는 PostgreSQL이며, `.env`의 `DB_*` 또는 `DATABASE_URL`로 변경할 수 있습니다.
-- 현재 스캔 요청은 동기 실행입니다(요청이 완료될 때까지 응답 대기).
+- run_now=true이면 Job을 생성한 뒤 백그라운드에서 실행됩니다.
 
 ## 대상/자격증명 스키마
 - SERVER: `connection_info.host`(또는 `ip`) 필수, `port` 선택
@@ -167,7 +167,7 @@ uv run pytest
 
 ## 확장 방향
 아래는 선택 확장 항목이며, 현재 운용에는 필수가 아닙니다.
-- Static: 외부 SCA 도구(OSV, Safety 등) 어댑터 연동
+- Static: 외부 스캐너(Strix 등) 연동 고도화
 - Remote: SSH/WinRM 기반 점검 스크립트와 결과 파싱 확장
-- Dynamic: HTTP 기반 휴리스틱/레시피 엔진 고도화
+- Dynamic: 외부 스캐너(Strix 등) 연동 고도화
 - DB: 마이그레이션 도구(Alembic) 도입

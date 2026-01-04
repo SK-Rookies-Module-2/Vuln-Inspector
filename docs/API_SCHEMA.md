@@ -8,7 +8,7 @@ http://127.0.0.1:8000/docs
 - Content-Type: `application/json`
 - 인증: 없음(내부/개발용)
 - 기본 DB: PostgreSQL (`.env`의 `DB_*` 또는 `DATABASE_URL`)
-- 스캔 실행 방식: 동기 실행(`run_now: true`일 때 요청이 완료될 때까지 대기)
+- 스캔 실행 방식: 백그라운드 실행(`run_now: true`일 때 Job 생성 후 즉시 반환)
 
 ### 오류 응답 형식
 FastAPI 기본 오류 응답을 사용합니다.
@@ -103,9 +103,9 @@ FastAPI 기본 오류 응답을 사용합니다.
 ```json
 {
   "target_id": 1,
-  "scan_scope": ["static_dependency_check", "remote_linux_kisa_u01"],
+  "scan_scope": ["static_strix_scan", "remote_linux_kisa_u01"],
   "scan_config": {
-    "static_dependency_check": {"manifest_path": "requirements.txt"},
+    "static_strix_scan": {"repo_url": "https://example.com/repo.git"},
     "remote_linux_kisa_u01": {"sshd_config_path": "/etc/ssh/sshd_config", "use_sudo": false}
   },
   "run_now": true
@@ -119,7 +119,7 @@ FastAPI 기본 오류 응답을 사용합니다.
 - `run_now` (boolean, optional, default: true)
 
 **run_now**
-- `true`: 생성 후 즉시 실행(동기)
+- `true`: 생성 후 즉시 백그라운드 실행
 - `false`: Job만 생성하고 실행은 `/jobs/{id}/run`으로 별도 호출
 
 **응답**
@@ -128,7 +128,7 @@ FastAPI 기본 오류 응답을 사용합니다.
   "id": 1,
   "target_id": 1,
   "status": "COMPLETED",
-  "scan_scope": ["static_dependency_check", "remote_linux_kisa_u01"],
+  "scan_scope": ["static_strix_scan", "remote_linux_kisa_u01"],
   "scan_config": {"...": "..."},
   "start_time": "2024-01-01T00:00:00",
   "end_time": "2024-01-01T00:00:05",
@@ -142,9 +142,12 @@ FastAPI 기본 오류 응답을 사용합니다.
 
 **응답 코드**
 - 201: 생성 성공
-- 400: 플러그인 ID 오류 또는 설정 검증 실패
 - 404: 대상 없음
 - 422: 필드 검증 실패
+
+**실행 오류 처리**
+- 플러그인 ID/설정 오류는 백그라운드 실행 중 발생할 수 있으며,
+  `Job.error_message`와 `status=FAILED`로 기록됩니다.
 
 ### POST /api/v1/jobs/{job_id}/run
 - 기존 Job을 다시 실행
@@ -152,7 +155,6 @@ FastAPI 기본 오류 응답을 사용합니다.
 
 **응답 코드**
 - 200: 실행 성공
-- 400: 플러그인 ID 오류 또는 설정 검증 실패
 - 404: Job 또는 Target 없음
 - 409: 이미 실행 중
 
@@ -211,7 +213,36 @@ FastAPI 기본 오류 응답을 사용합니다.
 
 ---
 
-## 3) Finding 스키마
+## 3) Plugin API
+
+### GET /api/v1/plugins
+**쿼리 파라미터**
+- `type` (string, optional: `static` | `remote` | `dynamic`)
+
+**응답 코드**
+- 200: 정상 반환
+
+**응답 예시**
+```json
+[
+  {
+    "id": "static_strix_scan",
+    "name": "Strix External Static Scan",
+    "version": "0.1.0",
+    "type": "static",
+    "category": "external",
+    "tags": ["OWASP:2025:A03"],
+    "description": "External static scan placeholder for Strix integration.",
+    "config_schema": {"properties": {"repo_url": {"type": "string"}}},
+    "entry_point": "main.py",
+    "class_name": "StrixStaticScan"
+  }
+]
+```
+
+---
+
+## 4) Finding 스키마
 **severity 값 예시**: `Critical | High | Medium | Low | Info`  
 **tags 처리**: 플러그인이 전달한 태그를 그대로 반환합니다.
 ```json
@@ -231,7 +262,7 @@ FastAPI 기본 오류 응답을 사용합니다.
 
 ---
 
-## 4) Report API
+## 5) Report API
 
 ### POST /api/v1/jobs/{job_id}/report
 **요청 본문**
@@ -276,15 +307,17 @@ FastAPI 기본 오류 응답을 사용합니다.
 
 ---
 
-## 5) Demo 플러그인별 scan_config 스키마
+## 6) Demo 플러그인별 scan_config 스키마
 
-### static_dependency_check
+### static_strix_scan
 **필드**
-- `manifest_path` (string, default: `requirements.txt`)
 - `repo_url` (string, optional)
 - `repo_ref` (string, optional)
+- `repo_path` (string, optional)
+- `report_path` (string, optional)
+- `timeout` (integer, default: 1800)
 ```json
-{"manifest_path": "requirements.txt"}
+{"repo_url": "https://example.com/repo.git"}
 ```
 
 ### remote_linux_kisa_u01
@@ -300,23 +333,15 @@ FastAPI 기본 오류 응답을 사용합니다.
 }
 ```
 
-### dynamic_idor_scanner
+### dynamic_strix_scan
 **필드**
 - `base_url` (string, optional)
-- `endpoint_path` (string, default: `/api/users/1`)
-- `headers` (object, default: `{}`)
 - `auth_headers` (object, default: `{}`)
-- `require_auth` (boolean, default: false)
-- `timeout` (integer, default: 5, min: 1)
-- `verify_ssl` (boolean, default: true)
+- `report_path` (string, optional)
+- `timeout` (integer, default: 1800, min: 1)
 ```json
 {
-  "base_url": "http://127.0.0.1:8000",
-  "endpoint_path": "/api/users/2",
-  "headers": {},
-  "auth_headers": {"Authorization": "Bearer TOKEN"},
-  "require_auth": true,
-  "timeout": 5,
-  "verify_ssl": true
+  "base_url": "https://example.com",
+  "auth_headers": {"Authorization": "Bearer TOKEN"}
 }
 ```
