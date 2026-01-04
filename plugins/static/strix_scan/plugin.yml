@@ -1,0 +1,24 @@
+id: "static_strix_scan"
+name: "Strix External Static Scan"
+version: "0.1.0"
+type: "static"
+category: "external"
+tags:
+  - "OWASP:2025:A03"
+description: "External static scan placeholder for Strix integration."
+config_schema:
+  properties:
+    repo_url:
+      type: string
+    repo_ref:
+      type: string
+    repo_path:
+      type: string
+    report_path:
+      type: string
+    timeout:
+      type: integer
+      default: 1800
+      min: 1
+entry_point: "main.py"
+class_name: "StrixStaticScan"

@@ -1,0 +1,23 @@
+id: "dynamic_strix_scan"
+name: "Strix External Dynamic Scan"
+version: "0.1.0"
+type: "dynamic"
+category: "external"
+tags:
+  - "OWASP:2025:A01"
+description: "External dynamic scan placeholder for Strix integration."
+config_schema:
+  properties:
+    base_url:
+      type: string
+    auth_headers:
+      type: object
+      default: {}
+    report_path:
+      type: string
+    timeout:
+      type: integer
+      default: 1800
+      min: 1
+entry_point: "main.py"
+class_name: "StrixDynamicScan"

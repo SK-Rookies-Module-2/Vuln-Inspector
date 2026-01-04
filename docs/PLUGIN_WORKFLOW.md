@@ -33,38 +33,40 @@
 
 ## 플러그인별 상세
 
-### 1) Static: dependency_check
+### 1) Static: strix_scan (외부 스캐너)
 **파일**
-- `plugins/static/dependency_check/plugin.yml`
-- `plugins/static/dependency_check/main.py`
+- `plugins/static/strix_scan/plugin.yml`
+- `plugins/static/strix_scan/main.py`
 
 **핵심 함수**
-- `DependencyCheck.check()`
-  - `manifest_path` 읽기
-  - `==` 미사용 버전 지정 발견 시 `add_finding()` 호출
+- `StrixStaticScan.check()`
+  - 외부 스캐너 결과를 파싱해 `add_finding()` 호출
+  - 현재는 스켈레톤 상태로 동작 방식은 추후 확정
 
 **config_schema 예시**
 ```yaml
 config_schema:
   properties:
-    manifest_path:
-      type: string
-      default: "requirements.txt"
     repo_url:
       type: string
     repo_ref:
       type: string
+    repo_path:
+      type: string
+    timeout:
+      type: integer
+      default: 1800
 ```
 
 **API 호출 예시**
 ```bash
 curl -X POST http://127.0.0.1:8000/api/v1/jobs \
   -H "Content-Type: application/json" \
-  -d '{"target_id":1,"scan_scope":["static_dependency_check"],"scan_config":{"static_dependency_check":{"manifest_path":"requirements.txt"}}}'
+  -d '{"target_id":1,"scan_scope":["static_strix_scan"],"scan_config":{"static_strix_scan":{"repo_url":"https://example.com/repo.git"}}}'
 ```
 
 **테스트 방법**
-- 데모 실행: `python3 scripts/run_static_demo.py`
+- 외부 스캐너 연동 전에는 스켈레톤 상태
 - 유닛 테스트: `UV_CACHE_DIR=.uv-cache uv run pytest -q`
 
 ---
@@ -115,18 +117,15 @@ curl -X POST http://127.0.0.1:8000/api/v1/jobs \
 
 ---
 
-### 3) Dynamic: idor_scanner
+### 3) Dynamic: strix_scan (외부 스캐너)
 **파일**
-- `plugins/dynamic/idor_scanner/plugin.yml`
-- `plugins/dynamic/idor_scanner/main.py`
+- `plugins/dynamic/strix_scan/plugin.yml`
+- `plugins/dynamic/strix_scan/main.py`
 
 **핵심 함수**
-- `IdorScanner.check()`
-  - 대상 URL 결정(`base_url` or `target.connection_info.url`)
-  - 무인증 요청 수행 (`HttpClient.get()`)
-  - `require_auth=True`이고 무인증 200이면 `add_finding()`
-- HTTP 경로
-  - `app/adapters/http.py:HttpClient.request()`
+- `StrixDynamicScan.check()`
+  - 외부 스캐너 결과를 파싱해 `add_finding()` 호출
+  - 현재는 스켈레톤 상태로 동작 방식은 추후 확정
 
 **config_schema 예시**
 ```yaml
@@ -134,37 +133,23 @@ config_schema:
   properties:
     base_url:
       type: string
-    endpoint_path:
-      type: string
-      default: "/api/users/1"
-    headers:
-      type: object
-      default: {}
     auth_headers:
       type: object
       default: {}
-    require_auth:
-      type: boolean
-      default: false
     timeout:
       type: integer
-      default: 5
-      min: 1
-    verify_ssl:
-      type: boolean
-      default: true
+      default: 1800
 ```
 
 **API 호출 예시**
 ```bash
 curl -X POST http://127.0.0.1:8000/api/v1/jobs \
   -H "Content-Type: application/json" \
-  -d '{"target_id":1,"scan_scope":["dynamic_idor_scanner"],"scan_config":{"dynamic_idor_scanner":{"endpoint_path":"/api/users/2","require_auth":true}}}'
+  -d '{"target_id":1,"scan_scope":["dynamic_strix_scan"],"scan_config":{"dynamic_strix_scan":{"base_url":"https://example.com"}}}'
 ```
 
 **테스트 방법**
-- 데모 실행: `python3 scripts/run_dynamic_demo.py`
-  - 로컬 HTTP 서버를 임시 생성하여 동작 확인
+- 외부 스캐너 연동 전에는 스켈레톤 상태
 
 ---
 
@@ -184,4 +169,4 @@ curl -O http://127.0.0.1:8000/api/v1/reports/1/file
 ## 빠른 테스트 체크리스트
 - 플러그인 로딩: `tests/test_plugin_loader.py`
 - 설정 스키마 검증: `tests/test_config_validation.py`
-- 데모 실행: `scripts/run_*_demo.py`
+- 데모 실행: `scripts/run_remote_demo.py`

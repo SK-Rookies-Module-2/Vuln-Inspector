@@ -2,11 +2,11 @@
 # 프로젝트 전체 가이드
 
 ## 목적과 범위
-이 문서는 프로젝트를 처음 보는 사람이 **이 문서만으로** 실행/테스트/확장이 가능하도록 전체 동작 흐름과 파일 간 연관 관계를 설명합니다. 단기 목표는 “스캔 결과 보고서 생성”까지의 MVP이며, 성능/인증/비동기 처리는 우선순위가 낮습니다.
+이 문서는 프로젝트를 처음 보는 사람이 **이 문서만으로** 실행/테스트/확장이 가능하도록 전체 동작 흐름과 파일 간 연관 관계를 설명합니다. 단기 목표는 “스캔 결과 보고서 생성”까지의 MVP이며, 성능/인증 고도화는 우선순위가 낮습니다.
 
 ## 전체 동작 프로세스(요약)
 1. **대상 등록**: `POST /api/v1/targets` → `Target` 저장.
-2. **스캔 요청**: `POST /api/v1/jobs` → `ScanJob` 저장 후 동기 실행.
+2. **스캔 요청**: `POST /api/v1/jobs` → `ScanJob` 저장 후 백그라운드 실행.
 3. **플러그인 실행**: `ScanExecutor`가 `plugin.yml`을 읽어 플러그인을 로드하고 `check()` 실행.
 4. **결과 저장**: `Finding`을 DB에 저장, 태그는 플러그인이 전달한 값을 그대로 기록.
 5. **결과 조회**: `GET /api/v1/jobs/{id}/findings`로 결과 확인.
@@ -21,7 +21,7 @@
    - `app/db/models.py:Target` 생성 후 저장
 3. **스캔 Job 생성 및 실행**
    - `app/api/app.py:create_job()` → `app/db/models.py:ScanJob` 생성
-   - `run_now=True`이면 `app/services/scan_executor.py:ScanExecutor.run_job()` 호출
+   - `run_now=True`이면 백그라운드에서 `ScanExecutor.run_job()` 실행
 4. **스캔 실행 상세**
    - `ScanExecutor._set_job_running()` 상태 업데이트
    - 플러그인 순회(`job.scan_scope`)
@@ -71,7 +71,7 @@ curl -X POST http://127.0.0.1:8000/api/v1/targets \
 # 2) 스캔 요청
 curl -X POST http://127.0.0.1:8000/api/v1/jobs \
   -H "Content-Type: application/json" \
-  -d '{"target_id":1,"scan_scope":["static_dependency_check"],"scan_config":{"static_dependency_check":{"manifest_path":"requirements.txt"}}}'
+  -d '{"target_id":1,"scan_scope":["static_strix_scan"],"scan_config":{"static_strix_scan":{"repo_url":"https://example.com/repo.git"}}}'
 
 # 3) 결과 조회
 curl http://127.0.0.1:8000/api/v1/jobs/1/findings
@@ -107,7 +107,7 @@ curl -O http://127.0.0.1:8000/api/v1/reports/1/file
 
 ### 기존 플러그인 수정
 - `plugin.yml`의 `config_schema` 변경 시 **입력 검증**이 즉시 적용됨
-- 어댑터 사용: HTTP는 `app/adapters/http.py`, SSH는 `app/adapters/ssh.py` 활용
+- 외부 스캐너 어댑터: `app/adapters/external/*` 활용
 
 ### 보고서 형식 추가
 - `app/services/reporting.py`에 형식 추가
@@ -149,27 +149,24 @@ curl -O http://127.0.0.1:8000/api/v1/reports/1/file
 - `app/services/orchestrator.py`: 플러그인 목록 조회(기본)
 - `app/services/scan_executor.py`: 플러그인 실행 → 결과 저장
 - `app/services/reporting.py`: 보고서 생성
+- `app/services/report_parsers/strix.py`: Strix 리포트 파서 스켈레톤
 - `app/services/__init__.py`: 서비스 노출
-- `app/adapters/base.py`: 어댑터 인터페이스
-- `app/adapters/registry.py`: 어댑터 레지스트리(선택)
-- `app/adapters/http.py`: HTTP 어댑터(헤더/타임아웃/SSL)
 - `app/adapters/ssh.py`: SSH 어댑터(키/패스워드/프록시/ sudo)
-- `app/adapters/sca.py`: SCA 도구 실행 래퍼
+- `app/adapters/external/runner.py`: 외부 스캐너 실행 스켈레톤
+- `app/adapters/external/strix.py`: Strix 실행 스켈레톤
 - `app/adapters/__init__.py`: 어댑터 노출
 
 ### plugins/
 - `plugins/README.md`: 플러그인 구조/설정 스키마 설명
-- `plugins/static/dependency_check/main.py`: 정적 의존성 고정 여부 점검
-- `plugins/static/dependency_check/plugin.yml`: 정적 플러그인 메타/스키마
+- `plugins/static/strix_scan/main.py`: 외부 정적 스캐너 스켈레톤
+- `plugins/static/strix_scan/plugin.yml`: 정적 플러그인 메타/스키마
 - `plugins/remote/linux_kisa_u01/main.py`: SSH 기반 U-01 점검
 - `plugins/remote/linux_kisa_u01/plugin.yml`: 원격 플러그인 메타/스키마
-- `plugins/dynamic/idor_scanner/main.py`: HTTP 기반 IDOR 점검
-- `plugins/dynamic/idor_scanner/plugin.yml`: 동적 플러그인 메타/스키마
+- `plugins/dynamic/strix_scan/main.py`: 외부 동적 스캐너 스켈레톤
+- `plugins/dynamic/strix_scan/plugin.yml`: 동적 플러그인 메타/스키마
 
 ### scripts/
-- `scripts/run_static_demo.py`: 정적 플러그인 데모 실행
 - `scripts/run_remote_demo.py`: 원격 플러그인 데모 실행
-- `scripts/run_dynamic_demo.py`: 동적 플러그인 데모 실행
 
 ### fixtures/
 - `fixtures/sshd_config_demo`: 원격 플러그인 테스트용 SSH 설정 파일
