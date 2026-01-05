@@ -40,8 +40,8 @@
 
 **핵심 함수**
 - `StrixStaticScan.check()`
-  - 외부 스캐너 결과를 파싱해 `add_finding()` 호출
-  - 현재는 스켈레톤 상태로 동작 방식은 추후 확정
+  - Strix CLI를 실행하고 `strix_runs/<run_id>/` 결과를 파싱
+  - `vulnerabilities.csv` + `vulnerabilities/vuln-*.md`를 Finding으로 변환
 
 **config_schema 예시**
 ```yaml
@@ -52,6 +52,18 @@ config_schema:
     repo_ref:
       type: string
     repo_path:
+      type: string
+    scan_mode:
+      type: string
+      enum: ["quick", "standard", "deep"]
+    instruction:
+      type: string
+    instruction_file:
+      type: string
+    non_interactive:
+      type: boolean
+      default: true
+    run_name:
       type: string
     timeout:
       type: integer
@@ -124,8 +136,8 @@ curl -X POST http://127.0.0.1:8000/api/v1/jobs \
 
 **핵심 함수**
 - `StrixDynamicScan.check()`
-  - 외부 스캐너 결과를 파싱해 `add_finding()` 호출
-  - 현재는 스켈레톤 상태로 동작 방식은 추후 확정
+  - Strix CLI를 실행하고 `strix_runs/<run_id>/` 결과를 파싱
+  - `vulnerabilities.csv` + `vulnerabilities/vuln-*.md`를 Finding으로 변환
 
 **config_schema 예시**
 ```yaml
@@ -136,6 +148,18 @@ config_schema:
     auth_headers:
       type: object
       default: {}
+    scan_mode:
+      type: string
+      enum: ["quick", "standard", "deep"]
+    instruction:
+      type: string
+    instruction_file:
+      type: string
+    non_interactive:
+      type: boolean
+      default: true
+    run_name:
+      type: string
     timeout:
       type: integer
       default: 1800

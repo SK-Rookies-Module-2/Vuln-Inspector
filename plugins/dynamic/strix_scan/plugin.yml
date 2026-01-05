@@ -4,7 +4,7 @@ version: "0.1.0"
 type: "dynamic"
 category: "external"
 tags:
-  - "OWASP:2025:A01"
+  - "STRIX"
 description: "External dynamic scan placeholder for Strix integration."
 config_schema:
   properties:

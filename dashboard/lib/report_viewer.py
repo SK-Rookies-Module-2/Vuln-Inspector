@@ -77,7 +77,7 @@ def _target_info(target: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def _finding_row(item: Dict[str, Any]) -> Dict[str, Any]:
-    tags = item.get("tags") or []
+    tags = _normalize_tags(item.get("tags"))
     evidence = item.get("evidence") or {}
     return {
         "id": item.get("id"),
@@ -93,7 +93,9 @@ def _render_finding_detail(findings: List[Dict[str, Any]]) -> None:
     labels = [f"{item.get('id')} | {item.get('title')}" for item in findings]
     selected = st.selectbox("Finding 상세 보기", options=labels)
     index = labels.index(selected)
-    st.json(findings[index])
+    detail = dict(findings[index])
+    detail["tags"] = _normalize_tags(detail.get("tags"))
+    st.json(detail)
 
 
 def _kv_rows(values: Dict[str, Any]) -> List[Dict[str, Any]]:
@@ -104,6 +106,16 @@ def _to_json(value: Any) -> str:
     if value is None:
         return ""
     return json.dumps(value, ensure_ascii=False)
+
+
+def _normalize_tags(value: Any) -> List[str]:
+    if not value:
+        return []
+    if isinstance(value, list):
+        return [str(item) for item in value if item]
+    if isinstance(value, str):
+        return [item.strip() for item in value.split(",") if item.strip()]
+    return [str(value)]
 
 
 def _truncate(text: str, limit: int) -> str:

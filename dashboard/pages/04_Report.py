@@ -85,12 +85,20 @@ def main() -> None:
         report_format = str(selected_report.get("format", "")).lower()
         if report_format != "json":
             st.warning("Only JSON reports can be rendered as tables.")
-            return
-        try:
-            payload = fetch_report_json(api_base_url, int(report_id))
-            render_report(payload)
-        except Exception as exc:
-            st.error(str(exc))
+        else:
+            try:
+                payload = fetch_report_json(api_base_url, int(report_id))
+            except Exception as exc:
+                st.error(str(exc))
+            else:
+                st.session_state["report_payload"] = payload
+                st.session_state["report_payload_id"] = report_id
+
+    payload = st.session_state.get("report_payload")
+    payload_id = st.session_state.get("report_payload_id")
+    if payload:
+        st.caption(f"현재 표시 중인 report_id: {payload_id}")
+        render_report(payload)
 
 
 if __name__ == "__main__":
