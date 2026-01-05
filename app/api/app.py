@@ -359,6 +359,26 @@ def create_report(
     return ReportResponse.model_validate(report)
 
 
+@app.get(f"{API_PREFIX}/reports", response_model=List[ReportResponse])
+def list_reports(
+    session: Session = Depends(get_session),
+    job_id: int | None = Query(None),
+    limit: int = Query(100, ge=1, le=1000),
+    offset: int = Query(0, ge=0),
+) -> List[ReportResponse]:
+    # Report 목록을 필터링/페이지네이션으로 조회한다.
+    query = session.query(models.Report)
+    if job_id is not None:
+        query = query.filter(models.Report.job_id == job_id)
+    records = (
+        query.order_by(models.Report.id.desc())
+        .offset(offset)
+        .limit(limit)
+        .all()
+    )
+    return [ReportResponse.model_validate(record) for record in records]
+
+
 @app.get(f"{API_PREFIX}/reports/{{report_id}}", response_model=ReportResponse)
 def get_report(
     report_id: int,
@@ -369,6 +389,20 @@ def get_report(
     if report is None:
         raise HTTPException(status_code=404, detail="Report not found")
     return ReportResponse.model_validate(report)
+
+
+@app.delete(f"{API_PREFIX}/reports/{{report_id}}", status_code=204)
+def delete_report(
+    report_id: int,
+    session: Session = Depends(get_session),
+) -> Response:
+    # Report 메타데이터를 삭제한다.
+    report = session.get(models.Report, report_id)
+    if report is None:
+        raise HTTPException(status_code=404, detail="Report not found")
+    session.delete(report)
+    session.commit()
+    return Response(status_code=204)
 
 
 @app.get(f"{API_PREFIX}/reports/{{report_id}}/file")

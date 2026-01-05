@@ -30,15 +30,25 @@ def _load_findings(base_url: str, limit: int) -> List[Dict[str, Any]]:
     return client.list_findings(limit=limit, offset=0)
 
 
+@st.cache_data(ttl=5)
+def _load_reports(base_url: str, limit: int, job_id: int | None) -> List[Dict[str, Any]]:
+    client = APIClient(base_url)
+    return client.list_reports(job_id=job_id, limit=limit, offset=0)
+
+
+def _report_file_url(base_url: str, report_id: int) -> str:
+    return f"{base_url.rstrip('/')}/api/v1/reports/{report_id}/file"
+
+
 def main() -> None:
-    st.header("관리: Targets / Jobs / Findings")
+    st.header("관리: Targets / Jobs / Findings / Reports")
 
     api_base_url = os.getenv("API_BASE_URL", "http://127.0.0.1:8000")
     st.caption(f"API_BASE_URL = {api_base_url}")
 
     client = APIClient(api_base_url)
 
-    tab_targets, tab_jobs, tab_findings = st.tabs(["Targets", "Jobs", "Findings"])
+    tab_targets, tab_jobs, tab_findings, tab_reports = st.tabs(["Targets", "Jobs", "Findings", "Reports"])
 
     with tab_targets:
         st.subheader("대상(Target) 관리")
@@ -215,6 +225,68 @@ def main() -> None:
         try:
             findings = _load_findings(api_base_url, int(limit_findings))
             st.dataframe(findings, use_container_width=True)
+        except Exception as exc:
+            st.error(str(exc))
+
+    with tab_reports:
+        st.subheader("Report 관리")
+
+        with st.form("manage_create_report"):
+            job_id = st.number_input("job_id", min_value=1, step=1, value=1, key="manage_report_job_id")
+            report_format = st.selectbox("format", ["json", "csv"], key="manage_report_format")
+            submitted = st.form_submit_button("Report 생성")
+
+        if submitted:
+            try:
+                result = client.create_report(int(job_id), report_format)
+                st.success(f"Report 생성 완료: id={result.get('id')}")
+                st.json(result)
+                report_id = result.get("id")
+                if report_id:
+                    st.markdown(f"[보고서 파일 다운로드]({_report_file_url(api_base_url, int(report_id))})")
+                st.cache_data.clear()
+            except Exception as exc:
+                st.error(str(exc))
+
+        col_get, col_delete = st.columns(2)
+        with col_get:
+            st.subheader("Report 조회")
+            report_id = st.number_input("report_id", min_value=1, step=1, value=1, key="manage_report_get_id")
+            if st.button("조회", key="manage_report_get"):
+                try:
+                    result = client.get_report(int(report_id))
+                    st.json(result)
+                    st.markdown(f"[보고서 파일 다운로드]({_report_file_url(api_base_url, int(report_id))})")
+                except Exception as exc:
+                    st.error(str(exc))
+
+        with col_delete:
+            st.subheader("Report 삭제")
+            delete_report_id = st.number_input(
+                "삭제할 report_id", min_value=1, step=1, value=1, key="manage_report_delete_id"
+            )
+            if st.button("삭제", key="manage_report_delete"):
+                try:
+                    client.delete_report(int(delete_report_id))
+                    st.success("Report 삭제 완료")
+                    st.cache_data.clear()
+                except Exception as exc:
+                    st.error(str(exc))
+
+        st.subheader("Report 목록")
+        filter_job_id = st.number_input(
+            "job_id 필터 (0=전체)", min_value=0, step=1, value=0, key="reports_filter_job_id"
+        )
+        limit_reports = st.number_input(
+            "조회 limit", min_value=10, max_value=1000, value=200, step=50, key="reports_limit"
+        )
+        if st.button("새로고침", key="reports_refresh"):
+            st.cache_data.clear()
+
+        try:
+            job_id_filter = int(filter_job_id) if int(filter_job_id) > 0 else None
+            reports = _load_reports(api_base_url, int(limit_reports), job_id_filter)
+            st.dataframe(reports, use_container_width=True)
         except Exception as exc:
             st.error(str(exc))
 

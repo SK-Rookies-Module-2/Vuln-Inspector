@@ -1,0 +1,1425 @@
+{
+  "job": {
+    "id": 108,
+    "status": "COMPLETED",
+    "scan_scope": [
+      "remote_kisa_u01",
+      "remote_kisa_u03",
+      "remote_kisa_u04",
+      "remote_kisa_u05",
+      "remote_kisa_u06",
+      "remote_kisa_u07",
+      "remote_kisa_u08",
+      "remote_kisa_u09",
+      "remote_kisa_u10",
+      "remote_kisa_u11",
+      "remote_kisa_u12",
+      "remote_kisa_u13",
+      "remote_kisa_u14",
+      "remote_kisa_u15",
+      "remote_kisa_u16",
+      "remote_kisa_u17",
+      "remote_kisa_u18",
+      "remote_kisa_u19",
+      "remote_kisa_u20",
+      "remote_kisa_u21",
+      "remote_kisa_u22",
+      "remote_kisa_u23",
+      "remote_kisa_u24",
+      "remote_kisa_u25",
+      "remote_kisa_u26",
+      "remote_kisa_u27",
+      "remote_kisa_u28",
+      "remote_kisa_u29",
+      "remote_kisa_u31",
+      "remote_kisa_u32",
+      "remote_kisa_u33",
+      "remote_kisa_u34",
+      "remote_kisa_u35",
+      "remote_kisa_u36",
+      "remote_kisa_u37",
+      "remote_kisa_u38",
+      "remote_kisa_u39",
+      "remote_kisa_u40",
+      "remote_kisa_u41",
+      "remote_kisa_u42",
+      "remote_kisa_u43",
+      "remote_kisa_u44",
+      "remote_kisa_u45",
+      "remote_kisa_u46",
+      "remote_kisa_u47",
+      "remote_kisa_u48",
+      "remote_kisa_u49",
+      "remote_kisa_u50",
+      "remote_kisa_u51",
+      "remote_kisa_u52",
+      "remote_kisa_u53",
+      "remote_kisa_u54",
+      "remote_kisa_u55",
+      "remote_kisa_u56",
+      "remote_kisa_u57",
+      "remote_kisa_u58",
+      "remote_kisa_u59",
+      "remote_kisa_u60",
+      "remote_kisa_u61",
+      "remote_kisa_u62",
+      "remote_kisa_u63",
+      "remote_kisa_u64",
+      "remote_kisa_u65",
+      "remote_kisa_u66",
+      "remote_linux_kisa_u02",
+      "remote_linux_kisa_u30_umask",
+      "remote_linux_kisa_u67_log_file_perm"
+    ],
+    "scan_config": {
+      "remote_kisa_u01": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "protocols": [
+          "ssh",
+          "telnet"
+        ],
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u03": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u04": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u05": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u06": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "privileged_group": "wheel",
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u07": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "system_accounts": [
+          "lp",
+          "uucp",
+          "nuucp",
+          "daemon",
+          "bin",
+          "sys",
+          "adm",
+          "operator",
+          "mail",
+          "news",
+          "games"
+        ],
+        "non_login_shells": [
+          "/bin/false",
+          "/sbin/nologin",
+          "/usr/sbin/nologin",
+          "/bin/nologin"
+        ],
+        "inactive_days": 90,
+        "check_system_accounts": true,
+        "check_inactive_accounts": true,
+        "lastlog_command": "lastlog",
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u08": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "admin_groups": [
+          "root",
+          "wheel"
+        ],
+        "allowed_members": [
+          "root"
+        ],
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u09": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "exclude_groups": [
+          "root",
+          "bin",
+          "daemon",
+          "sys",
+          "adm",
+          "uucp",
+          "lp",
+          "mail",
+          "news"
+        ],
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u10": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u11": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "system_accounts": [
+          "daemon",
+          "bin",
+          "sys",
+          "adm",
+          "listen",
+          "nobody",
+          "nobody4",
+          "noaccess",
+          "diag",
+          "operator",
+          "games",
+          "gopher"
+        ],
+        "non_login_shells": [
+          "/bin/false",
+          "/sbin/nologin",
+          "/usr/sbin/nologin",
+          "/bin/nologin"
+        ],
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u12": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "profile_paths": [
+          "/etc/profile",
+          "/etc/bashrc",
+          "/etc/bash.bashrc"
+        ],
+        "csh_paths": [
+          "/etc/csh.login",
+          "/etc/csh.cshrc"
+        ],
+        "max_timeout_seconds": 600,
+        "require_tmout_export": true,
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u13": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u14": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "path_command": "sh -lc 'echo $PATH'",
+        "profile_paths": [
+          "/etc/profile"
+        ],
+        "check_runtime_path": true,
+        "check_profile_paths": true,
+        "allow_trailing_dot": true,
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u15": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "find_command": "find {path} -xdev {prune} \\( -nouser -o -nogroup \\) -ls",
+        "search_paths": [
+          "/etc",
+          "/var",
+          "/home",
+          "/opt",
+          "/root"
+        ],
+        "exclude_paths": [
+          "/proc",
+          "/sys",
+          "/dev",
+          "/run"
+        ],
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u16": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "required_owner": "root",
+        "max_mode": 644,
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u17": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "script_paths": [
+          "/etc/rc.d",
+          "/etc/rc*.d",
+          "/etc/init.d"
+        ],
+        "required_owner": "root",
+        "check_others_writable": true,
+        "list_command": "ls -l {path}",
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u18": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "required_owner": "root",
+        "max_mode": 400,
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u19": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "required_owner": "root",
+        "max_mode": 644,
+        "allow_group_write": false,
+        "allow_other_write": false,
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u20": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "required_owner": "root",
+        "max_mode": 600,
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u21": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "allowed_owners": [
+          "root",
+          "bin",
+          "sys"
+        ],
+        "max_mode": 640,
+        "allow_group_write": false,
+        "allow_other_permissions": false,
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u22": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "allowed_owners": [
+          "root",
+          "bin",
+          "sys"
+        ],
+        "max_mode": 644,
+        "allow_group_write": false,
+        "allow_other_write": false,
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u23": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "find_command": "find {path} -xdev {prune} -user root -type f \\( -perm -04000 -o -perm -02000 \\) -ls",
+        "search_paths": [
+          "/bin",
+          "/sbin",
+          "/usr/bin",
+          "/usr/sbin",
+          "/usr/local/bin",
+          "/usr/local/sbin",
+          "/opt",
+          "/home",
+          "/var",
+          "/tmp"
+        ],
+        "exclude_paths": [
+          "/proc",
+          "/sys",
+          "/dev",
+          "/run"
+        ],
+        "whitelist_paths": [
+          "/usr/bin/passwd",
+          "/usr/bin/su",
+          "/bin/ping"
+        ],
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u24": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "env_file_names": [
+          ".profile",
+          ".bashrc",
+          ".cshrc",
+          ".kshrc",
+          ".bash_profile",
+          ".login"
+        ],
+        "ignore_users": [],
+        "allow_root_owner": true,
+        "allow_user_owner": true,
+        "extra_allowed_owners": [],
+        "allow_group_write": false,
+        "allow_other_write": false,
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u25": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "find_command": "find {path} -xdev {prune} -type f -perm -2 -ls",
+        "search_paths": [
+          "/etc",
+          "/var",
+          "/home",
+          "/opt",
+          "/root",
+          "/bin",
+          "/sbin",
+          "/usr/bin",
+          "/usr/sbin",
+          "/usr/local/bin",
+          "/usr/local/sbin"
+        ],
+        "exclude_paths": [
+          "/proc",
+          "/sys",
+          "/dev",
+          "/run"
+        ],
+        "whitelist_paths": [],
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u26": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "find_command": "find {path} -xdev {prune} -type f -ls",
+        "search_paths": [
+          "/dev"
+        ],
+        "exclude_paths": [
+          "/dev/shm",
+          "/dev/mqueue"
+        ],
+        "whitelist_paths": [
+          "/dev/MAKEDEV",
+          "/dev/MAKEDEV.local"
+        ],
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u27": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "hosts_equiv_path": "/etc/hosts.equiv",
+        "rhosts_name": ".rhosts",
+        "ignore_users": [],
+        "allowed_hosts_equiv_owners": [
+          "root"
+        ],
+        "allow_root_owner": true,
+        "allow_user_owner": true,
+        "extra_allowed_owners": [],
+        "max_mode": 600,
+        "allow_group_write": false,
+        "allow_other_write": false,
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u28": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "hosts_deny_path": "/etc/hosts.deny",
+        "hosts_allow_path": "/etc/hosts.allow",
+        "required_deny_patterns": [
+          "ALL:ALL"
+        ],
+        "require_allow_entries": true,
+        "allowed_owners": [
+          "root"
+        ],
+        "max_mode": 600,
+        "allow_group_write": false,
+        "allow_other_write": false,
+        "check_iptables": true,
+        "iptables_command": "iptables -L -n",
+        "check_firewalld": true,
+        "firewalld_command": "firewall-cmd --list-all",
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u29": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "required_owner": "root",
+        "max_mode": 600,
+        "allow_group_write": false,
+        "allow_other_write": false,
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u31": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "ignore_users": [],
+        "allow_group_write": false,
+        "allow_other_write": false,
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u32": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "passwd_path": "/etc/passwd",
+        "ignore_users": [],
+        "ignore_home_paths": [
+          "/dev/null",
+          "/nonexistent",
+          "/var/empty"
+        ],
+        "ignore_home_prefixes": [],
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u33": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "find_command": "find {path} -xdev {prune} -type f -name '.*' -ls",
+        "search_paths": [
+          "/",
+          "/home",
+          "/root",
+          "/tmp",
+          "/var",
+          "/var/tmp",
+          "/dev"
+        ],
+        "exclude_paths": [
+          "/proc",
+          "/sys",
+          "/run"
+        ],
+        "allowed_basenames": [
+          ".profile",
+          ".bashrc",
+          ".bash_profile",
+          ".bash_logout",
+          ".cshrc",
+          ".kshrc",
+          ".login",
+          ".logout",
+          ".zshrc",
+          ".zprofile",
+          ".zlogin",
+          ".zlogout",
+          ".vimrc",
+          ".viminfo",
+          ".nanorc",
+          ".tmux.conf",
+          ".screenrc",
+          ".inputrc",
+          ".gitconfig",
+          ".pwd.lock"
+        ],
+        "whitelist_paths": [],
+        "suspicious_paths": [
+          "/tmp",
+          "/var/tmp",
+          "/dev"
+        ],
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u34": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "inetd_conf_path": "/etc/inetd.conf",
+        "xinetd_finger_path": "/etc/xinetd.d/finger",
+        "check_inetd": true,
+        "check_xinetd": true,
+        "check_process": true,
+        "process_command": "ps -ef",
+        "check_port": true,
+        "netstat_command": "netstat -an",
+        "finger_port": 79,
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u35": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "passwd_path": "/etc/passwd",
+        "check_ftp_accounts": true,
+        "ftp_account_names": [
+          "ftp",
+          "anonymous"
+        ],
+        "check_vsftpd": true,
+        "vsftpd_conf_paths": [
+          "/etc/vsftpd.conf",
+          "/etc/vsftpd/vsftpd.conf"
+        ],
+        "check_proftpd": true,
+        "proftpd_conf_path": "/etc/proftpd/proftpd.conf",
+        "check_samba": true,
+        "samba_conf_paths": [
+          "/etc/samba/smb.conf",
+          "/usr/lib/smb.conf"
+        ],
+        "check_nfs": true,
+        "nfs_export_paths": [
+          "/etc/exports",
+          "/etc/dfs/dfstab"
+        ],
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u36": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "inetd_conf_path": "/etc/inetd.conf",
+        "xinetd_dir": "/etc/xinetd.d",
+        "xinetd_services": [
+          "rlogin",
+          "rsh",
+          "rexec"
+        ],
+        "check_inetd": true,
+        "check_xinetd": true,
+        "check_systemd": true,
+        "check_processes": true,
+        "systemd_list_units_command": "systemctl list-unit-files",
+        "systemd_active_units_command": "systemctl list-units --type=service --state=active",
+        "process_command": "ps -ef",
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u37": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "command_paths": [
+          "/usr/bin/crontab",
+          "/usr/bin/at"
+        ],
+        "allow_group_execute": false,
+        "allow_other_execute": false,
+        "config_search_paths": [
+          "/etc/cron.d",
+          "/etc/cron.daily",
+          "/etc/cron.allow",
+          "/etc/at.allow"
+        ],
+        "find_command": "find {path} -type f -ls",
+        "allowed_owners": [
+          "root"
+        ],
+        "max_mode": 640,
+        "allow_group_write": false,
+        "allow_other_write": false,
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u38": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "inetd_conf_path": "/etc/inetd.conf",
+        "xinetd_dir": "/etc/xinetd.d",
+        "services": [
+          "echo",
+          "discard",
+          "daytime",
+          "chargen"
+        ],
+        "check_inetd": true,
+        "check_xinetd": true,
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u39": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "process_command": "ps -ef",
+        "process_pattern": "nfsd|statd|lockd",
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u40": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "exports_path": "/etc/exports",
+        "required_owner": "root",
+        "max_mode": 644,
+        "allow_group_write": false,
+        "allow_other_write": false,
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u41": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "process_command": "ps -ef",
+        "process_pattern": "automount|autofs",
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u42": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "inetd_conf_path": "/etc/inetd.conf",
+        "services": [
+          "cmsd",
+          "ttdbserverd",
+          "sadmind",
+          "rusersd",
+          "walld",
+          "sprayd",
+          "rstatd"
+        ],
+        "check_inetd": true,
+        "check_process": true,
+        "process_command": "ps -ef",
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u43": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "process_command": "ps -ef",
+        "process_pattern": "ypserv|ypbind|ypxfrd|rpc.yppasswdd|rpc.ypupdated",
+        "check_nis_plus": false,
+        "nis_plus_pattern": "rpc.nisd|nisplus",
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u44": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "inetd_conf_path": "/etc/inetd.conf",
+        "xinetd_dir": "/etc/xinetd.d",
+        "xinetd_services": [
+          "tftp",
+          "talk",
+          "ntalk"
+        ],
+        "check_inetd": true,
+        "check_xinetd": true,
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u45": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "sendmail_command": "sh -lc 'sendmail -d0.1 < /dev/null | grep Version'",
+        "postfix_command": "postconf mail_version",
+        "report_unknown": true,
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u46": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "sendmail_cf_path": "/etc/mail/sendmail.cf",
+        "require_smtp_enabled": false,
+        "check_service": false,
+        "smtp_process_command": "ps -ef",
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u47": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "access_path": "/etc/mail/access",
+        "access_db_path": "/etc/mail/access.db",
+        "sendmail_cf_path": "/etc/mail/sendmail.cf",
+        "check_access": true,
+        "check_access_db": true,
+        "check_sendmail_cf": true,
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u48": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "sendmail_cf_path": "/etc/mail/sendmail.cf",
+        "required_tokens": [
+          "noexpn",
+          "novrfy"
+        ],
+        "allow_goaway": true,
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u49": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "named_command": "named -v",
+        "report_unknown": true,
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u50": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "named_conf_paths": [
+          "/etc/named.conf",
+          "/etc/bind/named.conf.options"
+        ],
+        "allow_missing_config": false,
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u51": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "named_conf_paths": [
+          "/etc/named.conf",
+          "/etc/bind/named.conf.options"
+        ],
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u52": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "inetd_conf_path": "/etc/inetd.conf",
+        "xinetd_dir": "/etc/xinetd.d",
+        "xinetd_services": [
+          "telnet"
+        ],
+        "check_inetd": true,
+        "check_xinetd": true,
+        "check_systemd": true,
+        "systemd_socket_command": "systemctl list-units --type=socket",
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u53": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "check_vsftpd": true,
+        "vsftpd_conf_paths": [
+          "/etc/vsftpd.conf",
+          "/etc/vsftpd/vsftpd.conf"
+        ],
+        "check_proftpd": true,
+        "proftpd_conf_path": "/etc/proftpd/proftpd.conf",
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u54": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "check_process": true,
+        "process_command": "ps -ef",
+        "ftp_process_names": [
+          "ftpd",
+          "vsftpd",
+          "proftpd",
+          "pure-ftpd"
+        ],
+        "check_port": true,
+        "netstat_command": "netstat -an",
+        "ftp_port": 21,
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u55": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "passwd_path": "/etc/passwd",
+        "ftp_accounts": [
+          "ftp"
+        ],
+        "allowed_shells": [
+          "/bin/false",
+          "/sbin/nologin",
+          "/usr/sbin/nologin"
+        ],
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u56": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "vsftpd_conf_path": "/etc/vsftpd.conf",
+        "vsftpd_userlist_files": [
+          "/etc/vsftpd.ftpusers",
+          "/etc/vsftpd/user_list",
+          "/etc/ftpusers"
+        ],
+        "proftpd_conf_paths": [
+          "/etc/proftpd.conf",
+          "/etc/proftpd/proftpd.conf"
+        ],
+        "hosts_allow_path": "/etc/hosts.allow",
+        "hosts_deny_path": "/etc/hosts.deny",
+        "check_vsftpd": true,
+        "check_proftpd": true,
+        "check_tcp_wrapper": true,
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u57": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "ftpusers_paths": [
+          "/etc/ftpusers",
+          "/etc/vsftpd/ftpusers",
+          "/etc/proftpd.ftpusers"
+        ],
+        "required_users": [
+          "root"
+        ],
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u58": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "process_command": "ps -ef",
+        "snmp_process_names": [
+          "snmpd",
+          "snmptrapd"
+        ],
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u59": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "snmp_conf_paths": [
+          "/etc/snmp/snmpd.conf"
+        ],
+        "community_keywords": [
+          "rocommunity",
+          "rwcommunity",
+          "rocommunity6",
+          "rwcommunity6",
+          "com2sec",
+          "com2sec6"
+        ],
+        "check_process": true,
+        "process_command": "ps -ef",
+        "process_pattern": "snmpd",
+        "process_version_pattern": "v1|v2c",
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u60": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "snmpd_conf_path": "/etc/snmp/snmpd.conf",
+        "insecure_tokens": [
+          "public",
+          "private"
+        ],
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u61": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "snmpd_conf_path": "/etc/snmp/snmpd.conf",
+        "directives": [
+          "com2sec",
+          "com2sec6",
+          "rocommunity",
+          "rwcommunity",
+          "rocommunity6",
+          "rwcommunity6"
+        ],
+        "insecure_sources": [
+          "default",
+          "0.0.0.0",
+          "0.0.0.0/0",
+          "::",
+          "::/0",
+          "any"
+        ],
+        "require_source": true,
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u62": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "motd_path": "/etc/motd",
+        "issue_path": "/etc/issue",
+        "issue_net_path": "/etc/issue.net",
+        "sshd_config_path": "/etc/ssh/sshd_config",
+        "required_banner_phrases": [
+          "unauthorized",
+          "unauthorised",
+          "prohibited",
+          "authorized",
+          "authorised",
+          "접근",
+          "무단",
+          "불법",
+          "금지"
+        ],
+        "disallowed_patterns": [
+          "Linux",
+          "Ubuntu",
+          "Debian",
+          "CentOS",
+          "Red Hat",
+          "SunOS",
+          "AIX",
+          "HP-UX",
+          "Kernel",
+          "\\\\r",
+          "\\\\m",
+          "\\\\s",
+          "\\\\v"
+        ],
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u63": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "sudoers_path": "/etc/sudoers",
+        "required_owner": "root",
+        "max_mode": 640,
+        "allow_group_write": false,
+        "allow_other_write": false,
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u64": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "kernel_command": "uname -a",
+        "package_commands": [],
+        "report_unknown": true,
+        "max_lines_per_command": 200,
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u65": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "ntp_conf_paths": [
+          "/etc/ntp.conf"
+        ],
+        "chrony_conf_paths": [
+          "/etc/chrony.conf",
+          "/etc/chrony/chrony.conf"
+        ],
+        "process_command": "ps -ef",
+        "process_pattern": "ntpd|chronyd|systemd-timesyncd",
+        "insecure_sources": [
+          "127.0.0.1",
+          "127.127.1.0",
+          "localhost",
+          "::1"
+        ],
+        "require_process": true,
+        "require_time_servers": true,
+        "allow_local_fallback": false
+      },
+      "remote_kisa_u66": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "syslog_conf_paths": [
+          "/etc/syslog.conf",
+          "/etc/rsyslog.conf"
+        ],
+        "required_selectors": [
+          "*.info",
+          "authpriv.*",
+          "mail.*",
+          "cron.*",
+          "*.alert",
+          "*.emerg"
+        ],
+        "allow_missing_config": false,
+        "allow_local_fallback": false
+      },
+      "remote_linux_kisa_u02": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "pwquality_path": "/etc/security/pwquality.conf",
+        "common_password_path": "/etc/pam.d/common-password",
+        "login_defs_path": "/etc/login.defs",
+        "required_settings": {
+          "lcredit": -1,
+          "ucredit": -1,
+          "dcredit": -1,
+          "ocredit": -1,
+          "minlen": 8,
+          "PASS_MIN_DAYS": 1,
+          "PASS_MAX_DAYS": 90,
+          "remember": 4,
+          "difok": 1
+        }
+      },
+      "remote_linux_kisa_u30_umask": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "profile_path": "/etc/profile",
+        "login_defs_path": "/etc/login.defs",
+        "expected_umask": "022"
+      },
+      "remote_linux_kisa_u67_log_file_perm": {
+        "os_type": "linux",
+        "use_sudo": true,
+        "max_results": 200,
+        "log_dir": "/var/log",
+        "max_depth": 1,
+        "expected_owner": "root",
+        "allowed_owners": [
+          "root",
+          "syslog"
+        ],
+        "max_mode": "0644",
+        "max_entries": 300
+      }
+    },
+    "start_time": "2026-01-05T01:15:13.323208",
+    "end_time": "2026-01-05T01:19:45.771681",
+    "summary": {
+      "High": 12,
+      "Info": 4,
+      "Low": 5,
+      "Medium": 4
+    }
+  },
+  "target": {
+    "id": 10,
+    "name": "my_server",
+    "type": "SERVER",
+    "connection_info": {
+      "host": "10.7.143.237",
+      "port": 22,
+      "proxy_command": "ssh -i ~/.ssh/bastion-server-key.pem -o IdentitiesOnly=yes -W %h:%p ubuntu@34.213.137.30",
+      "identities_only": true
+    },
+    "description": null
+  },
+  "findings": [
+    {
+      "id": 121,
+      "job_id": 108,
+      "vuln_id": "KISA-U-01",
+      "title": "LINUX SSH root 원격 로그인 허용",
+      "severity": "High",
+      "tags": "KISA:U-01",
+      "description": "SSH 설정에서 PermitRootLogin이 no가 아니거나 누락되어 있습니다.",
+      "solution": "sshd_config에서 PermitRootLogin을 no로 설정하고 SSH를 재시작하세요.",
+      "evidence": "{\"os_type\": \"linux\", \"protocol\": \"ssh\", \"config_path\": \"/etc/ssh/sshd_config\", \"mode\": \"remote\", \"host\": \"10.7.143.237\", \"detected_value\": \"missing\"}",
+      "raw_data": "{}"
+    },
+    {
+      "id": 122,
+      "job_id": 108,
+      "vuln_id": "KISA-U-01",
+      "title": "LINUX TELNET 점검 불가",
+      "severity": "Info",
+      "tags": "KISA:U-01",
+      "description": "설정 파일을 읽지 못해 점검을 완료할 수 없습니다.",
+      "solution": "대상 접근 권한과 설정 파일 경로를 확인하세요.",
+      "evidence": "{\"os_type\": \"linux\", \"protocol\": \"telnet\", \"config_path\": \"/etc/securetty\", \"mode\": \"remote\", \"host\": \"10.7.143.237\", \"error\": \"cat: /etc/securetty: No such file or directory\"}",
+      "raw_data": "{}"
+    },
+    {
+      "id": 123,
+      "job_id": 108,
+      "vuln_id": "KISA-U-03",
+      "title": "Linux 계정 잠금 임계값 설정 미흡",
+      "severity": "High",
+      "tags": "KISA:U-03",
+      "description": "PAM 잠금 모듈 설정을 찾지 못했습니다.",
+      "solution": "pam_tally/pam_tally2/pam_faillock에 deny<=10과 unlock_time을 설정하세요.",
+      "evidence": "{\"os_type\": \"linux\", \"config_path\": \"/etc/pam.d/common-auth\", \"mode\": \"remote\", \"host\": \"10.7.143.237\", \"detected_value\": \"missing pam_tally/pam_tally2/pam_faillock\"}",
+      "raw_data": "{}"
+    },
+    {
+      "id": 124,
+      "job_id": 108,
+      "vuln_id": "KISA-U-06",
+      "title": "Linux su 기능 제한 미흡",
+      "severity": "High",
+      "tags": "KISA:U-06",
+      "description": "su 명령어가 특정 그룹으로 제한되어 있지 않습니다.",
+      "solution": "su 권한을 4750으로 설정하고 privileged_group에만 실행 권한을 부여하세요.",
+      "evidence": "{\"os_type\": \"linux\", \"config_path\": \"/usr/bin/su\", \"mode\": \"remote\", \"host\": \"10.7.143.237\", \"detected_value\": {\"mode\": \"4755\", \"group\": \"root\", \"raw\": \"4755 root\", \"method\": \"stat\"}, \"source\": \"permission\", \"required_group\": \"wheel\", \"pam_configured\": false}",
+      "raw_data": "{}"
+    },
+    {
+      "id": 125,
+      "job_id": 108,
+      "vuln_id": "KISA-U-09",
+      "title": "Linux 계정 없는 GID 존재",
+      "severity": "Low",
+      "tags": "KISA:U-09",
+      "description": "계정에 할당되지 않은 GID를 가진 그룹이 존재합니다.",
+      "solution": "불필요한 그룹을 삭제하거나 적절한 계정에 할당하세요.",
+      "evidence": "{\"os_type\": \"linux\", \"config_path\": {\"group\": \"/etc/group\", \"passwd\": \"/etc/passwd\"}, \"mode\": \"remote\", \"detected_value\": [{\"group\": \"tty\", \"gid\": 5, \"line\": \"tty:x:5:\"}, {\"group\": \"disk\", \"gid\": 6, \"line\": \"disk:x:6:\"}, {\"group\": \"kmem\", \"gid\": 15, \"line\": \"kmem:x:15:\"}, {\"group\": \"dialout\", \"gid\": 20, \"line\": \"dialout:x:20:\"}, {\"group\": \"fax\", \"gid\": 21, \"line\": \"fax:x:21:\"}, {\"group\": \"voice\", \"gid\": 22, \"line\": \"voice:x:22:\"}, {\"group\": \"cdrom\", \"gid\": 24, \"line\": \"cdrom:x:24:ubuntu\"}, {\"group\": \"floppy\", \"gid\": 25, \"line\": \"floppy:x:25:\"}, {\"group\": \"tape\", \"gid\": 26, \"line\": \"tape:x:26:\"}, {\"group\": \"sudo\", \"gid\": 27, \"line\": \"sudo:x:27:ubuntu\"}, {\"group\": \"audio\", \"gid\": 29, \"line\": \"audio:x:29:\"}, {\"group\": \"dip\", \"gid\": 30, \"line\": \"dip:x:30:ubuntu\"}, {\"group\": \"operator\", \"gid\": 37, \"line\": \"operator:x:37:\"}, {\"group\": \"src\", \"gid\": 40, \"line\": \"src:x:40:\"}, {\"group\": \"shadow\", \"gid\": 42, \"line\": \"shadow:x:42:\"}, {\"group\": \"utmp\", \"gid\": 43, \"line\": \"utmp:x:43:\"}, {\"group\": \"video\", \"gid\": 44, \"line\": \"video:x:44:\"}, {\"group\": \"sasl\", \"gid\": 45, \"line\": \"sasl:x:45:\"}, {\"group\": \"plugdev\", \"gid\": 46, \"line\": \"plugdev:x:46:\"}, {\"group\": \"staff\", \"gid\": 50, \"line\": \"staff:x:50:\"}, {\"group\": \"users\", \"gid\": 100, \"line\": \"users:x:100:\"}, {\"group\": \"systemd-journal\", \"gid\": 999, \"line\": \"systemd-journal:x:999:\"}, {\"group\": \"crontab\", \"gid\": 997, \"line\": \"crontab:x:997:\"}, {\"group\": \"input\", \"gid\": 995, \"line\": \"input:x:995:\"}, {\"group\": \"sgx\", \"gid\": 994, \"line\": \"sgx:x:994:\"}, {\"group\": \"kvm\", \"gid\": 993, \"line\": \"kvm:x:993:\"}, {\"group\": \"render\", \"gid\": 992, \"line\": \"render:x:992:\"}, {\"group\": \"lxd\", \"gid\": 105, \"line\": \"lxd:x:105:ubuntu\"}, {\"group\": \"_ssh\", \"gid\": 106, \"line\": \"_ssh:x:106:\"}, {\"group\": \"rdma\", \"gid\": 107, \"line\": \"rdma:x:107:\"}, {\"group\": \"admin\", \"gid\": 110, \"line\": \"admin:x:110:\"}, {\"group\": \"netdev\", \"gid\": 111, \"line\": \"netdev:x:111:\"}], \"group\": \"tty\", \"gid\": 5, \"line\": \"tty:x:5:\", \"host\": \"10.7.143.237\"}",
+      "raw_data": "{}"
+    },
+    {
+      "id": 126,
+      "job_id": 108,
+      "vuln_id": "KISA-U-12",
+      "title": "Linux 세션 종료 시간 미설정",
+      "severity": "Low",
+      "tags": "KISA:U-12",
+      "description": "세션 타임아웃이 없거나 기준값을 초과합니다.",
+      "solution": "TMOUT/ autologout 값을 600초(10분) 이하로 설정하세요.",
+      "evidence": "{\"os_type\": \"linux\", \"config_path\": {\"profile_paths\": [\"/etc/profile\", \"/etc/bashrc\", \"/etc/bash.bashrc\"], \"user_profile_paths\": [], \"csh_paths\": [\"/etc/csh.login\", \"/etc/csh.cshrc\"]}, \"mode\": \"remote\", \"detected_value\": {\"tmout\": {\"values\": [], \"export_present\": false, \"max_timeout_seconds\": 600, \"status\": \"tmout_missing\"}, \"autologout\": {\"status\": null, \"values\": [], \"max_timeout_seconds\": 600}, \"issues\": [{\"source\": \"tmout\", \"issue\": \"tmout_missing\"}]}, \"source\": \"tmout\", \"host\": \"10.7.143.237\"}",
+      "raw_data": "{}"
+    },
+    {
+      "id": 127,
+      "job_id": 108,
+      "vuln_id": "KISA-U-18",
+      "title": "Linux shadow 권한 설정 미흡",
+      "severity": "High",
+      "tags": "KISA:U-18",
+      "description": "소유자 또는 권한 설정이 기준을 만족하지 않습니다.",
+      "solution": "소유자를 root로 설정하고 권한을 400 이하로 제한하세요.",
+      "evidence": "{\"os_type\": \"linux\", \"config_path\": \"/etc/shadow\", \"mode\": \"remote\", \"host\": \"10.7.143.237\", \"detected_value\": {\"owner\": \"root\", \"mode\": \"0640\", \"raw\": \"640 root\", \"method\": \"stat\", \"required_owner\": \"root\", \"max_mode\": \"0620\", \"issues\": [\"permission_too_open\"], \"type\": \"file\"}}",
+      "raw_data": "{}"
+    },
+    {
+      "id": 128,
+      "job_id": 108,
+      "vuln_id": "KISA-U-20",
+      "title": "Linux inetd 점검 불가",
+      "severity": "Info",
+      "tags": "KISA:U-20",
+      "description": "inetd/xinetd 설정 파일 권한 정보를 확인할 수 없습니다.",
+      "solution": "대상 접근 권한과 파일 경로를 확인하세요.",
+      "evidence": "{\"os_type\": \"linux\", \"config_path\": {\"checked_paths\": [\"no_target_files\"]}, \"mode\": \"remote\", \"error\": \"No target files found\"}",
+      "raw_data": "{}"
+    },
+    {
+      "id": 129,
+      "job_id": 108,
+      "vuln_id": "KISA-U-21",
+      "title": "Linux syslog 권한 설정 미흡",
+      "severity": "High",
+      "tags": "KISA:U-21",
+      "description": "syslog/rsyslog 설정 파일의 소유자 또는 권한 설정이 기준을 만족하지 않습니다.",
+      "solution": "소유자를 root/bin/sys로 설정하고 권한을 640 이하로 제한하세요.",
+      "evidence": "{\"os_type\": \"linux\", \"config_path\": {\"checked_paths\": [\"/etc/rsyslog.conf\"]}, \"mode\": \"remote\", \"detected_value\": [{\"path\": \"/etc/rsyslog.conf\", \"owner\": \"root\", \"mode\": \"0644\", \"raw\": \"644 root\", \"method\": \"stat\", \"issues\": [\"permission_too_open\", \"other_permissions\"]}], \"count\": 1, \"host\": \"10.7.143.237\"}",
+      "raw_data": "{}"
+    },
+    {
+      "id": 130,
+      "job_id": 108,
+      "vuln_id": "KISA-U-23",
+      "title": "Linux SUID/SGID 파일 과다",
+      "severity": "High",
+      "tags": "KISA:U-23",
+      "description": "화이트리스트에 없는 SUID/SGID 파일이 발견되었습니다.",
+      "solution": "불필요한 SUID/SGID 파일을 제거하거나 권한을 회수하세요.",
+      "evidence": "{\"os_type\": \"linux\", \"config_path\": {\"commands\": [\"find /bin -xdev \\\\( -path /proc -o -path /sys -o -path /dev -o -path /run \\\\) -prune -o -user root -type f \\\\( -perm -04000 -o -perm -02000 \\\\) -ls\", \"find /sbin -xdev \\\\( -path /proc -o -path /sys -o -path /dev -o -path /run \\\\) -prune -o -user root -type f \\\\( -perm -04000 -o -perm -02000 \\\\) -ls\", \"find /usr/bin -xdev \\\\( -path /proc -o -path /sys -o -path /dev -o -path /run \\\\) -prune -o -user root -type f \\\\( -perm -04000 -o -perm -02000 \\\\) -ls\", \"find /usr/sbin -xdev \\\\( -path /proc -o -path /sys -o -path /dev -o -path /run \\\\) -prune -o -user root -type f \\\\( -perm -04000 -o -perm -02000 \\\\) -ls\", \"find /usr/local/bin -xdev \\\\( -path /proc -o -path /sys -o -path /dev -o -path /run \\\\) -prune -o -user root -type f \\\\( -perm -04000 -o -perm -02000 \\\\) -ls\", \"find /usr/local/sbin -xdev \\\\( -path /proc -o -path /sys -o -path /dev -o -path /run \\\\) -prune -o -user root -type f \\\\( -perm -04000 -o -perm -02000 \\\\) -ls\", \"find /opt -xdev \\\\( -path /proc -o -path /sys -o -path /dev -o -path /run \\\\) -prune -o -user root -type f \\\\( -perm -04000 -o -perm -02000 \\\\) -ls\", \"find /home -xdev \\\\( -path /proc -o -path /sys -o -path /dev -o -path /run \\\\) -prune -o -user root -type f \\\\( -perm -04000 -o -perm -02000 \\\\) -ls\", \"find /var -xdev \\\\( -path /proc -o -path /sys -o -path /dev -o -path /run \\\\) -prune -o -user root -type f \\\\( -perm -04000 -o -perm -02000 \\\\) -ls\", \"find /tmp -xdev \\\\( -path /proc -o -path /sys -o -path /dev -o -path /run \\\\) -prune -o -user root -type f \\\\( -perm -04000 -o -perm -02000 \\\\) -ls\"]}, \"mode\": \"remote\", \"detected_value\": [{\"path\": \"/usr/bin/ssh-agent\", \"line\": \"     2250    304 -rwxr-sr-x   1 root     _ssh       309688 Aug 26 13:49 /usr/bin/ssh-agent\"}, {\"path\": \"/usr/bin/newgrp\", \"line\": \"     1853     40 -rwsr-xr-x   1 root     root        40664 May 30  2024 /usr/bin/newgrp\"}, {\"path\": \"/usr/bin/chfn\", \"line\": \"     1883     72 -rwsr-xr-x   1 root     root        72792 May 30  2024 /usr/bin/chfn\"}, {\"path\": \"/usr/bin/expiry\", \"line\": \"     1885     28 -rwxr-sr-x   1 root     shadow      27152 May 30  2024 /usr/bin/expiry\"}, {\"path\": \"/usr/bin/gpasswd\", \"line\": \"     1886     76 -rwsr-xr-x   1 root     root        76248 May 30  2024 /usr/bin/gpasswd\"}, {\"path\": \"/usr/bin/fusermount3\", \"line\": \"     2196     40 -rwsr-xr-x   1 root     root        39296 Apr  8  2024 /usr/bin/fusermount3\"}, {\"path\": \"/usr/bin/mount\", \"line\": \"     1925     52 -rwsr-xr-x   1 root     root        51584 Jun  5  2025 /usr/bin/mount\"}, {\"path\": \"/usr/bin/crontab\", \"line\": \"     2134     40 -rwxr-sr-x   1 root     crontab     39664 Mar 31  2024 /usr/bin/crontab\"}, {\"path\": \"/usr/bin/chage\", \"line\": \"     1882     72 -rwxr-sr-x   1 root     shadow      72184 May 30  2024 /usr/bin/chage\"}, {\"path\": \"/usr/bin/chsh\", \"line\": \"     1884     44 -rwsr-xr-x   1 root     root        44760 May 30  2024 /usr/bin/chsh\"}, {\"path\": \"/usr/bin/umount\", \"line\": \"     1926     40 -rwsr-xr-x   1 root     root        39296 Jun  5  2025 /usr/bin/umount\"}, {\"path\": \"/usr/bin/sudo\", \"line\": \"     2141    272 -rwsr-xr-x   1 root     root       277936 Jun 25  2025 /usr/bin/sudo\"}, {\"path\": \"/usr/sbin/unix_chkpwd\", \"line\": \"    22846     32 -rwxr-sr-x   1 root     shadow      31040 Sep 15 12:37 /usr/sbin/unix_chkpwd\"}, {\"path\": \"/usr/sbin/pam_extrausers_chkpwd\", \"line\": \"    22841     28 -rwxr-sr-x   1 root     shadow      26944 Sep 15 12:37 /usr/sbin/pam_extrausers_chkpwd\"}], \"count\": 14, \"host\": \"10.7.143.237\"}",
+      "raw_data": "{}"
+    },
+    {
+      "id": 131,
+      "job_id": 108,
+      "vuln_id": "KISA-U-28",
+      "title": "Linux 접속 IP/포트 제한 미흡",
+      "severity": "High",
+      "tags": "KISA:U-28",
+      "description": "접속 제한 설정이 확인되지 않았습니다.",
+      "solution": "hosts.deny/hosts.allow 또는 방화벽으로 접속 IP/포트를 제한하세요.",
+      "evidence": "{\"os_type\": \"linux\", \"config_path\": {\"hosts_deny\": \"/etc/hosts.deny\", \"hosts_allow\": \"/etc/hosts.allow\", \"iptables\": \"iptables -L -n\", \"firewalld\": \"firewall-cmd --list-all\"}, \"mode\": \"remote\", \"detected_value\": [{\"file\": \"hosts.deny\", \"path\": \"/etc/hosts.deny\", \"mode\": \"remote\", \"owner\": \"root\", \"perm\": \"0644\", \"raw\": \"644 root\", \"method\": \"stat\", \"issues\": [\"permission_too_open\", \"deny_pattern_missing\"], \"status\": \"ok\", \"ok\": false, \"line_count\": 0, \"lines\": [], \"matched_lines\": []}, {\"file\": \"hosts.allow\", \"path\": \"/etc/hosts.allow\", \"mode\": \"remote\", \"owner\": \"root\", \"perm\": \"0644\", \"raw\": \"644 root\", \"method\": \"stat\", \"issues\": [\"permission_too_open\", \"allow_entries_missing\"], \"status\": \"ok\", \"ok\": false, \"line_count\": 0, \"lines\": []}, {\"issue\": \"tcp_wrapper_not_configured\"}, {\"issue\": \"firewall_not_detected\"}], \"count\": 4, \"checked_files\": 2, \"missing_files\": 0, \"policy\": {\"required_deny_patterns\": [\"ALL:ALL\"], \"require_allow_entries\": true, \"allowed_owners\": [\"root\"], \"max_mode\": \"0600\", \"allow_group_write\": false, \"allow_other_write\": false, \"check_iptables\": true, \"check_firewalld\": true}, \"firewall\": {\"iptables\": {\"command\": \"iptables -L -n\", \"policy_detected\": false}}, \"host\": \"10.7.143.237\", \"partial_errors\": [{\"command\": \"firewall-cmd --list-all\", \"error\": \"sudo: firewall-cmd: command not found\"}]}",
+      "raw_data": "{}"
+    },
+    {
+      "id": 132,
+      "job_id": 108,
+      "vuln_id": "KISA-U-31",
+      "title": "Linux 홈 디렉터리 권한 설정 미흡",
+      "severity": "Medium",
+      "tags": "KISA:U-31",
+      "description": "홈 디렉터리 소유자 또는 권한 설정이 기준을 만족하지 않습니다.",
+      "solution": "홈 디렉터리를 해당 계정이 소유하도록 하고 타 사용자 쓰기 권한을 제거하세요.",
+      "evidence": "{\"os_type\": \"linux\", \"config_path\": {\"passwd\": \"/etc/passwd\"}, \"mode\": \"remote\", \"detected_value\": [{\"user\": \"daemon\", \"path\": \"/usr/sbin\", \"owner\": \"root\", \"mode\": \"0755\", \"raw\": \"755 root\", \"method\": \"stat\", \"issues\": [\"owner_mismatch\"]}, {\"user\": \"bin\", \"path\": \"/bin\", \"owner\": \"root\", \"mode\": \"0777\", \"raw\": \"777 root\", \"method\": \"stat\", \"issues\": [\"owner_mismatch\", \"group_writable\", \"other_writable\"]}, {\"user\": \"sys\", \"path\": \"/dev\", \"owner\": \"root\", \"mode\": \"0755\", \"raw\": \"755 root\", \"method\": \"stat\", \"issues\": [\"owner_mismatch\"]}, {\"user\": \"sync\", \"path\": \"/bin\", \"owner\": \"root\", \"mode\": \"0777\", \"raw\": \"777 root\", \"method\": \"stat\", \"issues\": [\"owner_mismatch\", \"group_writable\", \"other_writable\"]}, {\"user\": \"games\", \"path\": \"/usr/games\", \"owner\": \"root\", \"mode\": \"0755\", \"raw\": \"755 root\", \"method\": \"stat\", \"issues\": [\"owner_mismatch\"]}, {\"user\": \"mail\", \"path\": \"/var/mail\", \"owner\": \"root\", \"mode\": \"2775\", \"raw\": \"2775 root\", \"method\": \"stat\", \"issues\": [\"owner_mismatch\", \"group_writable\"]}, {\"user\": \"proxy\", \"path\": \"/bin\", \"owner\": \"root\", \"mode\": \"0777\", \"raw\": \"777 root\", \"method\": \"stat\", \"issues\": [\"owner_mismatch\", \"group_writable\", \"other_writable\"]}, {\"user\": \"backup\", \"path\": \"/var/backups\", \"owner\": \"root\", \"mode\": \"0755\", \"raw\": \"755 root\", \"method\": \"stat\", \"issues\": [\"owner_mismatch\"]}, {\"user\": \"systemd-network\", \"path\": \"/\", \"owner\": \"root\", \"mode\": \"0755\", \"raw\": \"755 root\", \"method\": \"stat\", \"issues\": [\"owner_mismatch\"]}, {\"user\": \"systemd-timesync\", \"path\": \"/\", \"owner\": \"root\", \"mode\": \"0755\", \"raw\": \"755 root\", \"method\": \"stat\", \"issues\": [\"owner_mismatch\"]}, {\"user\": \"dhcpcd\", \"path\": \"/usr/lib/dhcpcd\", \"owner\": \"root\", \"mode\": \"0755\", \"raw\": \"755 root\", \"method\": \"stat\", \"issues\": [\"owner_mismatch\"]}, {\"user\": \"systemd-resolve\", \"path\": \"/\", \"owner\": \"root\", \"mode\": \"0755\", \"raw\": \"755 root\", \"method\": \"stat\", \"issues\": [\"owner_mismatch\"]}, {\"user\": \"uuidd\", \"path\": \"/run/uuidd\", \"owner\": \"root\", \"mode\": \"0755\", \"raw\": \"755 root\", \"method\": \"stat\", \"issues\": [\"owner_mismatch\"]}, {\"user\": \"sshd\", \"path\": \"/run/sshd\", \"owner\": \"root\", \"mode\": \"0755\", \"raw\": \"755 root\", \"method\": \"stat\", \"issues\": [\"owner_mismatch\"]}, {\"user\": \"fwupd-refresh\", \"path\": \"/var/lib/fwupd\", \"owner\": \"root\", \"mode\": \"0755\", \"raw\": \"755 root\", \"method\": \"stat\", \"issues\": [\"owner_mismatch\"]}, {\"user\": \"polkitd\", \"path\": \"/\", \"owner\": \"root\", \"mode\": \"0755\", \"raw\": \"755 root\", \"method\": \"stat\", \"issues\": [\"owner_mismatch\"]}], \"count\": 16, \"checked_dirs\": 23, \"missing_dirs\": 13, \"policy\": {\"allow_group_write\": false, \"allow_other_write\": false}, \"host\": \"10.7.143.237\"}",
+      "raw_data": "{}"
+    },
+    {
+      "id": 133,
+      "job_id": 108,
+      "vuln_id": "KISA-U-32",
+      "title": "Linux 홈 디렉터리 누락",
+      "severity": "Medium",
+      "tags": "KISA:U-32",
+      "description": "/etc/passwd에 등록된 홈 디렉터리가 존재하지 않는 계정이 있습니다.",
+      "solution": "계정별 홈 디렉터리를 생성하거나 불필요한 계정을 정리하세요.",
+      "evidence": "{\"os_type\": \"linux\", \"config_path\": \"/etc/passwd\", \"mode\": \"remote\", \"detected_value\": [{\"account\": \"lp\", \"home\": \"/var/spool/lpd\", \"status\": \"home_missing\", \"line\": \"lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin\"}, {\"account\": \"news\", \"home\": \"/var/spool/news\", \"status\": \"home_missing\", \"line\": \"news:x:9:9:news:/var/spool/news:/usr/sbin/nologin\"}, {\"account\": \"uucp\", \"home\": \"/var/spool/uucp\", \"status\": \"home_missing\", \"line\": \"uucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin\"}, {\"account\": \"www-data\", \"home\": \"/var/www\", \"status\": \"home_missing\", \"line\": \"www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin\"}, {\"account\": \"list\", \"home\": \"/var/list\", \"status\": \"home_missing\", \"line\": \"list:x:38:38:Mailing List Manager:/var/list:/usr/sbin/nologin\"}, {\"account\": \"irc\", \"home\": \"/run/ircd\", \"status\": \"home_missing\", \"line\": \"irc:x:39:39:ircd:/run/ircd:/usr/sbin/nologin\"}, {\"account\": \"tomcat\", \"home\": \"/var/lib/tomcat\", \"status\": \"home_missing\", \"line\": \"tomcat:x:988:988:Apache Tomcat:/var/lib/tomcat:/usr/sbin/nologin\"}], \"count\": 7, \"checked_count\": 30, \"skipped_count\": 6, \"host\": \"10.7.143.237\"}",
+      "raw_data": "{}"
+    },
+    {
+      "id": 134,
+      "job_id": 108,
+      "vuln_id": "KISA-U-33",
+      "title": "Linux 숨겨진 파일 발견",
+      "severity": "Low",
+      "tags": "KISA:U-33",
+      "description": "의심스러운 숨김 파일이 발견되었습니다.",
+      "solution": "불필요한 숨김 파일을 제거하거나 정당성을 확인하세요.",
+      "evidence": "{\"os_type\": \"linux\", \"config_path\": {\"commands\": [\"find / -xdev \\\\( -path /proc -o -path /sys -o -path /run \\\\) -prune -o -type f -name '.*' -ls\", \"find /home -xdev \\\\( -path /proc -o -path /sys -o -path /run \\\\) -prune -o -type f -name '.*' -ls\", \"find /root -xdev \\\\( -path /proc -o -path /sys -o -path /run \\\\) -prune -o -type f -name '.*' -ls\", \"find /tmp -xdev \\\\( -path /proc -o -path /sys -o -path /run \\\\) -prune -o -type f -name '.*' -ls\", \"find /var -xdev \\\\( -path /proc -o -path /sys -o -path /run \\\\) -prune -o -type f -name '.*' -ls\", \"find /var/tmp -xdev \\\\( -path /proc -o -path /sys -o -path /run \\\\) -prune -o -type f -name '.*' -ls\", \"find /dev -xdev \\\\( -path /proc -o -path /sys -o -path /run \\\\) -prune -o -type f -name '.*' -ls\"]}, \"mode\": \"remote\", \"detected_value\": [{\"path\": \"/home/ubuntu/.bash_history\", \"line\": \"   278425      8 -rw-------   1 ubuntu   ubuntu       4898 Jan  2 18:17 /home/ubuntu/.bash_history\", \"suspicious\": false}, {\"path\": \"/home/ubuntu/.lesshst\", \"line\": \"   278009      4 -rw-------   1 ubuntu   ubuntu         20 Jan  2 04:38 /home/ubuntu/.lesshst\", \"suspicious\": false}, {\"path\": \"/home/ubuntu/.mysql_history\", \"line\": \"   278379     12 -rw-------   1 ubuntu   ubuntu       8640 Jan  2 04:22 /home/ubuntu/.mysql_history\", \"suspicious\": false}, {\"path\": \"/home/ubuntu/.sudo_as_admin_successful\", \"line\": \"   262348      0 -rw-r--r--   1 ubuntu   ubuntu          0 Jan  2 01:33 /home/ubuntu/.sudo_as_admin_successful\", \"suspicious\": false}, {\"path\": \"/root/.lesshst\", \"line\": \"    25054      4 -rw-------   1 root     root           20 Jan  2 04:43 /root/.lesshst\", \"suspicious\": false}, {\"path\": \"/var/cache/apparmor/208b6430.0/.features\", \"line\": \"   262150      4 -rw-r--r--   1 root     root         2868 Jan  2 01:21 /var/cache/apparmor/208b6430.0/.features\", \"suspicious\": false}, {\"path\": \"/var/cache/apparmor/0fb44ac6.0/.features\", \"line\": \"    33241      4 -rw-r--r--   1 root     root         2869 Oct 22 10:15 /var/cache/apparmor/0fb44ac6.0/.features\", \"suspicious\": false}, {\"path\": \"/var/lib/landscape/.cleanup.user\", \"line\": \"    84195      0 -rw-r--r--   1 landscape landscape        0 Oct 22 10:02 /var/lib/landscape/.cleanup.user\", \"suspicious\": false}, {\"path\": \"/var/.updated\", \"line\": \"    33527      4 -rw-r--r--   1 root      root           208 Oct 22 09:59 /var/.updated\", \"suspicious\": false}], \"count\": 9, \"suspicious_count\": 0, \"host\": \"10.7.143.237\", \"partial_errors\": [\"SSH command timeout\"]}",
+      "raw_data": "{}"
+    },
+    {
+      "id": 135,
+      "job_id": 108,
+      "vuln_id": "KISA-U-37",
+      "title": "Linux crontab/at 권한 설정 미흡",
+      "severity": "High",
+      "tags": "KISA:U-37",
+      "description": "crontab/at 명령 또는 관련 설정 파일 권한이 기준을 만족하지 않습니다.",
+      "solution": "일반 사용자 실행 권한을 제거하고 관련 설정 파일 소유자를 root, 권한을 640 이하로 설정하세요.",
+      "evidence": "{\"os_type\": \"linux\", \"config_path\": {\"command_paths\": [\"/usr/bin/crontab\", \"/usr/bin/at\"], \"config_search_paths\": [\"/etc/cron.d\", \"/etc/cron.daily\", \"/etc/cron.allow\", \"/etc/at.allow\"], \"find_command\": \"find {path} -type f -ls\"}, \"mode\": \"remote\", \"detected_value\": [{\"category\": \"command\", \"path\": \"/usr/bin/crontab\", \"owner\": \"root\", \"mode\": \"2755\", \"raw\": \"2755 root\", \"method\": \"stat\", \"issues\": [\"group_executable\", \"other_executable\"]}, {\"category\": \"config\", \"path\": \"/etc/cron.d/e2scrub_all\", \"owner\": \"root\", \"mode\": \"0644\", \"raw\": \"      284      4 -rw-r--r--   1 root     root          201 Apr  8  2024 /etc/cron.d/e2scrub_all\", \"issues\": [\"permission_too_open\"]}, {\"category\": \"config\", \"path\": \"/etc/cron.d/sysstat\", \"owner\": \"root\", \"mode\": \"0644\", \"raw\": \"      286      4 -rw-r--r--   1 root     root          396 Jan  9  2024 /etc/cron.d/sysstat\", \"issues\": [\"permission_too_open\"]}, {\"category\": \"config\", \"path\": \"/etc/cron.d/.placeholder\", \"owner\": \"root\", \"mode\": \"0644\", \"raw\": \"      285      4 -rw-r--r--   1 root     root          102 Mar 31  2024 /etc/cron.d/.placeholder\", \"issues\": [\"permission_too_open\"]}, {\"category\": \"config\", \"path\": \"/etc/cron.daily/logrotate\", \"owner\": \"root\", \"mode\": \"0755\", \"raw\": \"      264      4 -rwxr-xr-x   1 root     root          377 Apr  8  2024 /etc/cron.daily/logrotate\", \"issues\": [\"permission_too_open\"]}, {\"category\": \"config\", \"path\": \"/etc/cron.daily/apport\", \"owner\": \"root\", \"mode\": \"0755\", \"raw\": \"      265      4 -rwxr-xr-x   1 root     root          376 Jul  8  2025 /etc/cron.daily/apport\", \"issues\": [\"permission_too_open\"]}, {\"category\": \"config\", \"path\": \"/etc/cron.daily/sysstat\", \"owner\": \"root\", \"mode\": \"0755\", \"raw\": \"      267      4 -rwxr-xr-x   1 root     root          518 Jan  9  2024 /etc/cron.daily/sysstat\", \"issues\": [\"permission_too_open\"]}, {\"category\": \"config\", \"path\": \"/etc/cron.daily/dpkg\", \"owner\": \"root\", \"mode\": \"0755\", \"raw\": \"      261      4 -rwxr-xr-x   1 root     root          123 Feb  5  2024 /etc/cron.daily/dpkg\", \"issues\": [\"permission_too_open\"]}, {\"category\": \"config\", \"path\": \"/etc/cron.daily/tomcat10\", \"owner\": \"root\", \"mode\": \"0755\", \"raw\": \"    33749      4 -rwxr-xr-x   1 root     root          551 Dec  3  2023 /etc/cron.daily/tomcat10\", \"issues\": [\"permission_too_open\"]}, {\"category\": \"config\", \"path\": \"/etc/cron.daily/.placeholder\", \"owner\": \"root\", \"mode\": \"0644\", \"raw\": \"      262      4 -rw-r--r--   1 root     root          102 Mar 31  2024 /etc/cron.daily/.placeholder\", \"issues\": [\"permission_too_open\"]}, {\"category\": \"config\", \"path\": \"/etc/cron.daily/apt-compat\", \"owner\": \"root\", \"mode\": \"0755\", \"raw\": \"      263      4 -rwxr-xr-x   1 root     root         1478 Mar 22  2024 /etc/cron.daily/apt-compat\", \"issues\": [\"permission_too_open\"]}, {\"category\": \"config\", \"path\": \"/etc/cron.daily/man-db\", \"owner\": \"root\", \"mode\": \"0755\", \"raw\": \"      266      4 -rwxr-xr-x   1 root     root         1395 Mar 29  2024 /etc/cron.daily/man-db\", \"issues\": [\"permission_too_open\"]}], \"count\": 12, \"checked_files\": 12, \"missing_paths\": [\"/usr/bin/at\", \"/etc/cron.allow\", \"/etc/at.allow\"], \"policy\": {\"allow_group_execute\": false, \"allow_other_execute\": false, \"allowed_owners\": [\"root\"], \"max_mode\": \"0640\", \"allow_group_write\": false, \"allow_other_write\": false}, \"host\": \"10.7.143.237\"}",
+      "raw_data": "{}"
+    },
+    {
+      "id": 136,
+      "job_id": 108,
+      "vuln_id": "KISA-U-39",
+      "title": "Linux NFS 서비스 활성화",
+      "severity": "High",
+      "tags": "KISA:U-39",
+      "description": "NFS 관련 데몬이 실행 중입니다.",
+      "solution": "불필요한 NFS 서비스를 중지하고 비활성화하세요.",
+      "evidence": "{\"os_type\": \"linux\", \"config_path\": {\"process_command\": \"ps -ef\", \"process_pattern\": \"nfsd|statd|lockd\"}, \"mode\": \"remote\", \"detected_value\": [\"root          34       2  0 01:01 ?        00:00:00 [kworker/R-kblockd]\", \"root          45       2  0 01:01 ?        00:00:00 [kworker/0:1H-kblockd]\"], \"count\": 2, \"host\": \"10.7.143.237\"}",
+      "raw_data": "{}"
+    },
+    {
+      "id": 137,
+      "job_id": 108,
+      "vuln_id": "KISA-U-50",
+      "title": "Linux DNS Zone Transfer 점검 불가",
+      "severity": "Info",
+      "tags": "KISA:U-50",
+      "description": "DNS 설정 파일을 확인할 수 없습니다.",
+      "solution": "대상 접근 권한과 named.conf 경로를 확인하세요.",
+      "evidence": "{\"os_type\": \"linux\", \"config_path\": {\"named_conf_paths\": [\"/etc/named.conf\", \"/etc/bind/named.conf.options\"]}, \"mode\": \"remote\", \"partial_errors\": [], \"missing_files\": [\"/etc/named.conf\", \"/etc/bind/named.conf.options\"], \"host\": \"10.7.143.237\"}",
+      "raw_data": "{}"
+    },
+    {
+      "id": 138,
+      "job_id": 108,
+      "vuln_id": "KISA-U-56",
+      "title": "Linux FTP 접근 제어 미설정",
+      "severity": "Low",
+      "tags": "KISA:U-56",
+      "description": "FTP 접근 제어 설정을 확인할 수 없거나 설정이 미흡합니다.",
+      "solution": "ftpusers/userlist 또는 Limit LOGIN/TCP Wrapper로 접근을 제한하세요.",
+      "evidence": "{\"os_type\": \"linux\", \"config_path\": {\"vsftpd_conf_path\": \"/etc/vsftpd.conf\", \"vsftpd_userlist_files\": [\"/etc/vsftpd.ftpusers\", \"/etc/vsftpd/user_list\", \"/etc/ftpusers\"], \"proftpd_conf_paths\": [\"/etc/proftpd.conf\", \"/etc/proftpd/proftpd.conf\"], \"hosts_allow_path\": \"/etc/hosts.allow\", \"hosts_deny_path\": \"/etc/hosts.deny\"}, \"mode\": \"remote\", \"detected_value\": [{\"source\": \"tcp_wrapper\", \"hosts_allow_path\": \"/etc/hosts.allow\", \"hosts_deny_path\": \"/etc/hosts.deny\", \"issue\": \"no_ftp_entries\"}], \"count\": 1}",
+      "raw_data": "{}"
+    },
+    {
+      "id": 139,
+      "job_id": 108,
+      "vuln_id": "KISA-U-57",
+      "title": "Linux ftpusers 설정 미흡",
+      "severity": "Medium",
+      "tags": "KISA:U-57",
+      "description": "ftpusers 파일에 필수 계정이 포함되어 있지 않습니다.",
+      "solution": "ftpusers 파일에 root 등 중요 계정을 추가하세요.",
+      "evidence": "{\"os_type\": \"linux\", \"config_path\": {\"ftpusers_paths\": [\"/etc/ftpusers\", \"/etc/vsftpd/ftpusers\", \"/etc/proftpd.ftpusers\"]}, \"mode\": \"remote\", \"detected_value\": {\"files\": [{\"path\": \"/etc/ftpusers\", \"status\": \"missing\"}, {\"path\": \"/etc/vsftpd/ftpusers\", \"status\": \"missing\"}, {\"path\": \"/etc/proftpd.ftpusers\", \"status\": \"missing\"}], \"missing_users\": [\"root\"]}, \"count\": 3, \"checked_files\": 0, \"missing_files\": 3, \"host\": \"10.7.143.237\"}",
+      "raw_data": "{}"
+    },
+    {
+      "id": 140,
+      "job_id": 108,
+      "vuln_id": "KISA-U-62",
+      "title": "Linux 로그인 경고 메시지 설정 미흡",
+      "severity": "Low",
+      "tags": "KISA:U-62",
+      "description": "로그인 경고 메시지가 없거나 시스템 정보가 노출되어 있습니다.",
+      "solution": "경고 문구를 설정하고 시스템 정보가 노출되지 않도록 조치하세요.",
+      "evidence": "{\"os_type\": \"linux\", \"config_path\": {\"motd_path\": \"/etc/motd\", \"issue_path\": \"/etc/issue\", \"issue_net_path\": \"/etc/issue.net\", \"sshd_config_path\": \"/etc/ssh/sshd_config\", \"sshd_banner_path\": null}, \"mode\": \"remote\", \"detected_value\": [{\"path\": \"/etc/issue\", \"issue\": \"warning_missing\", \"source\": \"issue\"}, {\"path\": \"/etc/issue\", \"issue\": \"system_info_exposed\", \"source\": \"issue\", \"patterns\": [\"Ubuntu\"]}, {\"path\": \"/etc/issue.net\", \"issue\": \"warning_missing\", \"source\": \"issue_net\"}, {\"path\": \"/etc/issue.net\", \"issue\": \"system_info_exposed\", \"source\": \"issue_net\", \"patterns\": [\"Ubuntu\"]}], \"count\": 4, \"checked_files\": [\"/etc/ssh/sshd_config\", \"/etc/issue\", \"/etc/issue.net\"], \"host\": \"10.7.143.237\", \"missing_files\": [\"/etc/motd\"]}",
+      "raw_data": "{}"
+    },
+    {
+      "id": 141,
+      "job_id": 108,
+      "vuln_id": "KISA-U-64",
+      "title": "Linux 보안 패치 확인 필요",
+      "severity": "Info",
+      "tags": "KISA:U-64",
+      "description": "수집된 버전 정보를 벤더 권고와 비교해야 합니다.",
+      "solution": "커널/패키지 버전을 벤더 최신 권고 버전과 비교하세요.",
+      "evidence": "{\"os_type\": \"linux\", \"config_path\": {\"kernel_command\": \"uname -a\", \"package_commands\": [\"rpm -qa\"]}, \"mode\": \"remote\", \"detected_value\": {\"kernel\": {\"command\": \"uname -a\", \"status\": \"unknown\", \"version\": \"10\", \"min_version\": null, \"lines\": [\"Linux ip-10-7-143-237 6.14.0-1018-aws #18~24.04.1-Ubuntu SMP Mon Nov 24 19:46:27 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux\"]}, \"packages\": [{\"command\": \"rpm -qa\", \"line_count\": 0, \"lines\": [], \"mode\": \"remote\", \"error\": \"sudo: rpm: command not found\"}]}, \"count\": 2, \"host\": \"10.7.143.237\"}",
+      "raw_data": "{}"
+    },
+    {
+      "id": 142,
+      "job_id": 108,
+      "vuln_id": "KISA-U-66",
+      "title": "Linux 시스템 로깅 설정 미흡",
+      "severity": "Medium",
+      "tags": "KISA:U-66",
+      "description": "주요 로그 레벨이 정책에 따라 설정되어 있지 않습니다.",
+      "solution": "syslog/rsyslog 설정에 필수 selector를 추가하세요.",
+      "evidence": "{\"os_type\": \"linux\", \"config_path\": {\"syslog_conf_paths\": [\"/etc/syslog.conf\", \"/etc/rsyslog.conf\"]}, \"mode\": \"remote\", \"detected_value\": [{\"missing_selector\": \"*\"}, {\"missing_selector\": \"authpriv\"}, {\"missing_selector\": \"mail\"}, {\"missing_selector\": \"cron\"}, {\"missing_selector\": \"*\"}, {\"missing_selector\": \"*\"}], \"count\": 6, \"checked_files\": [\"/etc/rsyslog.conf\"], \"matched_selectors\": [], \"host\": \"10.7.143.237\", \"missing_files\": [\"/etc/syslog.conf\"]}",
+      "raw_data": "{}"
+    },
+    {
+      "id": 143,
+      "job_id": 108,
+      "vuln_id": "KISA-U-02",
+      "title": "비밀번호 정책 점검",
+      "severity": "High",
+      "tags": "KISA:U-02",
+      "description": "KISA U-02 점검 결과, 비밀번호 정책이 권고 기준을 충족하지 못하는 항목이 확인되었습니다.\n미준수 항목:\n- 최소 비밀번호 길이(minlen): 현재: None, 기준: >= 8 (위치: /etc/security/pwquality.conf 또는 PAM)\n- 숫자 포함(dcredit): 현재: None, 기준: <= -1 (위치: /etc/security/pwquality.conf 또는 PAM)\n- 대문자 포함(ucredit): 현재: None, 기준: <= -1 (위치: /etc/security/pwquality.conf 또는 PAM)\n- 소문자 포함(lcredit): 현재: None, 기준: <= -1 (위치: /etc/security/pwquality.conf 또는 PAM)\n- 특수문자 포함(ocredit): 현재: None, 기준: <= -1 (위치: /etc/security/pwquality.conf 또는 PAM)\n- 이전 비밀번호 차이(difok): 현재: None, 기준: >= 1 (위치: /etc/security/pwquality.conf 또는 PAM)\n- 비밀번호 재사용 방지(remember): 현재: None, 기준: >= 4 (위치: /etc/pam.d/common-password)\n- 비밀번호 최소 사용 기간: 현재: '0', 기준: >= 1 (위치: /etc/login.defs)\n- 비밀번호 최대 사용 기간: 현재: '99999', 기준: <= 90 (위치: /etc/login.defs)",
+      "solution": "다음 항목을 권고 기준에 맞게 설정한 뒤 정책이 실제로 적용되는지 확인하세요.\n- 최소 비밀번호 길이(minlen): minlen=8 이상으로 설정 (수정 위치: /etc/security/pwquality.conf 또는 PAM)\n- 숫자 포함(dcredit): dcredit=-1 이하로 설정 (수정 위치: /etc/security/pwquality.conf 또는 PAM)\n- 대문자 포함(ucredit): ucredit=-1 이하로 설정 (수정 위치: /etc/security/pwquality.conf 또는 PAM)\n- 소문자 포함(lcredit): lcredit=-1 이하로 설정 (수정 위치: /etc/security/pwquality.conf 또는 PAM)\n- 특수문자 포함(ocredit): ocredit=-1 이하로 설정 (수정 위치: /etc/security/pwquality.conf 또는 PAM)\n- 이전 비밀번호 차이(difok): difok=1 이상으로 설정 (수정 위치: /etc/security/pwquality.conf 또는 PAM)\n- 비밀번호 재사용 방지(remember): pam_pwhistory.so remember=N 설정 (수정 위치: /etc/pam.d/common-password)\n- 비밀번호 최소 사용 기간: PASS_MIN_DAYS 1 이상 (수정 위치: /etc/login.defs)\n- 비밀번호 최대 사용 기간: PASS_MAX_DAYS 90 이하 (수정 위치: /etc/login.defs)\n\n참고: PAM 설정 변경 시 pam_pwquality 또는 pam_pwhistory 모듈이 pam_unix.so 보다 위에 위치해야 실제로 적용됩니다.",
+      "evidence": "{\"pwquality\": {\"path\": null, \"lines\": null, \"parsed\": {}}, \"common_password\": {\"path\": \"/etc/pam.d/common-password\", \"lines\": [\"password\\t[success=1 default=ignore]\\tpam_unix.so obscure yescrypt\", \"password\\trequisite\\t\\t\\tpam_deny.so\", \"password\\trequired\\t\\t\\tpam_permit.so\"], \"parsed\": [{\"idx\": 0, \"ptype\": \"password\", \"control\": \"[success=1 default=ignore]\", \"module\": \"pam_unix.so\", \"args\": [\"obscure\", \"yescrypt\"], \"options\": {\"obscure\": true, \"yescrypt\": true}, \"raw\": \"password\\t[success=1 default=ignore]\\tpam_unix.so obscure yescrypt\"}, {\"idx\": 1, \"ptype\": \"password\", \"control\": \"requisite\", \"module\": \"pam_deny.so\", \"args\": [], \"options\": {}, \"raw\": \"password\\trequisite\\t\\t\\tpam_deny.so\"}, {\"idx\": 2, \"ptype\": \"password\", \"control\": \"required\", \"module\": \"pam_permit.so\", \"args\": [], \"options\": {}, \"raw\": \"password\\trequired\\t\\t\\tpam_permit.so\"}]}, \"login_defs\": {\"path\": \"/etc/login.defs\", \"lines\": [\"MAIL_DIR        /var/mail\", \"FAILLOG_ENAB\\t\\tyes\", \"LOG_UNKFAIL_ENAB\\tno\", \"LOG_OK_LOGINS\\t\\tno\", \"SYSLOG_SU_ENAB\\t\\tyes\", \"SYSLOG_SG_ENAB\\t\\tyes\", \"FTMP_FILE\\t/var/log/btmp\", \"SU_NAME\\t\\tsu\", \"HUSHLOGIN_FILE\\t.hushlogin\", \"ENV_SUPATH\\tPATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\", \"ENV_PATH\\tPATH=/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games\", \"TTYGROUP\\ttty\", \"TTYPERM\\t\\t0600\", \"ERASECHAR\\t0177\", \"KILLCHAR\\t025\", \"UMASK\\t\\t022\", \"HOME_MODE\\t0750\", \"PASS_MAX_DAYS\\t99999\", \"PASS_MIN_DAYS\\t0\", \"PASS_WARN_AGE\\t7\", \"UID_MIN\\t\\t\\t 1000\", \"UID_MAX\\t\\t\\t60000\", \"SUB_UID_MIN\\t\\t   100000\", \"SUB_UID_MAX\\t\\t600100000\", \"SUB_UID_COUNT\\t\\t    65536\", \"GID_MIN\\t\\t\\t 1000\", \"GID_MAX\\t\\t\\t60000\", \"SUB_GID_MIN\\t\\t   100000\", \"SUB_GID_MAX\\t\\t600100000\", \"SUB_GID_COUNT\\t\\t    65536\", \"LOGIN_RETRIES\\t\\t5\", \"LOGIN_TIMEOUT\\t\\t60\", \"CHFN_RESTRICT\\t\\trwh\", \"DEFAULT_HOME\\tyes\", \"USERGROUPS_ENAB yes\", \"ENCRYPT_METHOD SHA512\", \"NONEXISTENT\\t/nonexistent\"], \"parsed\": {\"MAIL_DIR\": \"/var/mail\", \"FAILLOG_ENAB\": \"yes\", \"LOG_UNKFAIL_ENAB\": \"no\", \"LOG_OK_LOGINS\": \"no\", \"SYSLOG_SU_ENAB\": \"yes\", \"SYSLOG_SG_ENAB\": \"yes\", \"FTMP_FILE\": \"/var/log/btmp\", \"SU_NAME\": \"su\", \"HUSHLOGIN_FILE\": \".hushlogin\", \"ENV_SUPATH\": \"PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\", \"ENV_PATH\": \"PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games\", \"TTYGROUP\": \"tty\", \"TTYPERM\": \"0600\", \"ERASECHAR\": \"0177\", \"KILLCHAR\": \"025\", \"UMASK\": \"022\", \"HOME_MODE\": \"0750\", \"PASS_MAX_DAYS\": \"99999\", \"PASS_MIN_DAYS\": \"0\", \"PASS_WARN_AGE\": \"7\", \"UID_MIN\": \"1000\", \"UID_MAX\": \"60000\", \"SUB_UID_MIN\": \"100000\", \"SUB_UID_MAX\": \"600100000\", \"SUB_UID_COUNT\": \"65536\", \"GID_MIN\": \"1000\", \"GID_MAX\": \"60000\", \"SUB_GID_MIN\": \"100000\", \"SUB_GID_MAX\": \"600100000\", \"SUB_GID_COUNT\": \"65536\", \"LOGIN_RETRIES\": \"5\", \"LOGIN_TIMEOUT\": \"60\", \"CHFN_RESTRICT\": \"rwh\", \"DEFAULT_HOME\": \"yes\", \"USERGROUPS_ENAB\": \"yes\", \"ENCRYPT_METHOD\": \"SHA512\", \"NONEXISTENT\": \"/nonexistent\"}}, \"effective_policy\": {\"difok\": null, \"minlen\": null, \"dcredit\": null, \"ucredit\": null, \"lcredit\": null, \"ocredit\": null, \"remember\": null, \"PASS_MIN_DAYS\": \"0\", \"PASS_MAX_DAYS\": \"99999\"}, \"diagnose\": {\"is_vulnerable\": true, \"failed_keys\": [\"minlen\", \"dcredit\", \"ucredit\", \"lcredit\", \"ocredit\", \"difok\", \"remember\", \"PASS_MIN_DAYS\", \"PASS_MAX_DAYS\"], \"checks\": [{\"key\": \"minlen\", \"actual_raw\": null, \"actual\": null, \"expected\": \">= 8\", \"ok\": false, \"reason\": \"미설정(None)\"}, {\"key\": \"dcredit\", \"actual_raw\": null, \"actual\": null, \"expected\": \"<= -1\", \"ok\": false, \"reason\": \"미설정(None)\"}, {\"key\": \"ucredit\", \"actual_raw\": null, \"actual\": null, \"expected\": \"<= -1\", \"ok\": false, \"reason\": \"미설정(None)\"}, {\"key\": \"lcredit\", \"actual_raw\": null, \"actual\": null, \"expected\": \"<= -1\", \"ok\": false, \"reason\": \"미설정(None)\"}, {\"key\": \"ocredit\", \"actual_raw\": null, \"actual\": null, \"expected\": \"<= -1\", \"ok\": false, \"reason\": \"미설정(None)\"}, {\"key\": \"difok\", \"actual_raw\": null, \"actual\": null, \"expected\": \">= 1\", \"ok\": false, \"reason\": \"미설정(None)\"}, {\"key\": \"remember\", \"actual_raw\": null, \"actual\": null, \"expected\": \">= 4\", \"ok\": false, \"reason\": \"미설정(None)\"}, {\"key\": \"PASS_MIN_DAYS\", \"actual_raw\": \"0\", \"actual\": 0, \"expected\": \">= 1\", \"ok\": false, \"reason\": \"기준 불만족: 0 >= 1 아님\"}, {\"key\": \"PASS_MAX_DAYS\", \"actual_raw\": \"99999\", \"actual\": 99999, \"expected\": \"<= 90\", \"ok\": false, \"reason\": \"기준 불만족: 99999 <= 90 아님\"}]}}",
+      "raw_data": "{}"
+    },
+    {
+      "id": 144,
+      "job_id": 108,
+      "vuln_id": "KISA-U-30",
+      "title": "UMASK 설정 점검",
+      "severity": "High",
+      "tags": "KISA:U-30",
+      "description": "UMASK 설정이 KISA U-30 권고값을 충족하지 않습니다.\n미준수 항목:\n- 프로파일 UMASK: 현재: None, 기준: == 22 (위치: /etc/profile)",
+      "solution": "다음 항목을 권고 기준에 맞게 설정한 뒤 정책이 실제로 적용되는지 확인하세요.\n- 프로파일 UMASK: umask 022 및 export umask로 설정 (수정 위치: /etc/profile)\n\nUMASK는 /etc/profile과 /etc/login.defs에서 동일하게 적용되어야 합니다.",
+      "evidence": "{\"profile\": {\"path\": \"/etc/profile\", \"lines\": [\"if [ \\\"${PS1-}\\\" ]; then\", \"if [ \\\"${BASH-}\\\" ] && [ \\\"$BASH\\\" != \\\"/bin/sh\\\" ]; then\", \"if [ -f /etc/bash.bashrc ]; then\", \". /etc/bash.bashrc\", \"fi\", \"else\", \"if [ \\\"$(id -u)\\\" -eq 0 ]; then\", \"PS1='# '\", \"else\", \"PS1='$ '\", \"fi\", \"fi\", \"fi\", \"if [ -d /etc/profile.d ]; then\", \"for i in /etc/profile.d/*.sh; do\", \"if [ -r $i ]; then\", \". $i\", \"fi\", \"done\", \"unset i\", \"fi\"], \"parsed\": {\"if\": \"[ -r $i ]; then\", \".\": \"$i\", \"PS1\": \"'$ '\", \"for\": \"i in /etc/profile.d/*.sh; do\", \"unset\": \"i\"}}, \"login_defs\": {\"path\": \"/etc/login.defs\", \"lines\": [\"MAIL_DIR        /var/mail\", \"FAILLOG_ENAB\\t\\tyes\", \"LOG_UNKFAIL_ENAB\\tno\", \"LOG_OK_LOGINS\\t\\tno\", \"SYSLOG_SU_ENAB\\t\\tyes\", \"SYSLOG_SG_ENAB\\t\\tyes\", \"FTMP_FILE\\t/var/log/btmp\", \"SU_NAME\\t\\tsu\", \"HUSHLOGIN_FILE\\t.hushlogin\", \"ENV_SUPATH\\tPATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\", \"ENV_PATH\\tPATH=/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games\", \"TTYGROUP\\ttty\", \"TTYPERM\\t\\t0600\", \"ERASECHAR\\t0177\", \"KILLCHAR\\t025\", \"UMASK\\t\\t022\", \"HOME_MODE\\t0750\", \"PASS_MAX_DAYS\\t99999\", \"PASS_MIN_DAYS\\t0\", \"PASS_WARN_AGE\\t7\", \"UID_MIN\\t\\t\\t 1000\", \"UID_MAX\\t\\t\\t60000\", \"SUB_UID_MIN\\t\\t   100000\", \"SUB_UID_MAX\\t\\t600100000\", \"SUB_UID_COUNT\\t\\t    65536\", \"GID_MIN\\t\\t\\t 1000\", \"GID_MAX\\t\\t\\t60000\", \"SUB_GID_MIN\\t\\t   100000\", \"SUB_GID_MAX\\t\\t600100000\", \"SUB_GID_COUNT\\t\\t    65536\", \"LOGIN_RETRIES\\t\\t5\", \"LOGIN_TIMEOUT\\t\\t60\", \"CHFN_RESTRICT\\t\\trwh\", \"DEFAULT_HOME\\tyes\", \"USERGROUPS_ENAB yes\", \"ENCRYPT_METHOD SHA512\", \"NONEXISTENT\\t/nonexistent\"], \"parsed\": {\"MAIL_DIR\": \"/var/mail\", \"FAILLOG_ENAB\": \"yes\", \"LOG_UNKFAIL_ENAB\": \"no\", \"LOG_OK_LOGINS\": \"no\", \"SYSLOG_SU_ENAB\": \"yes\", \"SYSLOG_SG_ENAB\": \"yes\", \"FTMP_FILE\": \"/var/log/btmp\", \"SU_NAME\": \"su\", \"HUSHLOGIN_FILE\": \".hushlogin\", \"ENV_SUPATH\": \"PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\", \"ENV_PATH\": \"PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games\", \"TTYGROUP\": \"tty\", \"TTYPERM\": \"0600\", \"ERASECHAR\": \"0177\", \"KILLCHAR\": \"025\", \"UMASK\": \"022\", \"HOME_MODE\": \"0750\", \"PASS_MAX_DAYS\": \"99999\", \"PASS_MIN_DAYS\": \"0\", \"PASS_WARN_AGE\": \"7\", \"UID_MIN\": \"1000\", \"UID_MAX\": \"60000\", \"SUB_UID_MIN\": \"100000\", \"SUB_UID_MAX\": \"600100000\", \"SUB_UID_COUNT\": \"65536\", \"GID_MIN\": \"1000\", \"GID_MAX\": \"60000\", \"SUB_GID_MIN\": \"100000\", \"SUB_GID_MAX\": \"600100000\", \"SUB_GID_COUNT\": \"65536\", \"LOGIN_RETRIES\": \"5\", \"LOGIN_TIMEOUT\": \"60\", \"CHFN_RESTRICT\": \"rwh\", \"DEFAULT_HOME\": \"yes\", \"USERGROUPS_ENAB\": \"yes\", \"ENCRYPT_METHOD\": \"SHA512\", \"NONEXISTENT\": \"/nonexistent\"}}, \"effective_hits\": {\"profile_umask_lines\": []}, \"effective_policy\": {\"profile_umask\": null, \"login_defs_umask\": 22}, \"diagnose\": {\"is_vulnerable\": true, \"failed_keys\": [\"profile_umask\"], \"checks\": [{\"key\": \"profile_umask\", \"actual_raw\": null, \"actual\": null, \"expected\": \"== 22\", \"ok\": false, \"reason\": \"미설정(None)\"}, {\"key\": \"login_defs_umask\", \"actual_raw\": 22, \"actual\": 22, \"expected\": \"== 22\", \"ok\": true, \"reason\": \"\"}]}}",
+      "raw_data": "{}"
+    },
+    {
+      "id": 145,
+      "job_id": 108,
+      "vuln_id": "KISA-U-67",
+      "title": "로그 파일 소유자/권한 점검",
+      "severity": "High",
+      "tags": "KISA:U-67",
+      "description": "로그 파일 소유자/권한이 권고값을 충족하지 않습니다.\n미준수 항목:\n- 로그 파일 권한: 현재: '3 files', 기준: == 0 files (mode within 0644) (위치: /var/log/*)\n\n[권한 과다 파일]\n  - /var/log/wtmp (mode: 0664)\n  - /var/log/btmp (mode: 0660)\n  - /var/log/lastlog (mode: 0664)",
+      "solution": "다음 항목을 권고 기준에 맞게 설정한 뒤 정책이 실제로 적용되는지 확인하세요.\n- 로그 파일 권한: chmod 644 /var/log/<파일 이름> (수정 위치: /var/log/*)\n\n로그 파일은 (root, syslog) 소유, 0644 이하 권한으로 관리하세요.\n\n[권한 수정 명령 예시]\nchmod 0644 /var/log/wtmp\nchmod 0644 /var/log/btmp\nchmod 0644 /var/log/lastlog",
+      "evidence": "{\"log_dir\": \"/var/log\", \"command\": \"find /var/log -maxdepth 1 -type f -printf '%p\\\\t%u\\\\t%#m\\\\n'\", \"allowed_owners\": [\"root\", \"syslog\"], \"max_mode\": \"0644\", \"raw_output\": \"/var/log/fontconfig.log\\troot\\t0644\\n/var/log/alternatives.log\\troot\\t0644\\n/var/log/wtmp\\troot\\t0664\\n/var/log/kern.log.1\\tsyslog\\t0640\\n/var/log/dmesg.0\\troot\\t0640\\n/var/log/btmp\\troot\\t0660\\n/var/log/cloud-init.log\\tsyslog\\t0640\\n/var/log/dmesg\\troot\\t0640\\n/var/log/apport.log\\troot\\t0640\\n/var/log/syslog.1\\tsyslog\\t0640\\n/var/log/dpkg.log\\troot\\t0644\\n/var/log/auth.log\\tsyslog\\t0640\\n/var/log/lastlog\\troot\\t0664\\n/var/log/kern.log\\tsyslog\\t0640\\n/var/log/auth.log.1\\tsyslog\\t0640\\n/var/log/syslog\\tsyslog\\t0640\\n/var/log/cloud-init-output.log\\troot\\t0640\\n\", \"entries_sampled\": [{\"path\": \"/var/log/fontconfig.log\", \"owner\": \"root\", \"mode\": \"0644\"}, {\"path\": \"/var/log/alternatives.log\", \"owner\": \"root\", \"mode\": \"0644\"}, {\"path\": \"/var/log/wtmp\", \"owner\": \"root\", \"mode\": \"0664\"}, {\"path\": \"/var/log/kern.log.1\", \"owner\": \"syslog\", \"mode\": \"0640\"}, {\"path\": \"/var/log/dmesg.0\", \"owner\": \"root\", \"mode\": \"0640\"}, {\"path\": \"/var/log/btmp\", \"owner\": \"root\", \"mode\": \"0660\"}, {\"path\": \"/var/log/cloud-init.log\", \"owner\": \"syslog\", \"mode\": \"0640\"}, {\"path\": \"/var/log/dmesg\", \"owner\": \"root\", \"mode\": \"0640\"}, {\"path\": \"/var/log/apport.log\", \"owner\": \"root\", \"mode\": \"0640\"}, {\"path\": \"/var/log/syslog.1\", \"owner\": \"syslog\", \"mode\": \"0640\"}, {\"path\": \"/var/log/dpkg.log\", \"owner\": \"root\", \"mode\": \"0644\"}, {\"path\": \"/var/log/auth.log\", \"owner\": \"syslog\", \"mode\": \"0640\"}, {\"path\": \"/var/log/lastlog\", \"owner\": \"root\", \"mode\": \"0664\"}, {\"path\": \"/var/log/kern.log\", \"owner\": \"syslog\", \"mode\": \"0640\"}, {\"path\": \"/var/log/auth.log.1\", \"owner\": \"syslog\", \"mode\": \"0640\"}, {\"path\": \"/var/log/syslog\", \"owner\": \"syslog\", \"mode\": \"0640\"}, {\"path\": \"/var/log/cloud-init-output.log\", \"owner\": \"root\", \"mode\": \"0640\"}], \"entries_truncated\": false, \"wrong_owner\": [], \"wrong_mode\": [{\"path\": \"/var/log/wtmp\", \"owner\": \"root\", \"mode_str\": \"0664\", \"mode_int\": 436}, {\"path\": \"/var/log/btmp\", \"owner\": \"root\", \"mode_str\": \"0660\", \"mode_int\": 432}, {\"path\": \"/var/log/lastlog\", \"owner\": \"root\", \"mode_str\": \"0664\", \"mode_int\": 436}]}",
+      "raw_data": "{}"
+    }
+  ],
+  "generated_at": "2026-01-05T02:17:04.782850"
+}

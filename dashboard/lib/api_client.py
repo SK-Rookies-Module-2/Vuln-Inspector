@@ -113,8 +113,20 @@ class APIClient:
     def create_report(self, job_id: int, report_format: str) -> Dict[str, Any]:
         return self._request("POST", f"/api/v1/jobs/{job_id}/report", {"format": report_format})
 
+    def list_reports(
+        self,
+        job_id: Optional[int] = None,
+        limit: int = 100,
+        offset: int = 0,
+    ) -> Any:
+        params = self._build_params(job_id=job_id, limit=limit, offset=offset)
+        return self._request("GET", "/api/v1/reports", params=params)
+
     def get_report(self, report_id: int) -> Dict[str, Any]:
         return self._request("GET", f"/api/v1/reports/{report_id}")
+
+    def delete_report(self, report_id: int) -> Any:
+        return self._request("DELETE", f"/api/v1/reports/{report_id}")
 
     def list_plugins(self, plugin_type: Optional[str] = None) -> Any:
         params = self._build_params(type=plugin_type)
