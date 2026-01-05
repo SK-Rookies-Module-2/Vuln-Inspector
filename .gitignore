@@ -13,6 +13,7 @@ wheels/
 # Scanner output / runtime artifacts
 storage/*
 !storage/.gitkeep
+strix_runs/*
 
 # IDE
 .vscode/
@@ -20,3 +21,4 @@ storage/*
 
 # Key
 .ssh/
+

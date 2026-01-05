@@ -12,6 +12,13 @@
 - 결과 파싱은 `app/services/report_parsers/strix.py`에서 수행한다.
 - 실행 결과/로그는 artifacts에 저장한다.
   - `storage/artifacts/{job_id}/strix/{run_name}/`
+- Strix는 실행 디렉터리 기준으로 `strix_runs/`를 생성한다.
+  - 따라서 실행 workdir는 위 artifacts 경로로 고정한다.
+  - 리포트는 `storage/artifacts/{job_id}/strix/{run_name}/strix_runs/{run_id}/` 아래 생성된다.
+  - 생성 파일 예시:
+    - `penetration_test_report.md`
+    - `vulnerabilities.csv`
+    - `vulnerabilities/vuln-0001.md`
 
 ## 실행 패턴(권장)
 - API 서버는 작업만 등록하고 실행은 워커 프로세스에서 수행한다.
@@ -20,6 +27,18 @@
 - 러너 레벨에서 타임아웃을 적용하고 소요 시간을 기록한다.
 - exit code는 참고 신호로만 사용하고 최종 성공 여부는 리포트 파싱으로 판단한다.
 - 명령 인자는 리스트로 전달해 쉘 인젝션을 방지한다.
+
+## 실시간 상태 반영(대시보드)
+- Strix 실행 로그(stdout/stderr)를 스트리밍 저장하고 대시보드에서 폴링한다.
+- 로그에서 상태 라인을 파싱해 `status.json`으로 요약 스냅샷을 만든다.
+  - 예: `Running penetration test`, `Vulnerabilities`, `Model`, `Agents`, `Input/Output/Cost`
+- `--non-interactive`를 기본으로 사용해 TUI 출력 대신 파싱 가능한 라인 로그를 확보한다.
+- 권장 아티팩트 경로:
+  - `storage/artifacts/{job_id}/strix/{run_name}/stdout.log`
+  - `storage/artifacts/{job_id}/strix/{run_name}/stderr.log`
+  - `storage/artifacts/{job_id}/strix/{run_name}/status.json`
+- 대시보드용 API는 최신 status.json을 반환한다.
+  - 예: `GET /api/v1/jobs/{job_id}/tools/strix/status`
 
 ## 권장 플러그인 ID
 - `static_strix_scan`
