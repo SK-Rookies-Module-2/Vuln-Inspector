@@ -1,28 +1,32 @@
 # Strix Plugin Schema Proposal
 
 ## 목적
-- Strix AI를 외부 도구로 통합하되, 현 프로젝트의 플러그인 계약을 유지한다.
-- 사용자는 scan_scope에서 "blackbox/whitebox"를 선택하는 감각으로 실행한다.
+- Strix CLI를 외부 도구로 통합하되 기존 플러그인 계약을 유지한다.
+- Static/Dynamic 채널로 분리해 Target 유형에 맞게 실행한다.
 
 ## 통합 전략
-- 플러그인 형태로 Strix 실행을 래핑한다.
-- 단일 플러그인 + mode 또는 두 개 플러그인으로 분리.
-- 본 제안은 "두 개 플러그인"을 권장한다.
+- 기존 플러그인 경로를 유지한다.
+  - `plugins/static/strix_scan`
+  - `plugins/dynamic/strix_scan`
+- CLI 호출은 `app/adapters/external/strix.py`에서 담당한다.
+- 결과 파싱은 `app/services/report_parsers/strix.py`에서 수행한다.
+- 실행 결과/로그는 artifacts에 저장한다.
+  - `storage/artifacts/{job_id}/strix/{run_name}/`
 
 ## 권장 플러그인 ID
-- external_strix_blackbox
-- external_strix_whitebox
+- `static_strix_scan`
+- `dynamic_strix_scan`
 
-## plugin.yml 예시 (Blackbox)
+## plugin.yml 예시 (Dynamic)
 ```yaml
-id: "external_strix_blackbox"
-name: "Strix AI Blackbox"
+id: "dynamic_strix_scan"
+name: "Strix External Dynamic Scan"
 version: "0.1.0"
 type: "dynamic"
 category: "external"
 tags:
   - "OWASP:2025:A01"
-description: "Run Strix AI blackbox scan and normalize results."
+description: "Run Strix dynamic scan and normalize results."
 config_schema:
   properties:
     base_url:
@@ -30,29 +34,37 @@ config_schema:
     auth_headers:
       type: object
       default: {}
+    scan_mode:
+      type: string
+      enum: ["quick", "standard", "deep"]
+      default: "deep"
+    instruction:
+      type: string
+    instruction_file:
+      type: string
+    non_interactive:
+      type: boolean
+      default: true
+    run_name:
+      type: string
     timeout:
       type: integer
-      default: 60
-    report_format:
-      type: string
-      default: "json"
-    max_results:
-      type: integer
-      default: 200
+      default: 1800
+      min: 1
 entry_point: "main.py"
-class_name: "StrixBlackbox"
+class_name: "StrixDynamicScan"
 ```
 
-## plugin.yml 예시 (Whitebox)
+## plugin.yml 예시 (Static)
 ```yaml
-id: "external_strix_whitebox"
-name: "Strix AI Whitebox"
+id: "static_strix_scan"
+name: "Strix External Static Scan"
 version: "0.1.0"
 type: "static"
 category: "external"
 tags:
   - "OWASP:2025:A03"
-description: "Run Strix AI whitebox scan and normalize results."
+description: "Run Strix static scan and normalize results."
 config_schema:
   properties:
     repo_url:
@@ -61,35 +73,55 @@ config_schema:
       type: string
     repo_path:
       type: string
+    scan_mode:
+      type: string
+      enum: ["quick", "standard", "deep"]
+      default: "deep"
+    instruction:
+      type: string
+    instruction_file:
+      type: string
+    non_interactive:
+      type: boolean
+      default: true
+    run_name:
+      type: string
     timeout:
       type: integer
-      default: 120
-    report_format:
-      type: string
-      default: "json"
-    max_results:
-      type: integer
-      default: 200
+      default: 1800
+      min: 1
 entry_point: "main.py"
-class_name: "StrixWhitebox"
+class_name: "StrixStaticScan"
 ```
 
 ## 입력 매핑
-### Blackbox
-- Target.type: WEB_URL
-- Target.connection_info.url → config.base_url 기본값
-- config.auth_headers는 사용자 입력 JSON
+### Dynamic
+- Target.type: `WEB_URL`
+- `Target.connection_info.url` → `config.base_url` 기본값
+- `instruction`/`instruction_file`로 인증 정보/스코프 전달
 
-### Whitebox
-- Target.type: GIT_REPO
-- Target.connection_info.url → config.repo_url 기본값
-- config.repo_ref는 branch/tag
+### Static
+- Target.type: `GIT_REPO`
+- `Target.connection_info.url` → `config.repo_url` 기본값
+- `Target.connection_info.path` → `config.repo_path` 기본값
+
+## CLI 매핑(핵심 옵션)
+```bash
+strix -n --target <target> \
+  --scan-mode <quick|standard|deep> \
+  --instruction "<text>" \
+  --instruction-file <file> \
+  --run-name <job_id>
+```
+- `-n/--non-interactive`는 기본 활성화한다.
+- `--run-name`에는 `job_id` 또는 `job_id + plugin_id` 조합을 사용한다.
 
 ## 실행/출력 흐름
-- 플러그인은 Strix 실행 결과를 수신한다.
-- 원본 보고서는 artifacts에 저장한다.
-  - storage/artifacts/{job_id}/strix/{run_id}/report.json
-- Findings 표준화 규칙은 별도 문서에 따른다.
+1. 플러그인이 config/target을 취합한다.
+2. `StrixRunner`가 CLI 커맨드를 구성/실행한다.
+3. stdout/stderr를 파일로 저장한다.
+4. 가능한 경우(지원 시) JSON 리포트를 저장한다.
+5. 파서가 Finding으로 변환한다.
 
 ## Finding 생성 규칙(요약)
 - Strix 결과 항목 1개 → Finding 1개
@@ -100,12 +132,16 @@ class_name: "StrixWhitebox"
 ## 오류/부분 성공 처리
 - Strix 실행 실패 시
   - 단일 Finding("External tool failed") 생성
-  - report 없음/로그만 evidence에 기록
+  - stdout/stderr 로그 경로를 evidence에 기록
 - 파싱 실패 시
   - Raw report 경로만 담은 Info Finding 생성
 
-## 구현 위치(예시)
-- app/adapters/strix.py (CLI/API 래퍼)
-- plugins/external/strix_blackbox/main.py
-- plugins/external/strix_whitebox/main.py
+## 보안 고려사항
+- `instruction`에 자격증명 포함 가능 → 로그/DB 저장 시 마스킹 고려
+- instruction 파일 경로는 허용 경로만 사용
 
+## 구현 위치(예시)
+- `app/adapters/external/strix.py` (CLI 래퍼)
+- `app/services/report_parsers/strix.py` (파서)
+- `plugins/static/strix_scan/main.py`
+- `plugins/dynamic/strix_scan/main.py`
