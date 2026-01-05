@@ -14,6 +14,7 @@ from app.core.plugin_loader import PluginLoader
 from app.db import models
 from app.db.session import get_session, init_db
 from app.services.scan_executor import run_job_background
+from app.services.ssh_validation import validate_ssh_connection
 from app.services.reporting import generate_report
 
 from .schemas import (
@@ -24,6 +25,7 @@ from .schemas import (
     PluginMetaResponse,
     ReportCreate,
     ReportResponse,
+    SshValidationResponse,
     TargetCreate,
     TargetResponse,
 )
@@ -115,6 +117,27 @@ def get_target(
         raise HTTPException(status_code=404, detail="Target not found")
     # ORM 객체를 응답 스키마로 변환한다.
     return TargetResponse.model_validate(target)
+
+
+@app.post(f"{API_PREFIX}/targets/{{target_id}}/validate-ssh", response_model=SshValidationResponse)
+def validate_target_ssh(
+    target_id: int,
+    session: Session = Depends(get_session),
+    timeout: int = Query(10, ge=1, le=60),
+) -> SshValidationResponse:
+    # 대상의 SSH 연결 유효성을 검사한다.
+    target = session.get(models.Target, target_id)
+    if target is None:
+        raise HTTPException(status_code=404, detail="Target not found")
+    if target.target_type != "SERVER":
+        raise HTTPException(status_code=400, detail="Target type must be SERVER")
+
+    try:
+        result = validate_ssh_connection(target, timeout=timeout)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+    return SshValidationResponse(target_id=target_id, **result)
 
 
 @app.delete(f"{API_PREFIX}/targets/{{target_id}}", status_code=204)

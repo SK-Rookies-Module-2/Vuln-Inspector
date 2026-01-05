@@ -82,7 +82,7 @@ def main() -> None:
             except Exception as exc:
                 st.error(str(exc))
 
-        col_get, col_delete = st.columns(2)
+        col_get, col_delete, col_validate = st.columns(3)
         with col_get:
             st.subheader("대상 조회")
             target_id = st.number_input("target_id", min_value=1, step=1, value=1, key="manage_target_id")
@@ -103,6 +103,25 @@ def main() -> None:
                     client.delete_target(int(delete_target_id))
                     st.success("대상 삭제 완료")
                     st.cache_data.clear()
+                except Exception as exc:
+                    st.error(str(exc))
+
+        with col_validate:
+            st.subheader("SSH 연결 검사")
+            validate_target_id = st.number_input(
+                "검사할 target_id", min_value=1, step=1, value=1, key="manage_validate_target_id"
+            )
+            timeout = st.number_input(
+                "timeout(초)", min_value=1, max_value=60, step=1, value=10, key="manage_validate_timeout"
+            )
+            if st.button("검사", key="manage_target_validate"):
+                try:
+                    result = client.validate_target_ssh(int(validate_target_id), int(timeout))
+                    if result.get("success"):
+                        st.success("SSH 연결 성공")
+                    else:
+                        st.error("SSH 연결 실패")
+                    st.json(result)
                 except Exception as exc:
                     st.error(str(exc))
 

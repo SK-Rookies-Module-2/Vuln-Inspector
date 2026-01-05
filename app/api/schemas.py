@@ -134,3 +134,16 @@ class PluginMetaResponse(BaseModel):
     config_schema: Optional[Dict[str, Any]] = None
     entry_point: str
     class_name: str
+
+
+class SshValidationResponse(BaseModel):
+    # SSH 연결 검사 결과 응답 스키마이다.
+    target_id: int
+    success: bool
+    message: str
+    duration_ms: int
+    stdout: Optional[str] = None
+    stderr: Optional[str] = None
+    host: Optional[str] = None
+    port: Optional[int] = None
+    user: Optional[str] = None

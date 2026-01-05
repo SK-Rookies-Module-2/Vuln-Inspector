@@ -63,6 +63,10 @@ class APIClient:
     def delete_target(self, target_id: int) -> Any:
         return self._request("DELETE", f"/api/v1/targets/{target_id}")
 
+    def validate_target_ssh(self, target_id: int, timeout: Optional[int] = None) -> Any:
+        params = self._build_params(timeout=timeout)
+        return self._request("POST", f"/api/v1/targets/{target_id}/validate-ssh", params=params)
+
     def create_job(self, payload: Dict[str, Any]) -> Dict[str, Any]:
         return self._request("POST", "/api/v1/jobs", payload)
 
