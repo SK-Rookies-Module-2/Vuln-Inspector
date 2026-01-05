@@ -10,8 +10,9 @@ wheels/
 .venv
 .env
 
-# Scanner output
-storage/artifacts/
+# Scanner output / runtime artifacts
+storage/*
+!storage/.gitkeep
 
 # IDE
 .vscode/
