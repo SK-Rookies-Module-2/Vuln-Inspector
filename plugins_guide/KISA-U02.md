@@ -37,7 +37,7 @@ OS별 상세 점검 로직 (Scripting Guide)
 
 - 채널: remote (SSH 기반 원격 파일 확인, 로컬 폴백)
 - 대상: TargetType.SERVER
-- 플러그인 위치(예시): plugins/remote/linux_kisa_u02_password_policy/
+- 플러그인 위치: `plugins/remote/kisa_u02/`
 - 플러그인 ID/클래스: remote_linux_kisa_u02 / LinuxKisaU02PasswordPolicy
 
 ### plugin.yml 설계(예시)

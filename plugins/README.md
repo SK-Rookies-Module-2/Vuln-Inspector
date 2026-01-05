@@ -15,6 +15,12 @@
 `plugin.yml`에 `config_schema`를 정의하면 입력 설정을 검증하고 기본값을 주입할 수 있습니다.
 원격 플러그인의 경우 `target.connection_info`(host/port)와 `target.credentials`(username/key_path)를 사용해 SSH로 접근할 수 있습니다.
 
+### Strix 플러그인(Static/Dynamic)
+- Static: `plugins/static/strix_scan/` (`static_strix_scan`)
+- Dynamic: `plugins/dynamic/strix_scan/` (`dynamic_strix_scan`)
+- 결과는 `strix_runs/<run_id>/` 하위에 생성되며 `vulnerabilities.csv` + `vulnerabilities/vuln-*.md`를 파싱합니다.
+- 주요 설정: `scan_mode`, `instruction`, `instruction_file`, `non_interactive`, `run_name`, `timeout`
+
 ### 정적(Static) 관련 권장 필드
 - `manifest_path`: 매니페스트 상대 경로(기본 `requirements.txt`)
 - `repo_url`/`repo_ref`: Git 저장소 URL과 브랜치/태그(선택)

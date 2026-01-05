@@ -10,4 +10,4 @@ def test_discover_plugins() -> None:
     loader = PluginLoader(repo_root / "plugins")
     plugins = loader.discover()
     plugin_ids = {meta.plugin_id for meta in plugins}
-    assert "remote_linux_kisa_u01" in plugin_ids
+    assert "remote_kisa_u01" in plugin_ids

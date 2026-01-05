@@ -15,6 +15,8 @@
 ├── tests/          # 테스트 코드
 ├── fixtures/       # 데모용 설정/입력 파일
 ├── storage/        # 스캔 아티팩트/보고서 저장(생성물)
+├── plugins_guide/  # KISA 점검 기준/플러그인 설계 가이드
+├── referenceSource/# 참고용 스캐너/스크립트
 ├── docker-compose.yml
 ├── Dockerfile
 ├── README.md
@@ -129,9 +131,9 @@ docker-compose up -d db
 ```
 
 ## 채널별 기본 진단 동작
-- Static: 외부 스캐너(Strix) 결과를 파싱해 정적 진단을 처리합니다. (구성 예정)
-- Remote: `fixtures/sshd_config_demo`를 읽어 `PermitRootLogin` 설정을 점검합니다.
-- Dynamic: 외부 스캐너(Strix) 결과를 파싱해 동적 진단을 처리합니다. (구성 예정)
+- Static: 외부 스캐너(Strix) 실행 결과를 파싱해 정적 진단을 처리합니다.
+- Remote: KISA U-01 플러그인이 OS별 SSH/Telnet 설정을 점검합니다(필요 시 로컬 파일 fallback).
+- Dynamic: 외부 스캐너(Strix) 실행 결과를 파싱해 동적 진단을 처리합니다.
 
 ## 결과 출력
 원격 데모 스크립트는 Findings 개수와 증적(evidence)을 콘솔에 출력합니다.

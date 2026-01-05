@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import os
+import re
+from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
 import streamlit as st
@@ -66,6 +68,82 @@ def _rerun() -> None:
         st.rerun()
     else:
         st.experimental_rerun()
+
+
+def _read_log_tail(path: Path, max_bytes: int = 200_000) -> str:
+    if not path.exists():
+        return ""
+    size = path.stat().st_size
+    with path.open("rb") as handle:
+        if size > max_bytes:
+            handle.seek(-max_bytes, os.SEEK_END)
+        data = handle.read()
+    return data.decode("utf-8", errors="replace")
+
+
+def _parse_live_status(text: str) -> Dict[str, str]:
+    status: Dict[str, str] = {}
+    for line in _clean_log_lines(text):
+        if line.startswith("Target:"):
+            status["target"] = line.split("Target:", 1)[1].strip()
+        if line.startswith("Results will be saved to:"):
+            status["results_path"] = line.split("Results will be saved to:", 1)[1].strip()
+        if "Running penetration test" in line or "Completed" in line or "Failed" in line:
+            status["status_line"] = line.strip()
+        match = re.search(r"Vulnerabilities:\s*([0-9]+)", line)
+        if match:
+            status["vulnerabilities"] = match.group(1)
+        match = re.search(r"Model:\s*([A-Za-z0-9/._-]+)", line)
+        if match:
+            status["model"] = match.group(1)
+        match = re.search(r"Agents:\s*([0-9]+).*Tools:\s*([0-9]+)", line)
+        if match:
+            status["agents"] = match.group(1)
+            status["tools"] = match.group(2)
+        match = re.search(r"Input:\s*([0-9.]+[KMG]?).*Cached:\s*([0-9.]+[KMG]?)", line)
+        if match:
+            status["input"] = match.group(1)
+            status["cached"] = match.group(2)
+        match = re.search(r"Output:\s*([0-9.]+[KMG]?).*Cost:\s*\\$([0-9.]+)", line)
+        if match:
+            status["output"] = match.group(1)
+            status["cost"] = f"${match.group(2)}"
+    return status
+
+
+def _strip_ansi(text: str) -> str:
+    return re.sub(r"\x1b\[[0-9;]*[A-Za-z]", "", text)
+
+
+def _clean_log_lines(text: str) -> List[str]:
+    cleaned: List[str] = []
+    for raw_line in _strip_ansi(text).splitlines():
+        line = raw_line.strip()
+        if not line:
+            continue
+        if line.startswith(("╭", "╰")) and "──" in line:
+            continue
+        line = line.strip("│").strip()
+        if line and not set(line) <= {"─"}:
+            cleaned.append(line)
+    return cleaned
+
+
+def _extract_latest_block(text: str, title: str) -> str:
+    raw = _strip_ansi(text)
+    lines = raw.splitlines()
+    indexes = [i for i, line in enumerate(lines) if title in line]
+    if not indexes:
+        return ""
+    start = indexes[-1]
+    end = None
+    for i in range(start + 1, len(lines)):
+        line = lines[i]
+        if line.startswith("╰") and "─" in line:
+            end = i + 1
+            break
+    block_lines = lines[start:end] if end else lines[start:]
+    return "\n".join(block_lines).strip()
 
 
 def main() -> None:
@@ -148,6 +226,8 @@ def main() -> None:
             result = client.create_job(payload)
             st.success(f"Job 생성 완료: id={result.get('id')}")
             st.session_state["strix_last_job_id"] = result.get("id")
+            st.session_state["strix_last_run_name"] = run_name.strip()
+            st.session_state["strix_last_scan_type"] = "dynamic" if is_dynamic else "static"
             st.json(result)
         except Exception as exc:
             st.error(str(exc))
@@ -186,8 +266,46 @@ def main() -> None:
         except Exception as exc:
             findings_slot.error(str(exc))
 
+        last_scan_type = st.session_state.get("strix_last_scan_type") or ("dynamic" if is_dynamic else "static")
+        run_name = st.session_state.get("strix_last_run_name") or f"job-{last_job_id}-strix-{last_scan_type}"
+        log_path = Path("storage") / "artifacts" / str(last_job_id) / "strix" / run_name / "stdout.log"
+
+        st.subheader("7) 실행 로그")
+        log_text = _read_log_tail(log_path)
+        if log_text:
+            parsed = _parse_live_status(log_text)
+            if parsed.get("status_line"):
+                st.info(parsed["status_line"])
+            if parsed.get("target"):
+                st.caption(f"Target: {parsed['target']}")
+            if parsed.get("results_path"):
+                st.caption(f"Results: {parsed['results_path']}")
+            col1, col2, col3 = st.columns(3)
+            col1.metric("Vulnerabilities", parsed.get("vulnerabilities", "-"))
+            col2.metric("Model", parsed.get("model", "-"))
+            agents = parsed.get("agents", "-")
+            tools = parsed.get("tools", "-")
+            col3.metric("Agents / Tools", f"{agents} / {tools}")
+
+            col4, col5, col6 = st.columns(3)
+            col4.metric("Input", parsed.get("input", "-"))
+            col5.metric("Cached", parsed.get("cached", "-"))
+            col6.metric("Output / Cost", f"{parsed.get('output', '-')} / {parsed.get('cost', '-')}")
+
+            with st.expander("원본 로그 보기"):
+                init_block = _extract_latest_block(log_text, "STRIX PENETRATION TEST INITIATED")
+                live_block = _extract_latest_block(log_text, "Live Penetration Test Status")
+                if init_block:
+                    st.code(init_block)
+                if live_block:
+                    st.code(live_block)
+                if not init_block and not live_block:
+                    st.text(log_text[-4000:])
+        else:
+            st.info(f"stdout.log가 아직 생성되지 않았습니다: {log_path}")
+
         if status and status.get("status") in {"COMPLETED", "FAILED"}:
-            st.subheader("7) 보고서")
+            st.subheader("8) 보고서")
             col_create, col_view = st.columns(2)
             with col_create:
                 if st.button("보고서 생성(json)", key="strix_create_report"):

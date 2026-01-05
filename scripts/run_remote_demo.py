@@ -9,7 +9,7 @@ sys.path.insert(0, str(REPO_ROOT))
 from app.core.plugin_loader import PluginLoader
 from app.core.types import PluginContext
 
-PLUGIN_ID = "remote_linux_kisa_u01"
+PLUGIN_ID = "remote_kisa_u01"
 
 
 def main() -> None:
@@ -19,8 +19,13 @@ def main() -> None:
         raise SystemExit(f"Plugin not found: {PLUGIN_ID}")
 
     context = PluginContext(
-        target={"type": "SERVER", "host": "127.0.0.1"},
-        config={"sshd_config_path": str(REPO_ROOT / "fixtures" / "sshd_config_demo")},
+        target={"type": "SERVER", "connection_info": {"host": "127.0.0.1"}},
+        config={
+            "os_type": "linux",
+            "protocols": ["ssh"],
+            "allow_local_fallback": True,
+            "sshd_config_path": str(REPO_ROOT / "fixtures" / "sshd_config_demo"),
+        },
     )
     plugin = loader.load_plugin(meta, context)
     findings = plugin.check()

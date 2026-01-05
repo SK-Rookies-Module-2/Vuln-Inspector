@@ -52,8 +52,8 @@ version: "0.1.0"
 type: "dynamic"
 category: "external"
 tags:
-  - "OWASP:2025:A01"
-description: "Run Strix dynamic scan and normalize results."
+  - "STRIX"
+description: "External dynamic scan placeholder for Strix integration."
 config_schema:
   properties:
     base_url:
@@ -64,7 +64,6 @@ config_schema:
     scan_mode:
       type: string
       enum: ["quick", "standard", "deep"]
-      default: "deep"
     instruction:
       type: string
     instruction_file:
@@ -90,8 +89,8 @@ version: "0.1.0"
 type: "static"
 category: "external"
 tags:
-  - "OWASP:2025:A03"
-description: "Run Strix static scan and normalize results."
+  - "STRIX"
+description: "External static scan placeholder for Strix integration."
 config_schema:
   properties:
     repo_url:
@@ -103,7 +102,6 @@ config_schema:
     scan_mode:
       type: string
       enum: ["quick", "standard", "deep"]
-      default: "deep"
     instruction:
       type: string
     instruction_file:

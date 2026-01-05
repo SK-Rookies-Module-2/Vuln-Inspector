@@ -86,6 +86,32 @@ FastAPI 기본 오류 응답을 사용합니다.
 - 204: 삭제 완료
 - 404: 대상 없음
 
+### POST /api/v1/targets/{target_id}/validate-ssh
+**설명**: SERVER 대상의 SSH 연결을 사전 점검합니다.
+
+**쿼리 파라미터**
+- `timeout` (int, default: 10, min: 1, max: 60)
+
+**응답**
+```json
+{
+  "target_id": 1,
+  "success": true,
+  "message": "SSH connection ok",
+  "duration_ms": 120,
+  "stdout": "__vuln_inspector_ok__",
+  "stderr": null,
+  "host": "127.0.0.1",
+  "port": 22,
+  "user": "root"
+}
+```
+
+**응답 코드**
+- 200: 정상 반환
+- 400: 대상 유형/파라미터 오류
+- 404: 대상 없음
+
 ---
 
 ## 2) Job API
@@ -103,10 +129,10 @@ FastAPI 기본 오류 응답을 사용합니다.
 ```json
 {
   "target_id": 1,
-  "scan_scope": ["static_strix_scan", "remote_linux_kisa_u01"],
+  "scan_scope": ["static_strix_scan", "remote_kisa_u01"],
   "scan_config": {
     "static_strix_scan": {"repo_url": "https://example.com/repo.git"},
-    "remote_linux_kisa_u01": {"sshd_config_path": "/etc/ssh/sshd_config", "use_sudo": false}
+    "remote_kisa_u01": {"os_type": "linux", "protocols": ["ssh"], "use_sudo": false}
   },
   "run_now": true
 }
@@ -128,7 +154,7 @@ FastAPI 기본 오류 응답을 사용합니다.
   "id": 1,
   "target_id": 1,
   "status": "COMPLETED",
-  "scan_scope": ["static_strix_scan", "remote_linux_kisa_u01"],
+  "scan_scope": ["static_strix_scan", "remote_kisa_u01"],
   "scan_config": {"...": "..."},
   "start_time": "2024-01-01T00:00:00",
   "end_time": "2024-01-01T00:00:05",
@@ -231,7 +257,7 @@ FastAPI 기본 오류 응답을 사용합니다.
     "version": "0.1.0",
     "type": "static",
     "category": "external",
-    "tags": ["OWASP:2025:A03"],
+    "tags": ["STRIX"],
     "description": "External static scan placeholder for Strix integration.",
     "config_schema": {"properties": {"repo_url": {"type": "string"}}},
     "entry_point": "main.py",
@@ -305,6 +331,20 @@ FastAPI 기본 오류 응답을 사용합니다.
 - 200: 파일 반환
 - 404: Report 또는 파일 없음
 
+### GET /api/v1/reports
+**쿼리 파라미터**
+- `job_id` (int, optional)
+- `limit` (int, default: 100, max: 1000)
+- `offset` (int, default: 0)
+
+**응답 코드**
+- 200: 정상 반환
+
+### DELETE /api/v1/reports/{report_id}
+**응답 코드**
+- 204: 삭제 완료
+- 404: Report 없음
+
 ---
 
 ## 6) Demo 플러그인별 scan_config 스키마
@@ -314,22 +354,30 @@ FastAPI 기본 오류 응답을 사용합니다.
 - `repo_url` (string, optional)
 - `repo_ref` (string, optional)
 - `repo_path` (string, optional)
-- `report_path` (string, optional)
+- `scan_mode` (string, optional: `quick` | `standard` | `deep`)
+- `instruction` (string, optional)
+- `instruction_file` (string, optional)
+- `non_interactive` (boolean, default: true)
+- `run_name` (string, optional)
 - `timeout` (integer, default: 1800)
 ```json
 {"repo_url": "https://example.com/repo.git"}
 ```
 
-### remote_linux_kisa_u01
+### remote_kisa_u01
 **필드**
-- `sshd_config_path` (string, default: `fixtures/sshd_config_demo`)
+- `os_type` (string, required: `linux` | `solaris` | `aix` | `hpux`)
+- `protocols` (array, default: `["ssh", "telnet"]`)
+- `sshd_config_path` (string, optional)
+- `telnet_config_path` (string, optional)
 - `use_sudo` (boolean, default: false)
 - `sudo_user` (string, optional)
+- `allow_local_fallback` (boolean, default: false)
 ```json
 {
-  "sshd_config_path": "/etc/ssh/sshd_config",
-  "use_sudo": false,
-  "sudo_user": ""
+  "os_type": "linux",
+  "protocols": ["ssh"],
+  "use_sudo": false
 }
 ```
 
@@ -337,7 +385,11 @@ FastAPI 기본 오류 응답을 사용합니다.
 **필드**
 - `base_url` (string, optional)
 - `auth_headers` (object, default: `{}`)
-- `report_path` (string, optional)
+- `scan_mode` (string, optional: `quick` | `standard` | `deep`)
+- `instruction` (string, optional)
+- `instruction_file` (string, optional)
+- `non_interactive` (boolean, default: true)
+- `run_name` (string, optional)
 - `timeout` (integer, default: 1800, min: 1)
 ```json
 {

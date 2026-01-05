@@ -31,7 +31,7 @@ OS별 상세 점검 로직 (Scripting Guide)
 
 - 채널: remote (SSH 기반 원격 파일 확인)
 - 대상: TargetType.SERVER
-- 플러그인 위치: `plugins/remote/linux_kisa_u67_log_file_perm/`
+- 플러그인 위치: `plugins/remote/kisa_u67/`
 - 플러그인 ID/클래스: remote_linux_kisa_u67_log_file_perm / LinuxKisaU67LogFilePerm
 
 ### plugin.yml 설계(실제 적용)

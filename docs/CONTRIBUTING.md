@@ -105,20 +105,20 @@ curl -X POST http://127.0.0.1:8000/api/v1/jobs \
 
 ### 1) 디렉터리 생성
 ```
-plugins/remote/linux_kisa_u02/
+plugins/remote/password_policy_check/
 ```
 
 ### 2) plugin.yml 작성
-`plugins/remote/linux_kisa_u02/plugin.yml`
+`plugins/remote/password_policy_check/plugin.yml`
 ```yaml
-id: "remote_linux_kisa_u02"
+id: "remote_password_policy_check"
 name: "Password Policy Check"
 version: "0.1.0"
 type: "remote"
 category: "infrastructure"
 tags:
-  - "KISA:U-02"
-description: "Check password policy configuration."
+  - "POLICY:PW"
+description: "Check password policy configuration for remote hosts."
 config_schema:
   properties:
     config_path:
@@ -154,11 +154,11 @@ class PasswordPolicyCheck(BasePlugin):
         result = client.run(f"cat {config_path}")
         if "PASS_MAX_DAYS" in result.stdout:
             self.add_finding(
-                vuln_id="KISA-U-02",
+                vuln_id="POLICY-PW-01",
                 title="비밀번호 정책 점검",
                 severity="Medium",
                 evidence={"config_path": config_path},
-                tags=["KISA:U-02"],
+                tags=["POLICY:PW"],
                 description="비밀번호 정책 항목을 확인했습니다.",
                 solution="정책 기준에 맞게 설정하세요.",
             )
@@ -173,7 +173,7 @@ curl -X POST http://127.0.0.1:8000/api/v1/targets \
 
 curl -X POST http://127.0.0.1:8000/api/v1/jobs \
   -H "Content-Type: application/json" \
-  -d '{"target_id":1,"scan_scope":["remote_linux_kisa_u02"],"scan_config":{"remote_linux_kisa_u02":{"config_path":"/etc/login.defs","use_sudo":false}}}'
+  -d '{"target_id":1,"scan_scope":["remote_password_policy_check"],"scan_config":{"remote_password_policy_check":{"config_path":"/etc/login.defs"}}}'
 ```
 
 ## 동적 플러그인 예시(설명 + 예시)
@@ -193,7 +193,7 @@ version: "0.1.0"
 type: "dynamic"
 category: "external"
 tags:
-  - "OWASP:2025:A01"
+  - "STRIX"
 description: "External dynamic scan placeholder for Strix integration."
 config_schema:
   properties:
@@ -202,6 +202,18 @@ config_schema:
     auth_headers:
       type: object
       default: {}
+    scan_mode:
+      type: string
+      enum: ["quick", "standard", "deep"]
+    instruction:
+      type: string
+    instruction_file:
+      type: string
+    non_interactive:
+      type: boolean
+      default: true
+    run_name:
+      type: string
     timeout:
       type: integer
       default: 1800
@@ -213,15 +225,31 @@ class_name: "StrixDynamicScan"
 ```python
 from typing import List
 
-from app.core.errors import PluginConfigError
+from app.adapters.external.strix import StrixRunner
 from app.core.plugin_base import BasePlugin
 from app.core.types import Finding
+from app.core.storage import ensure_artifacts_dir
+from app.services.report_parsers.strix import parse_strix_report
 
 
 class StrixDynamicScan(BasePlugin):
     def check(self) -> List[Finding]:
-        # TODO: Strix 외부 스캐너 실행 및 리포트 파싱 추가
-        raise PluginConfigError("Strix dynamic scan is not configured yet")
+        config = self.context.config or {}
+        base_url = config.get("base_url")
+        if not base_url:
+            raise ValueError("base_url is required")
+
+        job_id = self.context.job_id or 0
+        run_name = config.get("run_name") or f"job-{job_id}-strix-dynamic"
+        workdir = ensure_artifacts_dir(job_id) / "strix" / run_name
+        workdir.mkdir(parents=True, exist_ok=True)
+
+        runner = StrixRunner()
+        runner.run_dynamic(base_url=base_url, workdir=workdir, timeout=int(config.get("timeout", 1800)))
+        run_dir = workdir / "strix_runs" / run_name
+        findings = parse_strix_report(run_dir)
+        self.results.extend(findings)
+        return self.results
 ```
 
 ### 4) API 호출 예시

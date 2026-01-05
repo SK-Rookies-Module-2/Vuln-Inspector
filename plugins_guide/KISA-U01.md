@@ -48,8 +48,6 @@ OS별 상세 점검 로직 (Scripting Guide)
 • 대상: TargetType.SERVER
 • 플러그인 위치(권장): `plugins/remote/kisa_u01/`
 
-- 기존 데모 플러그인 `remote_linux_kisa_u01`과 충돌을 피하기 위해 ID는 별도로 사용
-
 ### plugin.yml 설계(예시)
 
 ```yaml

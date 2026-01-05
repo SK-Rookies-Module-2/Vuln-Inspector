@@ -90,6 +90,7 @@ curl -O http://127.0.0.1:8000/api/v1/reports/1/file
 - WEB_URL: `connection_info.url` 필수
 - GIT_REPO: `connection_info.url` 또는 `path` 필수
 - 원격 점검 시: `credentials.username`과 `key_path` 또는 `password` 필요
+- SSH 고급 옵션(선택): `connection_info.proxy_jump`, `proxy_command`, `identities_only`
 
 ## 모듈 간 상호작용
 - `app/api/app.py` → `app/services/scan_executor.py`, `app/services/reporting.py` 호출
@@ -113,20 +114,21 @@ curl -O http://127.0.0.1:8000/api/v1/reports/1/file
 - `app/services/reporting.py`에 형식 추가
 - `SUPPORTED_FORMATS` 확장 및 생성 로직 구현
 
-## 디렉터리/파일 맵(전수)
-> 각 파일은 “무엇을 담당하는지”와 “어떤 모듈과 연결되는지”를 명시합니다.
+## 디렉터리/파일 맵(주요)
+> 핵심 동작과 자주 참고하는 파일을 중심으로 정리합니다.
 
 ### 루트
 - `AGENTS.md`: 협업/운영 가이드
-- `Guide.md`: 설계서(아키텍처 원본)
 - `README.md`: 사용법 요약
 - `pyproject.toml`: 프로젝트 메타데이터
 - `requirements.txt`: 런타임 의존성
 - `requirements-dev.txt`: 개발/테스트 의존성
 - `uv.lock`: uv 의존성 잠금 파일
-- `docker-compose.yml`: 로컬 DB/캐시 구성
+- `docker-compose.yml`: 로컬 DB/API/대시보드 구성
 - `run.py`: 오케스트레이터 실행 진입점(기본)
 - `main.py`: 간단 샘플 실행
+- `plugins_guide/`: KISA 점검 기준/설계 가이드
+- `referenceSource/`: 참고용 스캐너/스크립트 자료
 
 ### app/
 - `app/__init__.py`: 패키지 초기화
@@ -149,7 +151,8 @@ curl -O http://127.0.0.1:8000/api/v1/reports/1/file
 - `app/services/orchestrator.py`: 플러그인 목록 조회(기본)
 - `app/services/scan_executor.py`: 플러그인 실행 → 결과 저장
 - `app/services/reporting.py`: 보고서 생성
-- `app/services/report_parsers/strix.py`: Strix 리포트 파서 스켈레톤
+- `app/services/report_parsers/strix.py`: Strix 리포트 파서
+- `app/services/ssh_validation.py`: SSH 연결 사전 점검
 - `app/services/__init__.py`: 서비스 노출
 - `app/adapters/ssh.py`: SSH 어댑터(키/패스워드/프록시/ sudo)
 - `app/adapters/external/runner.py`: 외부 스캐너 실행 스켈레톤
@@ -160,16 +163,26 @@ curl -O http://127.0.0.1:8000/api/v1/reports/1/file
 - `plugins/README.md`: 플러그인 구조/설정 스키마 설명
 - `plugins/static/strix_scan/main.py`: 외부 정적 스캐너 스켈레톤
 - `plugins/static/strix_scan/plugin.yml`: 정적 플러그인 메타/스키마
-- `plugins/remote/linux_kisa_u01/main.py`: SSH 기반 U-01 점검
-- `plugins/remote/linux_kisa_u01/plugin.yml`: 원격 플러그인 메타/스키마
+- `plugins/remote/kisa_u01/main.py`: OS별 SSH/Telnet 기반 U-01 점검
+- `plugins/remote/kisa_u01/plugin.yml`: 원격 플러그인 메타/스키마
 - `plugins/dynamic/strix_scan/main.py`: 외부 동적 스캐너 스켈레톤
 - `plugins/dynamic/strix_scan/plugin.yml`: 동적 플러그인 메타/스키마
 
 ### scripts/
 - `scripts/run_remote_demo.py`: 원격 플러그인 데모 실행
+- `scripts/bootstrap_env.sh`: `.env` 생성 도우미
+- `scripts/load_strix_findings.py`: Strix 파서 결과 삽입/리포트 생성 유틸
 
 ### fixtures/
 - `fixtures/sshd_config_demo`: 원격 플러그인 테스트용 SSH 설정 파일
+
+### dashboard/
+- `dashboard/app.py`: 대시보드 진입점
+- `dashboard/pages/01_Overview.py`: 요약 대시보드
+- `dashboard/pages/02_Manage.py`: 대상/Job/Finding/Report 관리
+- `dashboard/pages/03_Remote.py`: 원격 진단 실행
+- `dashboard/lib/api_client.py`: API 호출 래퍼
+- `dashboard/lib/schemas.py`: JSON 파싱/검증 유틸
 
 ### tests/
 - `tests/conftest.py`: 테스트 경로 초기화
@@ -177,8 +190,10 @@ curl -O http://127.0.0.1:8000/api/v1/reports/1/file
 - `tests/test_config_validation.py`: 설정 스키마 검증 테스트
 
 ### storage/
-- `storage/vuln_inspector.db`: SQLite DB 파일(생성물)
+- `storage/vuln_inspector.db`: SQLite DB 파일(사용 시 생성됨)
 - `storage/reports/1/report.json`: 보고서 예시(생성물)
+- `storage/artifacts/<job_id>/`: 외부 스캐너 산출물
+- `storage/evidences/<job_id>/`: 증적/로그 저장 위치
 
 ### referenceSource/
 - `referenceSource/exploit_checker/*`: 참고용 스캐너 코드 및 스크립트

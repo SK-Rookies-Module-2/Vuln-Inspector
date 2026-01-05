@@ -83,30 +83,43 @@ curl -X POST http://127.0.0.1:8000/api/v1/jobs \
 
 ---
 
-### 2) Remote: linux_kisa_u01
+### 2) Remote: kisa_u01
 **파일**
-- `plugins/remote/linux_kisa_u01/plugin.yml`
-- `plugins/remote/linux_kisa_u01/main.py`
+- `plugins/remote/kisa_u01/plugin.yml`
+- `plugins/remote/kisa_u01/main.py`
 
 **핵심 함수**
-- `RootLoginCheck.check()`
-  - 로컬 파일(`sshd_config_path`) 읽기 또는 SSH로 원격 `cat /etc/ssh/sshd_config`
-  - `PermitRootLogin` 값 파싱 → 취약 시 `add_finding()`
+- `RootRemoteLoginCheck.check()`
+  - OS별 SSH/Telnet 설정 파일을 읽고 root 원격 접속 허용 여부를 판정
+  - SSH는 `PermitRootLogin`, Telnet은 OS별 설정(`securetty`, `login`, `security/user`) 파싱
+  - 취약/점검 불가 시 `add_finding()`으로 결과 기록
 - SSH 경로
   - `app/adapters/ssh.py:SshClient.run()`
 
 **config_schema 예시**
 ```yaml
 config_schema:
+  required:
+    - os_type
   properties:
+    os_type:
+      type: string
+      enum: ["linux", "solaris", "aix", "hpux"]
+    protocols:
+      type: array
+      default: ["ssh", "telnet"]
     sshd_config_path:
       type: string
-      default: "fixtures/sshd_config_demo"
+    telnet_config_path:
+      type: string
     use_sudo:
       type: boolean
       default: false
     sudo_user:
       type: string
+    allow_local_fallback:
+      type: boolean
+      default: false
 ```
 
 **API 호출 예시(원격 SSH)**
@@ -119,7 +132,7 @@ curl -X POST http://127.0.0.1:8000/api/v1/targets \
 # 스캔 실행
 curl -X POST http://127.0.0.1:8000/api/v1/jobs \
   -H "Content-Type: application/json" \
-  -d '{"target_id":1,"scan_scope":["remote_linux_kisa_u01"],"scan_config":{"remote_linux_kisa_u01":{"sshd_config_path":"/etc/ssh/sshd_config","use_sudo":false}}}'
+  -d '{"target_id":1,"scan_scope":["remote_kisa_u01"],"scan_config":{"remote_kisa_u01":{"os_type":"linux","protocols":["ssh"],"use_sudo":false}}}'
 ```
 
 **테스트 방법**

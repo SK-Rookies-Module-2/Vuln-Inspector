@@ -140,7 +140,7 @@ def main() -> None:
 
         with st.form("manage_create_job"):
             target_id = st.number_input("target_id", min_value=1, step=1, value=1, key="manage_job_target_id")
-            scan_scope = st.text_input("scan_scope (쉼표 구분)", value="remote_linux_kisa_u01")
+            scan_scope = st.text_input("scan_scope (쉼표 구분)", value="remote_kisa_u01")
             scan_config = st.text_area(
                 "scan_config (JSON)",
                 value=json.dumps({}, ensure_ascii=False, indent=2),

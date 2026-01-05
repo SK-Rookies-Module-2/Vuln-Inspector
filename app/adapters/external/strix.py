@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 from typing import Optional, Sequence
 
@@ -19,7 +20,8 @@ class StrixRunner(ExternalRunner):
         non_interactive: bool = True,
         run_name: Optional[str] = None,
     ) -> Sequence[str]:
-        cmd = ["strix"]
+        binary = os.getenv("STRIX_BIN", "strix")
+        cmd = [binary]
         if non_interactive:
             cmd.append("-n")
         cmd.extend(["--target", target])

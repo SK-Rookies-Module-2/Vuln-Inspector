@@ -61,9 +61,9 @@ API 중심의 진단 흐름을 **웹 대시보드에서 쉽게 실행/관찰/보
 ```json
 {
   "target_id": 1,
-  "scan_scope": ["remote_linux_kisa_u01", "dynamic_strix_scan"],
+  "scan_scope": ["remote_kisa_u01", "dynamic_strix_scan"],
   "scan_config": {
-    "remote_linux_kisa_u01": { "ssh_port": 22, "use_sudo": true },
+    "remote_kisa_u01": { "os_type": "linux", "protocols": ["ssh"], "use_sudo": true },
     "dynamic_strix_scan": { "base_url": "https://example.com", "timeout": 1800 }
   },
   "run_now": true
