@@ -13,6 +13,14 @@
 - 실행 결과/로그는 artifacts에 저장한다.
   - `storage/artifacts/{job_id}/strix/{run_name}/`
 
+## 실행 패턴(권장)
+- API 서버는 작업만 등록하고 실행은 워커 프로세스에서 수행한다.
+- 실행마다 run_id(run_name)를 부여해 아티팩트를 분리한다.
+- stdout/stderr는 실행 중 파일로 스트리밍 저장한다.
+- 러너 레벨에서 타임아웃을 적용하고 소요 시간을 기록한다.
+- exit code는 참고 신호로만 사용하고 최종 성공 여부는 리포트 파싱으로 판단한다.
+- 명령 인자는 리스트로 전달해 쉘 인젝션을 방지한다.
+
 ## 권장 플러그인 ID
 - `static_strix_scan`
 - `dynamic_strix_scan`
@@ -115,6 +123,7 @@ strix -n --target <target> \
 ```
 - `-n/--non-interactive`는 기본 활성화한다.
 - `--run-name`에는 `job_id` 또는 `job_id + plugin_id` 조합을 사용한다.
+- 장시간 실행이므로 워커에서 실행하고 상태를 주기적으로 갱신한다.
 
 ## 실행/출력 흐름
 1. 플러그인이 config/target을 취합한다.
