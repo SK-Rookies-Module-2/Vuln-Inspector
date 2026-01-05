@@ -13,7 +13,17 @@ config_schema:
     auth_headers:
       type: object
       default: {}
-    report_path:
+    scan_mode:
+      type: string
+      enum: ["quick", "standard", "deep"]
+    instruction:
+      type: string
+    instruction_file:
+      type: string
+    non_interactive:
+      type: boolean
+      default: true
+    run_name:
       type: string
     timeout:
       type: integer

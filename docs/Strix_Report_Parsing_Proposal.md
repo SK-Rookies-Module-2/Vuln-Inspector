@@ -72,6 +72,7 @@
 - 헤더 인식 규칙
   - 섹션 헤더는 `## ` 또는 `### `로 시작하는 라인
   - 헤더 텍스트는 대소문자 무시하고 비교
+  - `Artifacts:`/`Evidence:`처럼 `:`로 끝나는 라인도 섹션 헤더로 처리
 - 섹션 매핑(허용 라벨)
   - Description: `Description`, `Issue`, `Summary`
   - Evidence: `Evidence`, `Unauthenticated evidence`, `Artifacts`
